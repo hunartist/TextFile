@@ -30,18 +30,52 @@
         </asp:GridView>
 
          <div>
+             <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceRoomDetail" DataTextField="Id" DataValueField="Id" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged"></asp:DropDownList>
+             <asp:SqlDataSource ID="SqlDataSourceRoomDetail" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT * FROM [WeekStartEnd]"></asp:SqlDataSource>
+                    
+
              <%-- 各GridView数据在PrintTab中动态生成，去掉单独GridView的绑定 --%>
-            <%--<asp:GridView ID="GridView2" runat="server" onrowdatabound="GridView1_RowDataBound1" BorderWidth="1">--%>
+            <%--<asp:GridView ID="GridView2" runat="server" onrowdatabound="GridView1_RowDataBound1" BorderWidth="1">--%>             
              <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
              <asp:GridView ID="GridView1" runat="server" BorderWidth="1">
                 <HeaderStyle Wrap="False" />
                 <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-            </asp:GridView>
-             <asp:Label ID="Label2" runat="server" Text="Label"></asp:Label>
+            </asp:GridView>             
+            <asp:Label ID="Label2" runat="server" Text="Label"></asp:Label>
              <asp:GridView ID="GridView2" runat="server" BorderWidth="1">
                 <HeaderStyle Wrap="False" />
                 <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
-            </asp:GridView>
+            </asp:GridView>             
+             <asp:Label ID="Label3" runat="server" Text="Label"></asp:Label>
+             <asp:GridView ID="GridView3" runat="server" BorderWidth="1">
+                <HeaderStyle Wrap="False" />
+                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+            </asp:GridView>             
+             <asp:Label ID="Label4" runat="server" Text="Label"></asp:Label>
+             <asp:GridView ID="GridView4" runat="server" BorderWidth="1">
+                <HeaderStyle Wrap="False" />
+                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+            </asp:GridView>             
+             <asp:Label ID="Label5" runat="server" Text="Label"></asp:Label>
+             <asp:GridView ID="GridView5" runat="server" BorderWidth="1">
+                <HeaderStyle Wrap="False" />
+                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+            </asp:GridView>             
+             <asp:Label ID="Label6" runat="server" Text="Label"></asp:Label>
+             <asp:GridView ID="GridView6" runat="server" BorderWidth="1">
+                <HeaderStyle Wrap="False" />
+                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+            </asp:GridView>             
+             <asp:Label ID="Label7" runat="server" Text="Label"></asp:Label>
+             <asp:GridView ID="GridView7" runat="server" BorderWidth="1">
+                <HeaderStyle Wrap="False" />
+                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+            </asp:GridView>             
+             <asp:Label ID="Label8" runat="server" Text="Label"></asp:Label>
+             <asp:GridView ID="GridView8" runat="server" BorderWidth="1">
+                <HeaderStyle Wrap="False" />
+                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+            </asp:GridView>             
         </div>
     </form>
 </body>

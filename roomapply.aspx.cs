@@ -12,27 +12,39 @@ using System.Text.RegularExpressions;
 public partial class roomapply : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
-    {        
-        PrintTab("501",GridView1,Label1,"501");
-        PrintTab("505", GridView2,Label2,"505");
+    {
+        //PrintTab(1,"501", GridView1, Label1, "text");
+        //SqlConnection con = CommonClass.GetSqlConnection();
+        //SqlDataAdapter sda = new SqlDataAdapter();
+        //sda.SelectCommand = new SqlCommand("select Id from RoomDetail", con);
+        //DataSet ds = new DataSet();
+        //sda.Fill(ds);
+        //DataTable table = new DataTable();
+        //table = ds.Tables[0];
+        //for(int i=0;i<table.Rows.Count;i++)
+        //{
+        //    PrintTab(1, Convert.ToString(table.Rows[i][0]), GridView1,Label1, "23");
+        //}
     }       
 
-    protected void PrintTab(string roomName,GridView gvName,Label lbId,string lbName)
+    protected void PrintTab(int weekNum,string RoomName,GridView gvName,Label lbId,string lbName)
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select distinct a.strRoom,a.intDay,a.intStartNum,intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.Id=s.F_id where strRoom = "+roomName,con);
+        sda.SelectCommand = new SqlCommand("select * from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.Id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.Id where (aa.intWeek ="+weekNum+ "or aa.intWeek is null) and d.Id ="+RoomName, con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
         table = ds.Tables[0];
         DataTable dtSchedule = new DataTable();
 
+        GridView gvTemp = gvName;
+        
         //修改label名称
         lbId.Text = lbName;
 
         //添加八列
-        dtSchedule.Columns.Add(roomName);
+        dtSchedule.Columns.Add("kcb");
         for (int i=1;i<8;i++)
         {
             dtSchedule.Columns.Add(Convert.ToString(i));
@@ -107,6 +119,12 @@ public partial class roomapply : System.Web.UI.Page
         //合并单元格
         for (int i=0;i<table.Rows.Count;i++)
             GroupCol(gvName, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
+        dtSchedule.Dispose();
+        table.Dispose();
+        ds.Dispose();
+        sda.Dispose();
+        con.Dispose();
+
     }
 
     //根据DataTable动态生成GridView
@@ -175,7 +193,21 @@ public partial class roomapply : System.Web.UI.Page
     //        }
     //    }
     //}
-        
 
+
+
+    protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "501", GridView1, Label1, "501是");
+        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "505", GridView2, Label2, "505这");
+        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "506", GridView3, Label3, "506样");
+        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "507", GridView4, Label4, "507吗");
+        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "508", GridView5, Label5, "508？");
+        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "802", GridView6, Label6, "802？");
+        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "804", GridView7, Label7, "804？");
+        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "809", GridView8, Label8, "809？");
+
+        
+    }
 }
 
