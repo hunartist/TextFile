@@ -13,11 +13,11 @@ public partial class roomapply : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {        
-        PrintTab("501",GridView1);
-        PrintTab("505", GridView2);
+        PrintTab("501",GridView1,Label1,"501");
+        PrintTab("505", GridView2,Label2,"505");
     }       
 
-    protected void PrintTab(string roomName,GridView gvName)
+    protected void PrintTab(string roomName,GridView gvName,Label lbId,string lbName)
     {
         SqlConnection con = GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
@@ -26,6 +26,9 @@ public partial class roomapply : System.Web.UI.Page
         sda.Fill(ds);
         DataTable table = new DataTable();
         table = ds.Tables[0];
+
+        //修改label名称
+        lbId.Text = lbName;
 
         DataTable dtSchedule = new DataTable();
         //添加八列
