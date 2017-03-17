@@ -30,10 +30,15 @@
         </asp:GridView>
 
          <div>
-            <asp:GridView ID="GridView1" runat="server" 
-                onrowdatabound="GridView1_RowDataBound1" BorderWidth="1">
+             <%-- 各GridView数据在PrintTab中动态生成，去掉单独GridView的绑定 --%>
+            <%--<asp:GridView ID="GridView2" runat="server" onrowdatabound="GridView1_RowDataBound1" BorderWidth="1">--%>
+            <asp:GridView ID="GridView1" runat="server" BorderWidth="1">
                 <HeaderStyle Wrap="False" />
-                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle" />
+                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
+            </asp:GridView>
+             <asp:GridView ID="GridView2" runat="server" BorderWidth="1">
+                <HeaderStyle Wrap="False" />
+                <RowStyle HorizontalAlign="Center" VerticalAlign="Middle"/>
             </asp:GridView>
         </div>
     </form>

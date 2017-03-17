@@ -13,10 +13,11 @@ public partial class roomapply : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {        
-        PrintTab("501");
+        PrintTab("501",GridView1);
+        PrintTab("505", GridView2);
     }       
 
-    protected void PrintTab(string roomName)
+    protected void PrintTab(string roomName,GridView gvName)
     {
         SqlConnection con = GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
@@ -92,13 +93,48 @@ public partial class roomapply : System.Web.UI.Page
                 }
             }
         }
-        
-        GridView1.DataSource = dtSchedule;
-        GridView1.DataBind();
+
+        //gridview不写死
+        //GridView1.DataSource = dtSchedule;
+        //GridView1.DataBind();
+        DynamicGenerateColumns(gvName, dtSchedule);
+        gvName.DataSource = dtSchedule;
+        gvName.DataBind();
 
         //合并单元格
         for (int i=0;i<table.Rows.Count;i++)
             GroupCol(GridView1, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
+    }
+
+    //根据DataTable动态生成GridView
+    public static GridView DynamicGenerateColumns(GridView gv, DataTable dt)
+    {
+        // 把GridView的自动产生列设置为false,否则会出现重复列
+        gv.AutoGenerateColumns = false;
+
+        // 清空所有的Columns
+        gv.Columns.Clear();
+
+        // 遍历DataTable 的每个Columns,然后添加到GridView中去
+        foreach (DataColumn item in dt.Columns)
+        {
+            //if (item.ColumnName == "选择")
+            //{
+            //    CheckBoxField chCol = new CheckBoxField();
+            //    chCol.HeaderText = item.ColumnName;
+            //    chCol.DataField = item.ColumnName;
+            //    chCol.Visible = true;
+            //    gv.Columns.Add(chCol);
+            //    continue;
+            //}
+            BoundField col = new BoundField();
+            col.HeaderText = item.ColumnName;
+            col.HtmlEncode = false;
+            col.DataField = item.ColumnName;
+            col.Visible = true;
+            gv.Columns.Add(col);
+        }
+        return gv;
     }
 
     /// <summary>
@@ -125,17 +161,17 @@ public partial class roomapply : System.Web.UI.Page
     }
 
 
-    protected void GridView1_RowDataBound1(object sender, GridViewRowEventArgs e)
-    {
-        if (e.Row.RowType == DataControlRowType.DataRow)
-        {
-            TableCellCollection cells = e.Row.Cells;
-            foreach (TableCell cell in cells)
-            {
-                cell.Text = Server.HtmlDecode(cell.Text); //注意：此处所有的列所有的html代码都会按照html格式输出，如果只需要其中的哪一列的数据需要转换，此处需要小的修改即可。
-            }
-        }
-    }
+    //protected void GridView1_RowDataBound1(object sender, GridViewRowEventArgs e)
+    //{
+    //    if (e.Row.RowType == DataControlRowType.DataRow)
+    //    {
+    //        TableCellCollection cells = e.Row.Cells;
+    //        foreach (TableCell cell in cells)
+    //        {
+    //            cell.Text = Server.HtmlDecode(cell.Text); //注意：此处所有的列所有的html代码都会按照html格式输出，如果只需要其中的哪一列的数据需要转换，此处需要小的修改即可。
+    //        }
+    //    }
+    //}
 
     /// <summary> 
     /// 1.获取数据库的连接，返回值需判断是否为null 
