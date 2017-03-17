@@ -19,18 +19,18 @@ public partial class roomapply : System.Web.UI.Page
 
     protected void PrintTab(string roomName,GridView gvName,Label lbId,string lbName)
     {
-        SqlConnection con = GetSqlConnection();
+        SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
         sda.SelectCommand = new SqlCommand("select distinct a.strRoom,a.intDay,a.intStartNum,intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.Id=s.F_id where strRoom = "+roomName,con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
         table = ds.Tables[0];
+        DataTable dtSchedule = new DataTable();
 
         //修改label名称
         lbId.Text = lbName;
 
-        DataTable dtSchedule = new DataTable();
         //添加八列
         dtSchedule.Columns.Add(roomName);
         for (int i=1;i<8;i++)
@@ -106,7 +106,7 @@ public partial class roomapply : System.Web.UI.Page
 
         //合并单元格
         for (int i=0;i<table.Rows.Count;i++)
-            GroupCol(GridView1, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
+            GroupCol(gvName, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
     }
 
     //根据DataTable动态生成GridView
@@ -143,16 +143,16 @@ public partial class roomapply : System.Web.UI.Page
     /// <summary>
     /// 合并某列中的多个单元格
     /// </summary>
-    /// <param name="GridView1"></param>
+    /// <param name="gvName"></param>
     /// <param name="cols">要合并的那一列</param>
     /// <param name="sRow">开始行</param>
     /// <param name="eRow">结束行</param>
-    public static void GroupCol(GridView GridView1,int cols,int sRow,int eRow)
+    public static void GroupCol(GridView gvName,int cols,int sRow,int eRow)
     {
-        TableCell oldTc = GridView1.Rows[sRow].Cells[cols];
+        TableCell oldTc = gvName.Rows[sRow].Cells[cols];
         for (int i = 1;i<=eRow-sRow;i++)
         {
-            TableCell tc = GridView1.Rows[sRow + i].Cells[cols];
+            TableCell tc = gvName.Rows[sRow + i].Cells[cols];
             tc.Visible = false;
             if (oldTc.RowSpan == 0)
             {
@@ -175,42 +175,7 @@ public partial class roomapply : System.Web.UI.Page
     //        }
     //    }
     //}
-
-    /// <summary> 
-    /// 1.获取数据库的连接，返回值需判断是否为null 
-    /// </summary> 
-    /// <returns></returns> 
-    public static SqlConnection GetSqlConnection()
-    {
-        string strCnn = "Data Source=192.168.0.11;Initial Catalog=webTest;User ID=sa;Password=config;";
-        try
-        {
-            SqlConnection sqlCnn = new SqlConnection(strCnn);
-            sqlCnn.Open();
-            return sqlCnn;
-        }
-        catch (Exception ee)
-        {
-            string temp = ee.Message;
-            return null;
-        }
-    }
-    /// <summary> 
-    /// 获取SqlCommand对象 
-    /// </summary> 
-    /// <returns></returns> 
-    public static SqlCommand GetSqlCommand()
-    {
-        SqlConnection sqlCnn = GetSqlConnection();
-        if (sqlCnn == null)
-            return null;
-        else
-        {
-            SqlCommand sqlCmm = new SqlCommand();
-            sqlCmm.Connection = sqlCnn;
-            return sqlCmm;
-        }
-    }
+        
 
 }
 
