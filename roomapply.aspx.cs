@@ -28,15 +28,25 @@ public partial class roomapply : System.Web.UI.Page
         DataTable dtSchedule = new DataTable();
 
         //增加gridview
+        GridView gvTitle = new GridView();
+        gvTitle.ID = gvName + "Title";
+        gvTitle.HorizontalAlign = HorizontalAlign.Center;
+        gvTitle.BorderColor = System.Drawing.Color.Transparent;//无色
+        gvTitle.ShowHeader = false;
+
+        DataTable dtTitle = new DataTable();
+        dtTitle.Columns.Add(RoomName);
+        dtTitle.Rows.Add(RoomName);
+        gvTitle.DataSource = dtTitle;
+        gvTitle.DataBind();
+        GridViewPlaceHolder.Controls.Add(gvTitle);
+        dtTitle.Dispose();
+        gvTitle.Dispose();
+
         GridView gvTemp = new GridView();
         gvTemp.ID = gvName;
+        gvTemp.HorizontalAlign = HorizontalAlign.Center;
         GridViewPlaceHolder.Controls.Add(gvTemp);
-
-        //增加label
-        Label lbTemp = new Label();
-        lbTemp.ID = lbName;
-        lbTemp.Text = lbName;
-        PanelLable.Controls.Add(lbTemp);
 
         //添加八列
         dtSchedule.Columns.Add("kcb");
@@ -45,8 +55,8 @@ public partial class roomapply : System.Web.UI.Page
             dtSchedule.Columns.Add(Convert.ToString(i));
         }
 
-        //添加八行
-        for (int i = 0; i < 8; i++)
+        //添加10行
+        for (int i = 0; i < 10; i++)
         {
             dtSchedule.Rows.Add();
         }
@@ -54,7 +64,7 @@ public partial class roomapply : System.Web.UI.Page
         //添加左侧固定信息（第几节）
         for (int i = 0; i < 8; i++)
         {
-            dtSchedule.Rows[i][0] = (i + 1) ;
+            dtSchedule.Rows[i][0] = (i+1) ;
         }
 
         //此数组用于存放需要合并的单元格信息。如：需要合并第一列的一、二单元格
@@ -114,6 +124,8 @@ public partial class roomapply : System.Web.UI.Page
         //合并单元格
         for (int i=0;i<table.Rows.Count;i++)
             GroupCol(gvTemp, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
+
+        //dispose
         dtSchedule.Dispose();
         table.Dispose();
         ds.Dispose();
@@ -189,6 +201,23 @@ public partial class roomapply : System.Web.UI.Page
     //    }
     //}
 
+
+    protected void gvTemp_RowCreated(object sender, GridViewRowEventArgs e)
+    {
+        //判断创建的行是否为表头行
+        if (e.Row.RowType == DataControlRowType.Header)
+        {
+            //获取表头所在行的所有单元格
+            TableCellCollection tcHeader = e.Row.Cells;
+            //清除自动生成的表头
+            tcHeader.Clear();
+
+            //新添加的第一个表头单元格, 设置为合并7个列, 从而形成一行.
+            tcHeader.Add(new TableHeaderCell());
+            tcHeader[0].ColumnSpan = 8;
+
+        }
+    }
 
 
     protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)

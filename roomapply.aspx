@@ -36,7 +36,6 @@
 
              <%-- 各GridView数据在PrintTab中动态生成，去掉单独GridView的绑定 --%>
             <%--<asp:GridView ID="GridView2" runat="server" onrowdatabound="GridView1_RowDataBound1" BorderWidth="1">--%>             
-             <asp:Panel ID="PanelLable" runat="server"></asp:Panel>
              <asp:placeholder id="GridViewPlaceHolder" runat="Server"/>
 
                        
