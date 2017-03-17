@@ -14,20 +14,9 @@ public partial class roomapply : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //PrintTab(1,"501", GridView1, Label1, "text");
-        //SqlConnection con = CommonClass.GetSqlConnection();
-        //SqlDataAdapter sda = new SqlDataAdapter();
-        //sda.SelectCommand = new SqlCommand("select Id from RoomDetail", con);
-        //DataSet ds = new DataSet();
-        //sda.Fill(ds);
-        //DataTable table = new DataTable();
-        //table = ds.Tables[0];
-        //for(int i=0;i<table.Rows.Count;i++)
-        //{
-        //    PrintTab(1, Convert.ToString(table.Rows[i][0]), GridView1,Label1, "23");
-        //}
-    }       
+            }       
 
-    protected void PrintTab(int weekNum,string RoomName,GridView gvName,Label lbId,string lbName)
+    protected void PrintTab(int weekNum,string RoomName,string gvName,string lbName)
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
@@ -38,10 +27,16 @@ public partial class roomapply : System.Web.UI.Page
         table = ds.Tables[0];
         DataTable dtSchedule = new DataTable();
 
-        GridView gvTemp = gvName;
-        
-        //修改label名称
-        lbId.Text = lbName;
+        //增加gridview
+        GridView gvTemp = new GridView();
+        gvTemp.ID = gvName;
+        GridViewPlaceHolder.Controls.Add(gvTemp);
+
+        //增加label
+        Label lbTemp = new Label();
+        lbTemp.ID = lbName;
+        lbTemp.Text = lbName;
+        PanelLable.Controls.Add(lbTemp);
 
         //添加八列
         dtSchedule.Columns.Add("kcb");
@@ -112,13 +107,13 @@ public partial class roomapply : System.Web.UI.Page
         //gridview不写死
         //GridView1.DataSource = dtSchedule;
         //GridView1.DataBind();
-        DynamicGenerateColumns(gvName, dtSchedule);
-        gvName.DataSource = dtSchedule;
-        gvName.DataBind();
+        DynamicGenerateColumns(gvTemp, dtSchedule);
+        gvTemp.DataSource = dtSchedule;
+        gvTemp.DataBind();
 
         //合并单元格
         for (int i=0;i<table.Rows.Count;i++)
-            GroupCol(gvName, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
+            GroupCol(gvTemp, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
         dtSchedule.Dispose();
         table.Dispose();
         ds.Dispose();
@@ -161,16 +156,16 @@ public partial class roomapply : System.Web.UI.Page
     /// <summary>
     /// 合并某列中的多个单元格
     /// </summary>
-    /// <param name="gvName"></param>
+    /// <param name="gvTemp"></param>
     /// <param name="cols">要合并的那一列</param>
     /// <param name="sRow">开始行</param>
     /// <param name="eRow">结束行</param>
-    public static void GroupCol(GridView gvName,int cols,int sRow,int eRow)
+    public static void GroupCol(GridView gvTemp,int cols,int sRow,int eRow)
     {
-        TableCell oldTc = gvName.Rows[sRow].Cells[cols];
+        TableCell oldTc = gvTemp.Rows[sRow].Cells[cols];
         for (int i = 1;i<=eRow-sRow;i++)
         {
-            TableCell tc = gvName.Rows[sRow + i].Cells[cols];
+            TableCell tc = gvTemp.Rows[sRow + i].Cells[cols];
             tc.Visible = false;
             if (oldTc.RowSpan == 0)
             {
@@ -207,7 +202,21 @@ public partial class roomapply : System.Web.UI.Page
         //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "804", GridView7, Label7, "804？");
         //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "809", GridView8, Label8, "809？");
 
-        
+        SqlConnection con = CommonClass.GetSqlConnection();
+        SqlDataAdapter sda = new SqlDataAdapter();
+        sda.SelectCommand = new SqlCommand("select Id from RoomDetail", con);
+        DataSet ds = new DataSet();
+        sda.Fill(ds);
+        DataTable table = new DataTable();
+        table = ds.Tables[0];
+        for (int i = 0; i < table.Rows.Count; i++)
+        {
+            PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), Convert.ToString(table.Rows[i][0]), "Gridview" + i,Convert.ToString(i));
+        }
+        table.Dispose();
+        ds.Dispose();
+        sda.Dispose();
+        con.Dispose();
     }
 }
 
