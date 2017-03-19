@@ -20,7 +20,7 @@ public partial class roomapply : System.Web.UI.Page
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select * from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.Id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.Id where (aa.intWeek ="+weekNum+ "or aa.intWeek is null) and d.Id ="+RoomName, con);
+        sda.SelectCommand = new SqlCommand("select * from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.Id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.strRoomName where (aa.intWeek ="+weekNum+ "or aa.intWeek is null) and d.strRoomName =" + RoomName, con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -233,7 +233,7 @@ public partial class roomapply : System.Web.UI.Page
 
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select Id from RoomDetail", con);
+        sda.SelectCommand = new SqlCommand("select strRoomName from RoomDetail", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
