@@ -30,8 +30,13 @@
         </asp:GridView>
 
          <div>
-             <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceRoomDetail" DataTextField="Id" DataValueField="Id" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged"></asp:DropDownList>
+             <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="Id" DataValueField="Id" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged"></asp:DropDownList>
+             <asp:Button ID="Button1" runat="server" Text="SearchButton" OnClick="Button1_Click" />
+             <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
              <asp:SqlDataSource ID="SqlDataSourceRoomDetail" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT * FROM [WeekStartEnd]"></asp:SqlDataSource>
+                    
+
+             
                     
 
              <%-- 各GridView数据在PrintTab中动态生成，去掉单独GridView的绑定 --%>

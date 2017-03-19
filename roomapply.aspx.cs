@@ -62,7 +62,7 @@ public partial class roomapply : System.Web.UI.Page
         }
 
         //添加左侧固定信息（第几节）
-        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 10; i++)
         {
             dtSchedule.Rows[i][0] = (i+1) ;
         }
@@ -231,21 +231,42 @@ public partial class roomapply : System.Web.UI.Page
         //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "804", GridView7, Label7, "804？");
         //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "809", GridView8, Label8, "809？");
 
-        SqlConnection con = CommonClass.GetSqlConnection();
-        SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select strRoomName from RoomDetail", con);
-        DataSet ds = new DataSet();
-        sda.Fill(ds);
-        DataTable table = new DataTable();
-        table = ds.Tables[0];
-        for (int i = 0; i < table.Rows.Count; i++)
+
+    }
+
+    protected void Button1_Click(object sender, EventArgs e)
+    {
+        if (DropDownList1.SelectedValue == null)
         {
-            PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), Convert.ToString(table.Rows[i][0]), "Gridview" + i,Convert.ToString(i));
+            Label1.Text = "not selected";
+            return;
         }
-        table.Dispose();
-        ds.Dispose();
-        sda.Dispose();
-        con.Dispose();
+        else
+        {
+            try
+            {
+                SqlConnection con = CommonClass.GetSqlConnection();
+                SqlDataAdapter sda = new SqlDataAdapter();
+                sda.SelectCommand = new SqlCommand("select strRoomName from RoomDetail", con);
+                DataSet ds = new DataSet();
+                sda.Fill(ds);
+                DataTable table = new DataTable();
+                table = ds.Tables[0];
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), Convert.ToString(table.Rows[i][0]), "Gridview" + i, Convert.ToString(i));
+                }
+                table.Dispose();
+                ds.Dispose();
+                sda.Dispose();
+                con.Dispose();
+            }
+            catch (Exception ee)
+            {
+                string temp = ee.Message;
+                return;
+            }
+        }
     }
 }
 
