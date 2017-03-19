@@ -16,11 +16,11 @@ public partial class roomapply : System.Web.UI.Page
         //PrintTab(1,"501", GridView1, Label1, "text");
             }       
 
-    protected void PrintTab(int weekNum,string RoomName,string gvName,string lbName)
+    protected void PrintTab(int weekNum,string RoomName,string gvName,string departmentName)
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select * from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.Id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.strRoomName where (aa.intWeek ="+weekNum+ "or aa.intWeek is null) and d.strRoomName =" + RoomName, con);
+        sda.SelectCommand = new SqlCommand("select * from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.Id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.strRoomName where (aa.intWeek = "+weekNum+ " or aa.intWeek is null) and d.strRoomName = '" + RoomName+ "' and d.strDepart= '" + departmentName+"'", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -220,23 +220,28 @@ public partial class roomapply : System.Web.UI.Page
     }
 
 
-    protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "501", GridView1, Label1, "501是");
-        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "505", GridView2, Label2, "505这");
-        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "506", GridView3, Label3, "506样");
-        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "507", GridView4, Label4, "507吗");
-        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "508", GridView5, Label5, "508？");
-        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "802", GridView6, Label6, "802？");
-        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "804", GridView7, Label7, "804？");
-        //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "809", GridView8, Label8, "809？");
+    //protected void DropDownList1_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "501", GridView1, Label1, "501是");
+    //    //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "505", GridView2, Label2, "505这");
+    //    //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "506", GridView3, Label3, "506样");
+    //    //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "507", GridView4, Label4, "507吗");
+    //    //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "508", GridView5, Label5, "508？");
+    //    //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "802", GridView6, Label6, "802？");
+    //    //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "804", GridView7, Label7, "804？");
+    //    //PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), "809", GridView8, Label8, "809？");
 
 
-    }
+    //}
 
     protected void Button1_Click(object sender, EventArgs e)
     {
-        if (DropDownList1.SelectedValue == null)
+        if (DropDownListWeek.SelectedValue == null)
+        {
+            Label1.Text = "not selected";
+            return;
+        }
+        if (DropDownListDepart.SelectedValue == null)
         {
             Label1.Text = "not selected";
             return;
@@ -247,14 +252,14 @@ public partial class roomapply : System.Web.UI.Page
             {
                 SqlConnection con = CommonClass.GetSqlConnection();
                 SqlDataAdapter sda = new SqlDataAdapter();
-                sda.SelectCommand = new SqlCommand("select strRoomName from RoomDetail", con);
+                sda.SelectCommand = new SqlCommand("select RTRIM(strRoomName) as strRoomName from RoomDetail", con);
                 DataSet ds = new DataSet();
                 sda.Fill(ds);
                 DataTable table = new DataTable();
                 table = ds.Tables[0];
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    PrintTab(Convert.ToInt16(DropDownList1.SelectedItem.Value), Convert.ToString(table.Rows[i][0]), "Gridview" + i, Convert.ToString(i));
+                    PrintTab(Convert.ToInt16(DropDownListWeek.SelectedItem.Value), Convert.ToString(table.Rows[i][0]), "Gridview" + i,DropDownListDepart.SelectedValue);
                 }
                 table.Dispose();
                 ds.Dispose();

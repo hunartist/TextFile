@@ -30,11 +30,14 @@
         </asp:GridView>
 
          <div>
-             <asp:DropDownList ID="DropDownList1" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="Id" DataValueField="Id" OnSelectedIndexChanged="DropDownList1_SelectedIndexChanged"></asp:DropDownList>
+             <asp:DropDownList ID="DropDownListWeek" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="Id" DataValueField="Id"></asp:DropDownList>
+             <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
              <asp:Button ID="Button1" runat="server" Text="SearchButton" OnClick="Button1_Click" />
              <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
              <asp:SqlDataSource ID="SqlDataSourceRoomDetail" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT * FROM [WeekStartEnd]"></asp:SqlDataSource>
+             <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail]"></asp:SqlDataSource>
                     
+
 
              
                     
