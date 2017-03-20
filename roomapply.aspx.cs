@@ -49,7 +49,7 @@ public partial class roomapply : System.Web.UI.Page
         GridViewPlaceHolder.Controls.Add(gvTemp);
 
         //添加八列
-        dtSchedule.Columns.Add("kcb");
+        dtSchedule.Columns.Add("<a href='ipmsg.aspx?ipadd=" + RoomName + "' target='_blank'>详细</a>");
         for (int i=1;i<8;i++)
         {
             dtSchedule.Columns.Add(Convert.ToString(i));
