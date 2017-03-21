@@ -253,11 +253,11 @@ public partial class roomapply : System.Web.UI.Page
                 string sqlQuery;
 
                 SqlConnection con = CommonClass.GetSqlConnection();
-                SqlDataAdapter sda = new SqlDataAdapter();
                 sqlQuery = "select RTRIM(strRoomName) as strRoomName from RoomDetail where strDepart = @strDepart";
-                SqlCommand comm = new SqlCommand(sqlQuery,con);
-                comm.Parameters.AddWithValue("@strDepart", DropDownListDepart.SelectedValue);
-                sda.SelectCommand = comm;
+                //SqlCommand comm = new SqlCommand(sqlQuery,con);
+                //comm.Parameters.AddWithValue("@strDepart", DropDownListDepart.SelectedValue);
+                SqlDataAdapter sda = new SqlDataAdapter(sqlQuery,con);
+                sda.SelectCommand.Parameters.AddWithValue("@strDepart", DropDownListDepart.SelectedValue);
                 DataSet ds = new DataSet();
                 sda.Fill(ds);
                 DataTable table = new DataTable();
