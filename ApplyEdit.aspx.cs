@@ -31,7 +31,8 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void GridView10_RowUpdated(object sender, GridViewUpdatedEventArgs e)
     {
-        SqlDataSourceRoomApply.UpdateCommand = "UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [intStartWeek] = @intStartWeek , [intEndWeek] = @intEndWeek , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @original_id";
+        //SqlDataSourceRoomApply.UpdateCommand = "UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [intStartWeek] = @intStartWeek , [intEndWeek] = @intEndWeek , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @original_id";
+        SqlDataSourceRoomApply.UpdateParameters["action"].DefaultValue = "update";
         SqlDataSourceRoomApply.UpdateParameters["strRoom"].DefaultValue = e.NewValues["strRoom"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["intDay"].DefaultValue = e.NewValues["intDay"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["intStartNum"].DefaultValue = e.NewValues["intStartNum"].ToString();
@@ -41,7 +42,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.UpdateParameters["strName"].DefaultValue = e.NewValues["strName"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["strClass"].DefaultValue = e.NewValues["strClass"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["strTeacher"].DefaultValue = e.NewValues["strTeacher"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["original_id"].DefaultValue = LabelID.Text;
+        SqlDataSourceRoomApply.UpdateParameters["id"].DefaultValue = LabelID.Text;
 
         SqlDataSourceRoomApply.Update();
         GridView10.DataBind();

@@ -12,9 +12,11 @@
     <form id="form1" method="post" runat="server">
     
         <asp:SqlDataSource ID="SqlDataSourceRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @strDepart"
-            UpdateCommand="UPDATE [RoomApply] SET [strName] = @strName  WHERE [id] = @original_id"
+            UpdateCommandType ="StoredProcedure"
+            UpdateCommand="RoomApplyAction"
             >
             <UpdateParameters>
+                <asp:Parameter Name="Action" Type="String" />
                 <asp:Parameter Name="strRoom" Type="String" />
                 <asp:Parameter Name="intDay" Type="String" />
                 <asp:Parameter Name="intStartNum" Type="String" />
@@ -24,7 +26,7 @@
                 <asp:Parameter Name="strName" Type="String" />
                 <asp:Parameter Name="strClass" Type="String" />
                 <asp:Parameter Name="strTeacher" Type="String" />
-                <asp:Parameter Name="original_id" Type="String" />
+                <asp:Parameter Name="id" Type="String" />
             </UpdateParameters>
             <SelectParameters>
                 <asp:ControlParameter ControlID ="DropDownListDepart" Name ="strDepart" PropertyName ="SelectedValue" Type ="String" />

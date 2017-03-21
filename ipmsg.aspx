@@ -36,9 +36,9 @@
                 <asp:QueryStringParameter Name="ip" QueryStringField="ipadd" Type="String" />
             </SelectParameters>
         </asp:SqlDataSource>
-        <asp:DetailsView ID="DetailsViewIPSeat" runat="server" AutoGenerateRows="False" DataKeyNames="Id" DataSourceID="SqlDataSourceIPSeat" EnableModelValidation="True" Height="50px" Width="125px" BorderStyle="None" EmptyDataText="not found" GridLines="None" HorizontalAlign="Center">
+        <asp:DetailsView ID="DetailsViewIPSeat" runat="server" AutoGenerateRows="False" DataKeyNames="id" DataSourceID="SqlDataSourceIPSeat" EnableModelValidation="True" Height="50px" Width="125px" BorderStyle="None" EmptyDataText="not found" GridLines="None" HorizontalAlign="Center">
             <Fields>
-                <asp:BoundField DataField="Id" HeaderText="Id" InsertVisible="False" ReadOnly="True" SortExpression="Id" Visible="False" />
+                <asp:BoundField DataField="id" HeaderText="id" InsertVisible="False" ReadOnly="True" SortExpression="id" Visible="False" />
                 <asp:BoundField DataField="ip" HeaderText="ip" SortExpression="ip" Visible="False" />
                 <asp:BoundField DataField="seatnum" HeaderText="seatnum" SortExpression="seatnum" ShowHeader="False" />
             </Fields>

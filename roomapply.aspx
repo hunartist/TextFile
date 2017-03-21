@@ -12,7 +12,7 @@
     <form id="form1" runat="server">
 
          <div>
-             <asp:DropDownList ID="DropDownListWeek" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="Id" DataValueField="Id"></asp:DropDownList>
+             <asp:DropDownList ID="DropDownListWeek" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="id" DataValueField="id"></asp:DropDownList>
              <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
              <asp:Button ID="Button1" runat="server" Text="SearchButton" OnClick="Button1_Click" />
              <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
