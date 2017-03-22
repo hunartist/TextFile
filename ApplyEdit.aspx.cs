@@ -104,4 +104,9 @@ public partial class NextWebF : System.Web.UI.Page
 
     }
 
+
+    protected void GridView10_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        DropDownListDepart.Visible = true;
+    }
 }
