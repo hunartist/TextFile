@@ -39,6 +39,7 @@ select d.strRoomName from RoomApply a right join RoomDetail d on a.strRoom = d.s
                 <asp:ControlParameter ControlID="DropDownListDepart" Name="strDepart" PropertyName="SelectedValue" Type="String" DefaultValue="aaa" />
             </SelectParameters>
         </asp:SqlDataSource>
+        <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
         <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
         <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
         <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>
@@ -61,8 +62,26 @@ select d.strRoomName from RoomApply a right join RoomDetail d on a.strRoom = d.s
                 <asp:BoundField DataField="intDay" HeaderText="日期" SortExpression="intDay" />
                 <asp:BoundField DataField="intStartNum" HeaderText="开始节次" SortExpression="intStartNum" />
                 <asp:BoundField DataField="intEndNum" HeaderText="结束节次" SortExpression="intEndNum" />
-                <asp:BoundField DataField="intStartWeek" HeaderText="开始周" SortExpression="intStartWeek" />                
-                <asp:BoundField DataField="intEndWeek" HeaderText="结束周" SortExpression="intEndWeek" />
+                <%--<asp:BoundField DataField="intStartWeek" HeaderText="开始周" SortExpression="intStartWeek" />--%>     
+                <asp:TemplateField HeaderText="开始周" SortExpression="intStartWeek">
+                    <EditItemTemplate>
+                        <asp:DropDownList ID="ddlStartWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="id" DataValueField="id" SelectedValue='<%# Bind("intStartWeek") %>'>
+                        </asp:DropDownList>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbStartWeek" runat="server" Text='<%# Bind("intStartWeek") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>           
+                <%--<asp:BoundField DataField="intEndWeek" HeaderText="结束周" SortExpression="intEndWeek" />--%>
+                <asp:TemplateField HeaderText="结束周" SortExpression="intEndWeek">
+                    <EditItemTemplate>
+                        <asp:DropDownList ID="ddlEndWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="id" DataValueField="id" SelectedValue='<%# Bind("intEndWeek") %>'>
+                        </asp:DropDownList>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="lbEndWeek" runat="server" Text='<%# Bind("intEndWeek") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>   
                 <asp:BoundField DataField="strName" HeaderText="课程名称" SortExpression="strName" />
                 <asp:BoundField DataField="strClass" HeaderText="班级" SortExpression="strClass" />
                 <asp:BoundField DataField="strTeacher" HeaderText="教师" SortExpression="strTeacher" />

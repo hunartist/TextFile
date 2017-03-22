@@ -48,6 +48,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.Update();
         GridView10.DataBind();
         LabelMsg.Visible = false;
+        DropDownListDepart.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
 
@@ -59,6 +60,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void GridView10_RowEditing(object sender, GridViewEditEventArgs e)
     {
         LabelID.Text = GridView10.Rows[e.NewEditIndex].Cells[1].Text;
+        DropDownListDepart.Visible = false;
     }
 
     protected void GridView10_RowUpdating(object sender, GridViewUpdateEventArgs e)
@@ -93,7 +95,13 @@ public partial class NextWebF : System.Web.UI.Page
             LabelMsg.Text = "开始节次不能大于结束节次";
             e.Cancel = true;
         }
-        
+        if (Convert.ToInt16(e.NewValues["intStartWeek"]) > Convert.ToInt16(e.NewValues["intEndWeek"]))
+        {
+            LabelMsg.Visible = true;
+            LabelMsg.Text = "开始周不能大于周";
+            e.Cancel = true;
+        }
+
     }
 
 }
