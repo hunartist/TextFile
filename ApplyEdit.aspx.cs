@@ -22,6 +22,7 @@ public partial class NextWebF : System.Web.UI.Page
         //        Response.Redirect("tempLogin.aspx");
 
         //}
+        LabelMsg.Visible = false;
     }
 
     protected void ButtonNew_Click(object sender, EventArgs e)
@@ -46,6 +47,8 @@ public partial class NextWebF : System.Web.UI.Page
 
         SqlDataSourceRoomApply.Update();
         GridView10.DataBind();
+        LabelMsg.Visible = false;
+        Response.Write("<script>alert('操作成功')</script>");
     }
 
     protected void GridView10_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
@@ -60,23 +63,37 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void GridView10_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        RegexStringValidator regday = new RegexStringValidator("[1-7]");
-        RegexStringValidator regnum = new RegexStringValidator("[1-7]");
+        RegexStringValidator regday = new RegexStringValidator("^[1-7]{1}$");
+        RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|10");
+
         try
         {
             regday.Validate(e.NewValues["intDay"]);
         }
         catch
         {
+            LabelMsg.Visible = true;
             LabelMsg.Text = "日期只能填数字1至数字7";
             e.Cancel = true;
         }
-
-        //if (Convert.ToInt16(e.NewValues["intDay"]) == 6)
-        //{
-        //    LabelMsg.Text = "";
-        //    e.Cancel = true;
-        //}
+        try
+        {
+            regnum.Validate(e.NewValues["intStartNum"]);
+            regnum.Validate(e.NewValues["intEndNum"]);
+        }
+        catch
+        {
+            LabelMsg.Visible = true;
+            LabelMsg.Text = "节次只能填数字1至数字10";
+            e.Cancel = true;
+        }
+        if (Convert.ToInt16(e.NewValues["intStartNum"])> Convert.ToInt16(e.NewValues["intEndNum"]))
+        {
+            LabelMsg.Visible = true;
+            LabelMsg.Text = "开始节次不能大于结束节次";
+            e.Cancel = true;
+        }
+        
     }
 
 }
