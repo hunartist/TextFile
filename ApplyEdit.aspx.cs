@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Web;
@@ -98,8 +99,38 @@ public partial class NextWebF : System.Web.UI.Page
         if (Convert.ToInt16(e.NewValues["intStartWeek"]) > Convert.ToInt16(e.NewValues["intEndWeek"]))
         {
             LabelMsg.Visible = true;
-            LabelMsg.Text = "开始周不能大于周";
+            LabelMsg.Text = "开始周不能大于结束周";
             e.Cancel = true;
+        }
+
+        SqlConnection con = CommonClass.GetSqlConnection();
+        SqlDataAdapter sda = new SqlDataAdapter();
+        sda.SelectCommand = new SqlCommand(" select distinct s.intWeek,a.intStartNum,a.intEndNum from RoomApply a,RoomApplySub s  where a.id = s.f_id and a.strRoom = "+ e.NewValues["strRoom"].ToString()+ " and  a.intDay = "+ Convert.ToInt16(e.NewValues["intDay"]), con);
+        DataSet ds = new DataSet();
+        sda.Fill(ds);
+        DataTable table = new DataTable();
+        table = ds.Tables[0];
+
+        string roomN = e.NewValues["strRoom"].ToString();
+        int dayW = Convert.ToInt16(e.NewValues["intDay"]);
+        int newSN = Convert.ToInt16(e.NewValues["intStartNum"]);
+        int newEN = Convert.ToInt16(e.NewValues["intEndNum"]);
+
+        for (int i = 0;i<table.Rows.Count;i++)
+        {
+            int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
+            int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
+            int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
+            if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))
+            { }
+            else
+            {
+                LabelMsg.Visible = true;
+                LabelMsg.Text = roomN+" 第"+ weekN+"周 星期"+dayW+" "+"课程冲突";
+                e.Cancel = true;
+                break;
+            }
+                    
         }
 
     }
