@@ -57,4 +57,26 @@ public partial class NextWebF : System.Web.UI.Page
     {
         LabelID.Text = GridView10.Rows[e.NewEditIndex].Cells[1].Text;
     }
+
+    protected void GridView10_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        RegexStringValidator regday = new RegexStringValidator("[1-7]");
+        RegexStringValidator regnum = new RegexStringValidator("[1-7]");
+        try
+        {
+            regday.Validate(e.NewValues["intDay"]);
+        }
+        catch
+        {
+            LabelMsg.Text = "日期只能填数字1至数字7";
+            e.Cancel = true;
+        }
+
+        //if (Convert.ToInt16(e.NewValues["intDay"]) == 6)
+        //{
+        //    LabelMsg.Text = "";
+        //    e.Cancel = true;
+        //}
+    }
+
 }
