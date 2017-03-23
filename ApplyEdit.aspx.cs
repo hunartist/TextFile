@@ -26,10 +26,7 @@ public partial class NextWebF : System.Web.UI.Page
         LabelMsg.Visible = false;
     }
 
-    protected void ButtonNew_Click(object sender, EventArgs e)
-    {
-        
-    }
+
 
 
     protected void GridView10_RowUpdated(object sender, GridViewUpdatedEventArgs e)
