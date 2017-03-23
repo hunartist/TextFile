@@ -26,7 +26,8 @@ public partial class _Default : System.Web.UI.Page
         }
         else
         {
-            Page.RegisterStartupScript("javascript", "<script language=javascript>alert('用户名或密码错误！');</script>");
+            //Page.RegisterStartupScript("javascript", "<script language=javascript>alert('用户名或密码错误！');</script>");
+            Response.Write("<script>alert('用户名或密码错误！')</script>");
             setTB();
             return;
         }

@@ -17,12 +17,12 @@ public partial class NextWebF : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        //if (!IsPostBack)    //Page.IsPostBack
-        //{
-        //    if (user.redirectSet(Convert.ToString(Session["user"])))
-        //        Response.Redirect("tempLogin.aspx");
+        if (!IsPostBack)    //Page.IsPostBack
+        {
+            if (user.redirectSet(Convert.ToString(Session["user"])))
+                Response.Redirect("tempLogin.aspx");
 
-        //}
+        }
         LabelMsg.Visible = false;
     }
 

@@ -88,6 +88,7 @@
         <asp:TextBox ID="tbTeacher" runat="server"></asp:TextBox>
     </div>
         <asp:Button ID="ButtonSave" runat="server" Text="save" OnClick="ButtonSave_Click" />
+        <asp:HyperLink ID="hlEdit" runat="server" NavigateUrl="~/ApplyEdit.aspx">返回编辑</asp:HyperLink>
     </form>
 </body>
 </html>

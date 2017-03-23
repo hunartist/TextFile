@@ -120,7 +120,7 @@ select d.strRoomName from RoomApply a right join RoomDetail d on a.strRoom = d.s
         
 
         <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
-
+        <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx">查询</asp:HyperLink>
         
 
         

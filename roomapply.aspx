@@ -18,7 +18,7 @@
              <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
              <asp:SqlDataSource ID="SqlDataSourceRoomDetail" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT * FROM [WeekStartEnd]"></asp:SqlDataSource>
              <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail]"></asp:SqlDataSource>
-                    
+             <asp:HyperLink ID="hlLogin" runat="server" NavigateUrl="~/templogin.aspx">登录</asp:HyperLink>
 
 
              

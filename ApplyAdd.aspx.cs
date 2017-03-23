@@ -9,7 +9,12 @@ public partial class ApplyAdd : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
+        if (!IsPostBack)    //Page.IsPostBack
+        {
+            if (user.redirectSet(Convert.ToString(Session["user"])))
+                Response.Redirect("tempLogin.aspx");
 
+        }
     }
 
     protected void ButtonSave_Click(object sender, EventArgs e)
