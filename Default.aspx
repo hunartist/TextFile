@@ -1,7 +1,7 @@
 ﻿<%@ Page Language="C#" MasterPageFile="~/MasterPage.master" AutoEventWireup="true" CodeFile="Default.aspx.cs" Inherits="_Default" Title="yeswecan" %>
 <asp:Content ID="Content1" ContentPlaceHolderID="ContentPlaceHolder1" Runat="Server">
 <div>
-        <asp:LoginView ID="LoginView1" runat="server">
+        <asp:LoginView ID="LoginView1" runat="server" Visible="False">
             <LoggedInTemplate>
                 logged in&nbsp;
                 <asp:HyperLink ID="HyperLink1" runat="server" NavigateUrl="~/admin.aspx">admin</asp:HyperLink>
@@ -13,7 +13,7 @@
         </asp:LoginView>
     
     </div>
-        <asp:LoginStatus ID="LoginStatus1" runat="server" />
+        <asp:LoginStatus ID="LoginStatus1" runat="server" Visible="False" />
         <br />
         <br />
         <br />
