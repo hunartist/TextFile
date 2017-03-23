@@ -22,6 +22,10 @@ public partial class ApplyAdd : System.Web.UI.Page
         int endW = Convert.ToInt16(ddlEndW.Text);
         string idN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);
 
+        string NameN = tbName.Text;
+        string ClassN = tbClass.Text;
+        string TeacherN = tbTeacher.Text;
+
         SqlDataSourceRoomApply.InsertParameters["action"].DefaultValue = "insert";
         SqlDataSourceRoomApply.InsertParameters["strRoom"].DefaultValue = ddlRoom.Text;
         SqlDataSourceRoomApply.InsertParameters["intDay"].DefaultValue = ddlDay.Text;
@@ -43,6 +47,23 @@ public partial class ApplyAdd : System.Web.UI.Page
         if(startW > endW)
         {
             Response.Write("<script>alert('开始周不能大于结束周')</script>");
+            return;
+        }
+
+        
+        if (NameN == "")
+        {
+            Response.Write("<script>alert('课程名未填写')</script>");
+            return;
+        }
+        if (ClassN == "")
+        {
+            Response.Write("<script>alert('班级名未填写')</script>");
+            return;
+        }
+        if (TeacherN == "")
+        {
+            Response.Write("<script>alert('教师名未填写')</script>");
             return;
         }
 

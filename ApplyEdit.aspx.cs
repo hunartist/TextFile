@@ -32,6 +32,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void GridView10_RowUpdated(object sender, GridViewUpdatedEventArgs e)
     {
         //SqlDataSourceRoomApply.UpdateCommand = "UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [intStartWeek] = @intStartWeek , [intEndWeek] = @intEndWeek , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @original_id";
+        
         SqlDataSourceRoomApply.UpdateParameters["action"].DefaultValue = "update";
         SqlDataSourceRoomApply.UpdateParameters["strRoom"].DefaultValue = e.NewValues["strRoom"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["intDay"].DefaultValue = e.NewValues["intDay"].ToString();
@@ -39,9 +40,9 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.UpdateParameters["intEndNum"].DefaultValue = e.NewValues["intEndNum"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["intStartWeek"].DefaultValue = e.NewValues["intStartWeek"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["intEndWeek"].DefaultValue = e.NewValues["intEndWeek"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["strName"].DefaultValue = e.NewValues["strName"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["strClass"].DefaultValue = e.NewValues["strClass"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["strTeacher"].DefaultValue = e.NewValues["strTeacher"].ToString();
+        SqlDataSourceRoomApply.UpdateParameters["strName"].DefaultValue = Convert.ToString(e.NewValues["strName"]);
+        SqlDataSourceRoomApply.UpdateParameters["strClass"].DefaultValue = Convert.ToString(e.NewValues["strClass"]);
+        SqlDataSourceRoomApply.UpdateParameters["strTeacher"].DefaultValue = Convert.ToString(e.NewValues["strTeacher"]);
         SqlDataSourceRoomApply.UpdateParameters["id"].DefaultValue = LabelID.Text;
 
         SqlDataSourceRoomApply.Update();
@@ -101,6 +102,28 @@ public partial class NextWebF : System.Web.UI.Page
             e.Cancel = true;
         }
 
+        string NameN = Convert.ToString(e.NewValues["strName"]);
+        string ClassN = Convert.ToString(e.NewValues["strClass"]);
+        string TeacherN = Convert.ToString(e.NewValues["strTeacher"]);
+        if (NameN == "")
+        {
+            LabelMsg.Visible = true;
+            LabelMsg.Text = "课程名未填写";
+            e.Cancel = true;            
+        }
+        if (ClassN == "")
+        {
+            LabelMsg.Visible = true;
+            LabelMsg.Text = "班级未填写";
+            e.Cancel = true;            
+        }
+        if (TeacherN == "")
+        {
+            LabelMsg.Visible = true;
+            LabelMsg.Text = "教师未填写";
+            e.Cancel = true;            
+        }
+
         string roomN = e.NewValues["strRoom"].ToString();
         int dayW = Convert.ToInt16(e.NewValues["intDay"]);
         int newSN = Convert.ToInt16(e.NewValues["intStartNum"]);
@@ -123,4 +146,26 @@ public partial class NextWebF : System.Web.UI.Page
     {
         DropDownListDepart.Visible = true;
     }
+
+    protected void GridView10_RowDeleted(object sender, GridViewDeletedEventArgs e)
+    {
+        SqlDataSourceRoomApply.DeleteParameters["action"].DefaultValue = "delete";
+        SqlDataSourceRoomApply.DeleteParameters["strRoom"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["intDay"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["intStartNum"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["intEndNum"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["intStartWeek"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["intEndWeek"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["strName"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["strClass"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["strTeacher"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["id"].DefaultValue = e.Keys["id"].ToString();
+
+        SqlDataSourceRoomApply.Delete();
+        GridView10.DataBind();
+        LabelMsg.Visible = false;
+        DropDownListDepart.Visible = true;
+        Response.Write("<script>alert('操作成功')</script>");
+    }
+
 }
