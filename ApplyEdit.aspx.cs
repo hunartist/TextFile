@@ -28,8 +28,9 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void ButtonNew_Click(object sender, EventArgs e)
     {
-
+        
     }
+
 
     protected void GridView10_RowUpdated(object sender, GridViewUpdatedEventArgs e)
     {
@@ -103,36 +104,21 @@ public partial class NextWebF : System.Web.UI.Page
             e.Cancel = true;
         }
 
-        SqlConnection con = CommonClass.GetSqlConnection();
-        SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand(" select distinct s.intWeek,a.intStartNum,a.intEndNum from RoomApply a,RoomApplySub s  where a.id = s.f_id and a.strRoom = "+ e.NewValues["strRoom"].ToString()+ " and  a.intDay = "+ Convert.ToInt16(e.NewValues["intDay"]), con);
-        DataSet ds = new DataSet();
-        sda.Fill(ds);
-        DataTable table = new DataTable();
-        table = ds.Tables[0];
-
         string roomN = e.NewValues["strRoom"].ToString();
         int dayW = Convert.ToInt16(e.NewValues["intDay"]);
         int newSN = Convert.ToInt16(e.NewValues["intStartNum"]);
         int newEN = Convert.ToInt16(e.NewValues["intEndNum"]);
+        string idN = e.Keys["id"].ToString();
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, idN);
 
-        for (int i = 0;i<table.Rows.Count;i++)
+        if (checkmsg != "OK")
         {
-            int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
-            int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
-            int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
-            if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))
-            { }
-            else
-            {
-                LabelMsg.Visible = true;
-                LabelMsg.Text = roomN+" 第"+ weekN+"周 星期"+dayW+" "+"课程冲突";
-                e.Cancel = true;
-                break;
-            }
-                    
+            LabelMsg.Visible = true;
+            LabelMsg.Text = checkmsg;
+            e.Cancel = true;
         }
-
+                    
+                    
     }
 
 

@@ -18,11 +18,11 @@
             <UpdateParameters>
                 <asp:Parameter Name="Action" Type="String" />
                 <asp:Parameter Name="strRoom" Type="String" />
-                <asp:Parameter Name="intDay" Type="String" />
-                <asp:Parameter Name="intStartNum" Type="String" />
-                <asp:Parameter Name="intEndNum" Type="String" />
-                <asp:Parameter Name="intStartWeek" Type="String" />
-                <asp:Parameter Name="intEndWeek" Type="String" />
+                <asp:Parameter Name="intDay" Type="int16" />
+                <asp:Parameter Name="intStartNum" Type="int16" />
+                <asp:Parameter Name="intEndNum" Type="int16" />
+                <asp:Parameter Name="intStartWeek" Type="int16" />
+                <asp:Parameter Name="intEndWeek" Type="int16" />
                 <asp:Parameter Name="strName" Type="String" />
                 <asp:Parameter Name="strClass" Type="String" />
                 <asp:Parameter Name="strTeacher" Type="String" />
@@ -36,7 +36,7 @@
         <asp:SqlDataSource ID="SqlDataSourceRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [strRoomName] FROM [RoomDetail] WHERE ([strDepart] = @strDepart)
 select d.strRoomName from RoomApply a right join RoomDetail d on a.strRoom = d.strRoomName where d.strDepart = @strDepart">
             <SelectParameters>
-                <asp:ControlParameter ControlID="DropDownListDepart" Name="strDepart" PropertyName="SelectedValue" Type="String" DefaultValue="aaa" />
+                <asp:ControlParameter ControlID="DropDownListDepart" Name="strDepart" PropertyName="SelectedValue" Type="String" />
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
