@@ -60,7 +60,7 @@
         <div>
             <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName"></asp:DropDownList>
             <asp:TextBox ID="tbNameQuery" runat="server"></asp:TextBox>
-            <asp:Button ID="btFliter" runat="server" Text="过滤" />
+            <asp:Button ID="btFliter" runat="server" Text="过滤" OnClick="btFliter_Click" />
         </div>        
         <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
         <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>

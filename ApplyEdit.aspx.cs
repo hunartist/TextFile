@@ -170,4 +170,17 @@ public partial class NextWebF : System.Web.UI.Page
         Response.Write("<script>alert('操作成功')</script>");
     }
 
+
+    protected void btFliter_Click(object sender, EventArgs e)
+    {
+        SqlDataSourceRoomApply.SelectParameters.Clear();
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and a.strRoom = @roomN_CP";
+        ControlParameter roomN_CP = new ControlParameter();
+        roomN_CP.Name = "roomN_CP";
+        roomN_CP.Type = TypeCode.String;
+        roomN_CP.ControlID = "ddlRoom";
+        roomN_CP.PropertyName = "SelectedValue";
+        SqlDataSourceRoomApply.SelectParameters.Add(roomN_CP);
+        GridView10.DataBind();
+    }
 }

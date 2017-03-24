@@ -13,8 +13,8 @@ public partial class roomapply : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-        //PrintTab(1,"501", GridView1, Label1, "text");
-     }       
+        Label1.Visible = false;
+    }       
 
     protected void PrintTab(int weekNum,string RoomName,string gvName,string departmentName)
     {
@@ -284,11 +284,13 @@ public partial class roomapply : System.Web.UI.Page
     {
         if (DropDownListWeek.SelectedValue == null)
         {
+            Label1.Visible = true;
             Label1.Text = "not selected";
             return;
         }
         if (DropDownListDepart.SelectedValue == null)
         {
+            Label1.Visible = true;
             Label1.Text = "not selected";
             return;
         }
