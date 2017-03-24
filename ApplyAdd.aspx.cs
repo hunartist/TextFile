@@ -72,7 +72,7 @@ public partial class ApplyAdd : System.Web.UI.Page
             return;
         }
 
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, idN);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, startW, endW, idN);
         if (checkmsg != "OK")
         {
             Response.Write("<script>alert('"+checkmsg+"')</script>");

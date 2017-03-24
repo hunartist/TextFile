@@ -14,7 +14,7 @@ public partial class roomapply : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //PrintTab(1,"501", GridView1, Label1, "text");
-            }       
+     }       
 
     protected void PrintTab(int weekNum,string RoomName,string gvName,string departmentName)
     {

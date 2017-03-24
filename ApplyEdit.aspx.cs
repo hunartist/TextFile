@@ -43,7 +43,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.UpdateParameters["strName"].DefaultValue = Convert.ToString(e.NewValues["strName"]);
         SqlDataSourceRoomApply.UpdateParameters["strClass"].DefaultValue = Convert.ToString(e.NewValues["strClass"]);
         SqlDataSourceRoomApply.UpdateParameters["strTeacher"].DefaultValue = Convert.ToString(e.NewValues["strTeacher"]);
-        SqlDataSourceRoomApply.UpdateParameters["id"].DefaultValue = LabelID.Text;
+        SqlDataSourceRoomApply.UpdateParameters["id"].DefaultValue = e.Keys["id"].ToString();
 
         SqlDataSourceRoomApply.Update();
         GridView10.DataBind();
@@ -128,8 +128,10 @@ public partial class NextWebF : System.Web.UI.Page
         int dayW = Convert.ToInt16(e.NewValues["intDay"]);
         int newSN = Convert.ToInt16(e.NewValues["intStartNum"]);
         int newEN = Convert.ToInt16(e.NewValues["intEndNum"]);
+        int newSW = Convert.ToInt16(e.NewValues["intStartWeek"]);
+        int newEW = Convert.ToInt16(e.NewValues["intEndWeek"]);
         string idN = e.Keys["id"].ToString();
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, idN);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, newSW, newEW, idN);
 
         if (checkmsg != "OK")
         {

@@ -44,17 +44,25 @@
             <SelectParameters>
                 <asp:ControlParameter ControlID ="DropDownListDepart" Name ="strDepart" PropertyName ="SelectedValue" Type ="String" />
             </SelectParameters>
+            <FilterParameters>
+                <asp:ControlParameter
+                    Name ="NameQuery" ControlID="tbNameQuery" PropertyName="Text" />
+            </FilterParameters>
         </asp:SqlDataSource>       
         <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail]"></asp:SqlDataSource>
-        <asp:SqlDataSource ID="SqlDataSourceRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [strRoomName] FROM [RoomDetail] WHERE ([strDepart] = @strDepart)
-select d.strRoomName from RoomApply a right join RoomDetail d on a.strRoom = d.strRoomName where d.strDepart = @strDepart">
+        <asp:SqlDataSource ID="SqlDataSourceRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [strRoomName] FROM [RoomDetail] WHERE ([strDepart] = @strDepart)">
             <SelectParameters>
                 <asp:ControlParameter ControlID="DropDownListDepart" Name="strDepart" PropertyName="SelectedValue" Type="String" />
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
         <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
-        <asp:Label ID="LabelID" runat="server" Text="LabelID" Visible="False"></asp:Label>
+        <div>
+            <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName"></asp:DropDownList>
+            <asp:TextBox ID="tbNameQuery" runat="server"></asp:TextBox>
+            <asp:Button ID="btFliter" runat="server" Text="过滤" />
+        </div>        
+        <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
         <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>
 
         <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" EnableModelValidation="True" AllowPaging="True" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted">
@@ -85,7 +93,7 @@ select d.strRoomName from RoomApply a right join RoomDetail d on a.strRoom = d.s
                         <asp:Label ID="Label1" runat="server" Text='<%# Bind("strRoom") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:BoundField DataField="intDay" HeaderText="日期" SortExpression="intDay" />              
+                <asp:BoundField DataField="intDay" HeaderText="日期（星期几）" SortExpression="intDay" />              
 
                 <asp:BoundField DataField="intStartNum" HeaderText="开始节次" SortExpression="intStartNum" />
                 <asp:BoundField DataField="intEndNum" HeaderText="结束节次" SortExpression="intEndNum" />
