@@ -57,10 +57,12 @@
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
         <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
+        <asp:Button ID="btDepFlit" runat="server" Text="部门过滤" OnClick="btDepFlit_Click" />
         <div>
-            <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName"></asp:DropDownList>
+            <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName"></asp:DropDownList>            
+            <asp:Button ID="btFliter" runat="server" Text="教室过滤" OnClick="btFliter_Click" />
             <asp:TextBox ID="tbNameQuery" runat="server"></asp:TextBox>
-            <asp:Button ID="btFliter" runat="server" Text="过滤" OnClick="btFliter_Click" />
+            <asp:Button ID="btSearch" runat="server" Text="搜索课程名称" OnClick="btSearch_Click" />
         </div>        
         <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
         <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>

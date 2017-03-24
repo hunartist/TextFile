@@ -183,4 +183,30 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.SelectParameters.Add(roomN_CP);
         GridView10.DataBind();
     }
+
+    protected void btDepFlit_Click(object sender, EventArgs e)
+    {
+        SqlDataSourceRoomApply.SelectParameters.Clear();
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP";
+        ControlParameter depN_CP = new ControlParameter();
+        depN_CP.Name = "depN_CP";
+        depN_CP.Type = TypeCode.String;
+        depN_CP.ControlID = "DropDownListDepart";
+        depN_CP.PropertyName = "SelectedValue";
+        SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
+        GridView10.DataBind();
+    }
+
+    protected void btSearch_Click(object sender, EventArgs e)
+    {
+        SqlDataSourceRoomApply.SelectParameters.Clear();
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and a.strName like '%'+ @Name_CP + '%'";
+        ControlParameter Name_CP = new ControlParameter();
+        Name_CP.Name = "Name_CP";
+        Name_CP.Type = TypeCode.String;
+        Name_CP.ControlID = "tbNameQuery";
+        Name_CP.PropertyName = "Text";        
+        SqlDataSourceRoomApply.SelectParameters.Add(Name_CP);
+        GridView10.DataBind();
+    }
 }
