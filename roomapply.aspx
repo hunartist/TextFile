@@ -11,12 +11,15 @@
 <body>
     <form id="form1" runat="server">
 
-         <div>
-             <asp:DropDownList ID="DropDownListWeek" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="id" DataValueField="id"></asp:DropDownList>
+         <div align="center">
+             <asp:Label ID="lbTitle" runat="server" Text="lbTitle"></asp:Label>
+         </div>
+        <div>
+             <asp:DropDownList ID="DropDownListWeek" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="detail" DataValueField="id"></asp:DropDownList>
              <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
              <asp:Button ID="Button1" runat="server" Text="SearchButton" OnClick="Button1_Click" />
              <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-             <asp:SqlDataSource ID="SqlDataSourceRoomDetail" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT * FROM [WeekStartEnd]"></asp:SqlDataSource>
+             <asp:SqlDataSource ID="SqlDataSourceRoomDetail" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id],'第'+CAST(id as varchar(10)) + '周 ' + datePeriod  as detail FROM [WeekStartEnd]"></asp:SqlDataSource>
              <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail]"></asp:SqlDataSource>
              <asp:HyperLink ID="hlLogin" runat="server" NavigateUrl="~/templogin.aspx">登录</asp:HyperLink>
 

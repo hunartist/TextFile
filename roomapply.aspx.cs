@@ -39,6 +39,9 @@ public partial class roomapply : System.Web.UI.Page
         {
             DropDownListWeek.SelectedValue = weekNum.ToString();
         }
+
+        lbTitle.Text = table.Rows[0][3].ToString();
+
         table.Dispose();
         ds.Dispose();
         sda.Dispose();
@@ -343,7 +346,7 @@ public partial class roomapply : System.Web.UI.Page
                 table = ds.Tables[0];
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    PrintTab(Convert.ToInt16(DropDownListWeek.SelectedItem.Value), Convert.ToString(table.Rows[i][0]), "Gridview" + i,DropDownListDepart.SelectedValue);
+                    PrintTab(Convert.ToInt16(DropDownListWeek.SelectedValue), Convert.ToString(table.Rows[i][0]), "Gridview" + i,DropDownListDepart.SelectedValue);
                 }
                 table.Dispose();
                 ds.Dispose();
