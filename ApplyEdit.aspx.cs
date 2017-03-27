@@ -174,7 +174,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void btFliter_Click(object sender, EventArgs e)
     {
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and a.strRoom = @roomN_CP";
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and a.strRoom = @roomN_CP";
         ControlParameter roomN_CP = new ControlParameter();
         roomN_CP.Name = "roomN_CP";
         roomN_CP.Type = TypeCode.String;
@@ -187,7 +187,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void btDepFlit_Click(object sender, EventArgs e)
     {
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP";
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP";
         ControlParameter depN_CP = new ControlParameter();
         depN_CP.Name = "depN_CP";
         depN_CP.Type = TypeCode.String;
@@ -200,7 +200,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void btSearch_Click(object sender, EventArgs e)
     {
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and a.strName like '%'+ @Name_CP + '%'";
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and a.strName like '%'+ @Name_CP + '%'";
         ControlParameter Name_CP = new ControlParameter();
         Name_CP.Name = "Name_CP";
         Name_CP.Type = TypeCode.String;

@@ -23,12 +23,17 @@
                 <asp:Parameter Name="strName" Type="String" />
                 <asp:Parameter Name="strClass" Type="String" />
                 <asp:Parameter Name="strTeacher" Type="String" />
+                <asp:Parameter Name="strYearID" Type="String" />
                 <asp:Parameter Name="id" Type="String" />
             </InsertParameters>
         </asp:SqlDataSource>
 
         <asp:SqlDataSource ID="SqlDataSourceRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strRoomName]+' '+[strDepart] as strRoomNameShow,[strRoomName] FROM [RoomDetail]"></asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="SqlDataSourceYear" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [yearID] FROM [TitleStartEnd] WHERE [currentFlag] = 'true'"></asp:SqlDataSource>
+
+        <asp:Label ID="lbYear" runat="server" Text="Year"></asp:Label>
+        <asp:DropDownList ID="ddlYear" runat="server" DataSourceID="SqlDataSourceYear" DataTextField="yearID" DataValueField="yearID"></asp:DropDownList>
 
         <asp:Label ID="lbRoom" runat="server" Text="Room"></asp:Label>
         <asp:DropDownList ID="ddlRoom" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomNameShow" DataValueField="strRoomName"></asp:DropDownList>

@@ -39,6 +39,10 @@ public partial class roomapply : System.Web.UI.Page
         {
             DropDownListWeek.SelectedValue = weekNum.ToString();
         }
+        table.Dispose();
+        ds.Dispose();
+        sda.Dispose();
+        con.Dispose();
 
 
     }       
