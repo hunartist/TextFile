@@ -16,7 +16,7 @@ public class CommonClass
     /// <returns></returns> 
     public static SqlConnection GetSqlConnection()
     {
-        string strCnn = "Data Source=192.168.0.11;Initial Catalog=webTest;User ID=sa;Password=config;";
+        string strCnn = "Data Source=.;Initial Catalog=test;User ID=sa;Password=config;";
         try
         {
             SqlConnection sqlCnn = new SqlConnection(strCnn);

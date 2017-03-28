@@ -11,7 +11,7 @@
     </script>
     <form id="form1" method="post" runat="server">
     
-        <asp:SqlDataSource ID="SqlDataSourceRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP"
+        <asp:SqlDataSource ID="SqlDataSourceRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.strName,a.strClass,a.strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP order by a.id desc"
             UpdateCommandType ="StoredProcedure" UpdateCommand="RoomApplyAction" 
             DeleteCommandType ="StoredProcedure" DeleteCommand="RoomApplyAction"
             >
@@ -66,6 +66,9 @@
         </div>        
         <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
         <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>
+
+        <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
+        <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx">查询</asp:HyperLink>
 
         <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowPaging="True" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="30">
             <Columns>
@@ -122,21 +125,7 @@
                 <asp:BoundField DataField="strTeacher" HeaderText="教师" SortExpression="strTeacher" />
                 <asp:BoundField DataField="yearID" HeaderText="学期" SortExpression="yearID" ReadOnly="True" />
             </Columns>
-        </asp:GridView>        
-
-        
-
-        
-
-        
-
-        <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
-        <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx">查询</asp:HyperLink>
-        
-
-        
-
-        
+        </asp:GridView>   
 
     </form>
 </body>

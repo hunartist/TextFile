@@ -54,7 +54,7 @@ public partial class roomapply : System.Web.UI.Page
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select * from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = " + weekNum + " inner join WeekStartEnd w on  w.id = " + weekNum + " where d.strRoomName = '" + RoomName+ "' and d.strDepart= '" + departmentName+"'", con);
+        sda.SelectCommand = new SqlCommand("select * from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = " + weekNum + " inner join WeekStartEnd w on  w.id = " + weekNum + " where d.strRoomName = '" + RoomName+ "' and d.strDepart= '" + departmentName+"'", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -165,6 +165,7 @@ public partial class roomapply : System.Web.UI.Page
         DynamicGenerateColumns(gvTemp, dtSchedule);
         gvTemp.DataSource = dtSchedule;
         gvTemp.DataBind();
+        gvTemp.RowStyle.HorizontalAlign = HorizontalAlign.Center;
 
         //合并单元格
         for (int i=0;i<table.Rows.Count;i++)
