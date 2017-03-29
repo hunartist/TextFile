@@ -1,7 +1,7 @@
 USE [test]
 GO
 
-/****** 对象: SqlProcedure [dbo].[import] 脚本日期: 2017/3/28 22:37:52 ******/
+/****** 对象: SqlProcedure [dbo].[import] 脚本日期: 2017/3/29 8:55:44 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -25,10 +25,10 @@ AS
 	DECLARE	@return_value Int
 	declare @firstid varchar(20)
 	declare @tempid varchar(20)
-	declare @i int
+	declare @i varchar(2)
 	declare @tempRoom varchar(20)
 	set @firstid =REPLACE(CONVERT(VARCHAR(100), GETDATE(), 12) + CONVERT(VARCHAR(100), GETDATE(), 108),':','')+ 'import'
-	set @i = 1
+	set @i = '1'
 
 	create table #roomname (strRoomName varchar(100))
 	exec  ('insert into #roomname (strRoomName) select strRoomName from RoomDetail where strRoomName in ('+@strRoom_iGroup+')')
@@ -38,7 +38,11 @@ AS
 	while @@FETCH_STATUS = 0
 	begin
 	--select @tempRoom,@tempid+CONVERT(varchar(5),@i)
-	set @tempid = @firstid+CONVERT(varchar(5),@i)
+	if (CAST(@i as int)<10)
+		begin
+		set @i='0'+@i
+		end
+	set @tempid = @firstid+@i
 	exec [dbo].[RoomApplyAction]
 			@Action = N'insert',
 			@strRoom = @tempRoom,
@@ -52,7 +56,7 @@ AS
 			@strTeacher = @strTeacher_i,
 			@strYearID = @strYearID_i,
 			@id = @tempid
-	set @i = @i + 1
+	set @i = CAST(@i as int) + 1
 	FETCH NEXT from rid into @tempRoom
 	end
 	close rid
