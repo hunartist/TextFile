@@ -125,6 +125,7 @@
                 <asp:BoundField DataField="strTeacher" HeaderText="教师" SortExpression="strTeacher" />
                 <asp:BoundField DataField="yearID" HeaderText="学期" SortExpression="yearID" ReadOnly="True" />
             </Columns>
+            <PagerSettings FirstPageText="首页" LastPageText="末页" Mode="NumericFirstLast" NextPageText="下一页" PreviousPageText="上一页" />
         </asp:GridView>   
 
     </form>
