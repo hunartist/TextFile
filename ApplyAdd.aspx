@@ -32,13 +32,13 @@
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceYear" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [yearID] FROM [TitleStartEnd] WHERE [currentFlag] = 'true'"></asp:SqlDataSource>
 
-        <asp:Label ID="lbYear" runat="server" Text="Year"></asp:Label>
+        <asp:Label ID="lbYear" runat="server" Text="学期"></asp:Label>
         <asp:DropDownList ID="ddlYear" runat="server" DataSourceID="SqlDataSourceYear" DataTextField="yearID" DataValueField="yearID"></asp:DropDownList>
 
-        <asp:Label ID="lbRoom" runat="server" Text="Room"></asp:Label>
+        <asp:Label ID="lbRoom" runat="server" Text="教室"></asp:Label>
         <asp:DropDownList ID="ddlRoom" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomNameShow" DataValueField="strRoomName"></asp:DropDownList>
 
-        <asp:Label ID="lbDay" runat="server" Text="Day"></asp:Label>
+        <asp:Label ID="lbDay" runat="server" Text="星期几"></asp:Label>
         <asp:DropDownList ID="ddlDay" runat="server">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
@@ -49,7 +49,7 @@
             <asp:ListItem>7</asp:ListItem>
         </asp:DropDownList>
 
-        <asp:Label ID="lbStartN" runat="server" Text="StartN"></asp:Label>
+        <asp:Label ID="lbStartN" runat="server" Text="开始节次"></asp:Label>
         <asp:DropDownList ID="ddlStartN" runat="server">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
@@ -63,7 +63,7 @@
             <asp:ListItem>10</asp:ListItem>
         </asp:DropDownList>
 
-        <asp:Label ID="lbEndN" runat="server" Text="EndN"></asp:Label>
+        <asp:Label ID="lbEndN" runat="server" Text="结束节次"></asp:Label>
         <asp:DropDownList ID="ddlEndN" runat="server">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
@@ -77,19 +77,19 @@
             <asp:ListItem>10</asp:ListItem>
         </asp:DropDownList>
 
-        <asp:Label ID="lbStartW" runat="server" Text="StartW"></asp:Label>
-        <asp:DropDownList ID="ddlStartW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="id" DataValueField="id"></asp:DropDownList>
+        <asp:Label ID="lbStartW" runat="server" Text="开始周"></asp:Label>
+        <asp:DropDownList ID="ddlStartW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="id" DataValueField="id" AutoPostBack="True" OnSelectedIndexChanged="ddlStartW_SelectedIndexChanged"></asp:DropDownList>
 
-        <asp:Label ID="lbEndW" runat="server" Text="EndW"></asp:Label>
+        <asp:Label ID="lbEndW" runat="server" Text="结束周"></asp:Label>
         <asp:DropDownList ID="ddlEndW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="id" DataValueField="id"></asp:DropDownList>
 
-        <asp:Label ID="lbName" runat="server" Text="Name"></asp:Label>
+        <asp:Label ID="lbName" runat="server" Text="课程名称"></asp:Label>
         <asp:TextBox ID="tbName" runat="server"></asp:TextBox>
 
-        <asp:Label ID="lbClass" runat="server" Text="Class"></asp:Label>
+        <asp:Label ID="lbClass" runat="server" Text="班级"></asp:Label>
         <asp:TextBox ID="tbClass" runat="server"></asp:TextBox>
 
-        <asp:Label ID="lbTeacher" runat="server" Text="Teacher"></asp:Label>
+        <asp:Label ID="lbTeacher" runat="server" Text="教师"></asp:Label>
         <asp:TextBox ID="tbTeacher" runat="server"></asp:TextBox>
     </div>
         <asp:Button ID="ButtonSave" runat="server" Text="save" OnClick="ButtonSave_Click" />

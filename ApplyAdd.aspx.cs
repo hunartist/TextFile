@@ -87,4 +87,9 @@ public partial class ApplyAdd : System.Web.UI.Page
         Response.Write("<Script Language='JavaScript'>if ( window.confirm('" + strMsg + "')) {  window.location.href='" + strUrl_Yes +
                                 "' } else {window.location.href='" + strUrl_No + "' };</script>");
     }
+
+    protected void ddlStartW_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        ddlEndW.SelectedValue = ddlStartW.SelectedValue;
+    }
 }

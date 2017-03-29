@@ -202,6 +202,7 @@ public partial class NextWebF : System.Web.UI.Page
         depN_CP.ControlID = "DropDownListDepart";
         depN_CP.PropertyName = "SelectedValue";
         SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
+        ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
     }
 
