@@ -6,6 +6,28 @@
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="StyleSheet.css" />
+    <%--<script type="text/javascript">  
+    function s() {  
+        var t = document.getElementById("<%=gvTest.ClientID%>");  
+        var t2 = t.cloneNode(true)  
+        for (i = t2.rows.length - 1; i > 0; i--)  
+            t2.deleteRow(i)
+        
+        t.deleteRow(0)  
+        Rtop.appendChild(t2)  
+    }  
+    window.onload = s  
+    </script> --%>
+    <script src="Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <script src="Scripts/ScrollableGridPlugin.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#<%=gvTest.ClientID %>').Scrollable({
+                ScrollHeight: 700,
+                Width: 1424
+            });
+        });
+    </script>
     <title></title>
 </head>
 <body>
@@ -94,9 +116,10 @@
                 </SelectedItemTemplate>
             </asp:ListView>        
         </div>
+        <div id="Rtop"></div>
         <div id="right">
-            <asp:GridView ID="gvTest" runat="server" HorizontalAlign="Center" OnRowDataBound="gvTest_RowDataBound"></asp:GridView>
-            
+            <asp:GridView ID="gvTest" runat="server" AutoGenerateColumns="true" HorizontalAlign="Center" style="table-layout: fixed" OnRowDataBound="gvTest_RowDataBound">
+            </asp:GridView>            
         </div>    
         
     </form>

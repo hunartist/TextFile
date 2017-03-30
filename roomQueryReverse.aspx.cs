@@ -138,7 +138,16 @@ public partial class roomQueryReverse : System.Web.UI.Page
         //GridView1.DataSource = dtSchedule;
         //GridView1.DataBind();
         gvTest.DataSource = dtSchedule;
-        gvTest.DataBind();
+        try
+        {
+            gvTest.DataBind();
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        
 
 
         //合并单元格
@@ -218,6 +227,8 @@ public partial class roomQueryReverse : System.Web.UI.Page
                 cell.Text = Server.HtmlDecode(cell.Text); //注意：此处所有的列所有的html代码都会按照html格式输出，如果只需要其中的哪一列的数据需要转换，此处需要小的修改即可。
             }
         }
+        e.Row.Attributes.Add("style", "word-break:break-all;word-wrap:break-word");
+
     }
 
     //protected void GridView1_RowDataBound1(object sender, GridViewRowEventArgs e)
@@ -268,26 +279,19 @@ public partial class roomQueryReverse : System.Web.UI.Page
         return (cstr);
     }
 
-    protected void gvTest_RowCreated(object sender, GridViewRowEventArgs e)
-    {
-        //判断创建的行是否为表头行
-        if (e.Row.RowType == DataControlRowType.Header)
-        {
-            //获取表头所在行的所有单元格
-            TableCellCollection tcHeader = e.Row.Cells;
-            //清除自动生成的表头
-            tcHeader.Clear();
 
-            //新添加的第一个表头单元格, 设置为合并7个列, 从而形成一行.
-            tcHeader.Add(new TableHeaderCell());
-            tcHeader[0].ColumnSpan = 8;
-
-        }
-    }
 
     protected void btSearch_Click(object sender, EventArgs e)
     {
         PrintTab(Convert.ToInt16(ddlWeek.SelectedValue),  ddlDep.SelectedValue);
+        //for (int i = 0;i < gvTest.Rows.Count; i++)
+        //{
+        //    for (int j = 0; j < gvTest.Rows[0].Cells.Count; j++)
+        //    {
+        //        gvTest.Rows[i].Cells[j].Width = 80;
+        //    }
+        //}
+        
     }
 
 
