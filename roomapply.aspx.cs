@@ -15,37 +15,17 @@ public partial class roomapply : System.Web.UI.Page
     {
         Label1.Visible = false;
 
-        //get current week
-        SqlConnection con = CommonClass.GetSqlConnection();
-        SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select * from TitleStartEnd", con);
-        DataSet ds = new DataSet();
-        sda.Fill(ds);
-        DataTable table = new DataTable();
-        table = ds.Tables[0];
+        int weekNum = CommonClass.getCurrentWeek();
 
-        int startDate = Convert.ToDateTime(table.Rows[0][2]).DayOfYear;
-        int maxWeek = Convert.ToInt16(table.Rows[0][1]);
-        //一.找到第一周的最后一天（先获取1月1日是星期几，从而得知第一周周末是几）
-        int firstWeekend = 7 - Convert.ToInt32(DateTime.Parse(DateTime.Today.Year + "-1-1").DayOfWeek);
-        //二.获取今天是一年当中的第几天
-        int currentDay = DateTime.Today.DayOfYear;
-        //三.（今天 减去 第一周周末）/7 等于 距第一周有多少周 再加上第一周的1 就是今天是今年的第几周了
-        //    刚好考虑了惟一的特殊情况就是，今天刚好在第一周内，那么距第一周就是0 再加上第一周的1 最后还是1
-        int weekTemp = Convert.ToInt32(Math.Ceiling((startDate - firstWeekend) / 7.0)) ;
-        int weekNum = Convert.ToInt32(Math.Ceiling((currentDay - firstWeekend) / 7.0)) + 1 - weekTemp;
-
-        if((weekNum<=maxWeek)&&(Page.IsPostBack == false))
+        if (Page.IsPostBack == false)
         {
             DropDownListWeek.SelectedValue = weekNum.ToString();
         }
 
-        lbTitle.Text = table.Rows[0][3].ToString();
+        string title = CommonClass.getTitle();
+        lbTitle.Text = title;
 
-        table.Dispose();
-        ds.Dispose();
-        sda.Dispose();
-        con.Dispose();
+        
 
 
     }       

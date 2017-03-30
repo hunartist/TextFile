@@ -11,10 +11,11 @@
 <body>
     <form id="form1" runat="server">
         <div id ="left">
-        <asp:DropDownList ID="ddlDep" runat="server" DataSourceID="sqsDep" DataTextField="strDepart" DataValueField="strDepart" AutoPostBack="True" OnSelectedIndexChanged="ddlDep_SelectedIndexChanged">
+        <asp:DropDownList ID="ddlDep" runat="server" DataSourceID="sqsDep" DataTextField="strDepart" DataValueField="strDepart">
         </asp:DropDownList>
-        <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="sdsWeek" DataTextField="detail" DataValueField="id" AutoPostBack="True" OnSelectedIndexChanged="ddlWeek_SelectedIndexChanged">
+        <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="sdsWeek" DataTextField="detail" DataValueField="id">
         </asp:DropDownList>
+        <asp:Button ID="btSearch" runat="server" Text="查询" OnClick="btSearch_Click" />
         <asp:SqlDataSource ID="sdsRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [strRoomName] FROM [RoomDetail] WHERE ([strDepart] = @strDepart)">
             <SelectParameters>
                 <asp:ControlParameter ControlID="ddlDep" Name="strDepart" PropertyName="SelectedValue" Type="String" />
