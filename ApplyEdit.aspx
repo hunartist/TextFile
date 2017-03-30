@@ -68,7 +68,7 @@
         <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>
 
         <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
-        <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx">查询</asp:HyperLink>
+        <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>
 
         <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowPaging="True" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="14">
             <Columns>
