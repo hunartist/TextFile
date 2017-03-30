@@ -22,7 +22,7 @@ public partial class roomQueryReverse : System.Web.UI.Page
         
     }
 
-    protected void PrintTab(int weekNum, /*string RoomName,*/ string gvName, string departmentName)
+    protected void PrintTab(int weekNum,  string departmentName)
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
@@ -39,27 +39,7 @@ public partial class roomQueryReverse : System.Web.UI.Page
         sdaRoom.Fill(dsRoom);
         DataTable roomTable = new DataTable();
         roomTable = dsRoom.Tables[0];
-
-        ////增加gridview
-        //GridView gvTitle = new GridView();
-        //gvTitle.ID = gvName + "Title";
-        //gvTitle.HorizontalAlign = HorizontalAlign.Center;
-        //gvTitle.BorderColor = System.Drawing.Color.Transparent;//无色
-        //gvTitle.ShowHeader = false;
-
-        //DataTable dtTitle = new DataTable();
-        //dtTitle.Columns.Add(RoomName);
-        //dtTitle.Rows.Add(RoomName + " 第" + weekNum + "周 " + table.Rows[0]["strDepart"].ToString() + " " + table.Rows[0]["datePeriod"].ToString());
-        //gvTitle.DataSource = dtTitle;
-        //gvTitle.DataBind();
-        //GridViewPlaceHolder.Controls.Add(gvTitle);
-        //dtTitle.Dispose();
-        //gvTitle.Dispose();
-
-        GridView gvTemp = new GridView();
-        gvTemp.ID = gvName;
-        gvTemp.HorizontalAlign = HorizontalAlign.Center;
-        GridViewPlaceHolder.Controls.Add(gvTemp);
+        
 
         //添加八列
         dtSchedule.Columns.Add("查询");
@@ -157,14 +137,13 @@ public partial class roomQueryReverse : System.Web.UI.Page
         //gridview不写死
         //GridView1.DataSource = dtSchedule;
         //GridView1.DataBind();
-        DynamicGenerateColumns(gvTemp, dtSchedule);
-        gvTemp.DataSource = dtSchedule;
-        gvTemp.DataBind();
-        gvTemp.RowStyle.HorizontalAlign = HorizontalAlign.Center;
+        gvTest.DataSource = dtSchedule;
+        gvTest.DataBind();
+
 
         //合并单元格
         for (int i = 0; i < table.Rows.Count; i++)
-            GroupCol(gvTemp, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
+            GroupCol(gvTest, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
 
         //dispose
         dtSchedule.Dispose();
@@ -209,16 +188,16 @@ public partial class roomQueryReverse : System.Web.UI.Page
     /// <summary>
     /// 合并某列中的多个单元格
     /// </summary>
-    /// <param name="gvTemp"></param>
+    /// <param name="gvTest"></param>
     /// <param name="cols">要合并的那一列</param>
     /// <param name="sRow">开始行</param>
     /// <param name="eRow">结束行</param>
-    public static void GroupCol(GridView gvTemp, int cols, int sRow, int eRow)
+    public static void GroupCol(GridView gvTest, int cols, int sRow, int eRow)
     {
-        TableCell oldTc = gvTemp.Rows[sRow].Cells[cols];
+        TableCell oldTc = gvTest.Rows[sRow].Cells[cols];
         for (int i = 1; i <= eRow - sRow; i++)
         {
-            TableCell tc = gvTemp.Rows[sRow + i].Cells[cols];
+            TableCell tc = gvTest.Rows[sRow + i].Cells[cols];
             tc.Visible = false;
             if (oldTc.RowSpan == 0)
             {
@@ -229,6 +208,17 @@ public partial class roomQueryReverse : System.Web.UI.Page
         }
     }
 
+    protected void gvTest_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            TableCellCollection cells = e.Row.Cells;
+            foreach (TableCell cell in cells)
+            {
+                cell.Text = Server.HtmlDecode(cell.Text); //注意：此处所有的列所有的html代码都会按照html格式输出，如果只需要其中的哪一列的数据需要转换，此处需要小的修改即可。
+            }
+        }
+    }
 
     //protected void GridView1_RowDataBound1(object sender, GridViewRowEventArgs e)
     //{
@@ -278,7 +268,7 @@ public partial class roomQueryReverse : System.Web.UI.Page
         return (cstr);
     }
 
-    protected void gvTemp_RowCreated(object sender, GridViewRowEventArgs e)
+    protected void gvTest_RowCreated(object sender, GridViewRowEventArgs e)
     {
         //判断创建的行是否为表头行
         if (e.Row.RowType == DataControlRowType.Header)
@@ -297,6 +287,8 @@ public partial class roomQueryReverse : System.Web.UI.Page
 
     protected void btSearch_Click(object sender, EventArgs e)
     {
-        PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), "gvTest", ddlDep.SelectedValue);
+        PrintTab(Convert.ToInt16(ddlWeek.SelectedValue),  ddlDep.SelectedValue);
     }
+
+
 }

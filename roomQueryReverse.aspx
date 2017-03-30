@@ -95,7 +95,7 @@
             </asp:ListView>        
         </div>
         <div id="right">
-        <asp:placeholder id="GridViewPlaceHolder" runat="Server"/>        
+            <asp:GridView ID="gvTest" runat="server" HorizontalAlign="Center" OnRowDataBound="gvTest_RowDataBound"></asp:GridView>
             
         </div>    
         
