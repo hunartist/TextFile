@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<link rel="stylesheet" type="text/css" href="StyleSheet.css" />
+<link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
     <title></title>
 </head>
 <body>

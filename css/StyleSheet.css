@@ -12,11 +12,19 @@
 }
 
 #left {
-    position: fixed; top: 0px; left: 0px; width: 210px; z-index: 1040;
+    position: fixed; top: 0px; left: 0px; width: 210px; z-index: 1050;
     /*position:fixed; position:absolute;left:10px;*/
     float: left; height: 100%; width: 200px; margin: 0px; overflow-y:auto; 
 }
 
 #right {
      height: 100%; width:100%; 
+}
+
+#whyyy {
+    color:red;
+}
+
+.tableShow {
+    font-size:larger;
 }

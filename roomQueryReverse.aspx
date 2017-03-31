@@ -5,34 +5,33 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-    <link rel="stylesheet" type="text/css" href="StyleSheet.css" />
-    <%--<script type="text/javascript">  
-    function s() {  
-        var t = document.getElementById("<%=gvTest.ClientID%>");  
-        var t2 = t.cloneNode(true)  
-        for (i = t2.rows.length - 1; i > 0; i--)  
-            t2.deleteRow(i)
-        
-        t.deleteRow(0)  
-        Rtop.appendChild(t2)  
-    }  
-    window.onload = s  
-    </script> --%>
-    <script src="Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
+    <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
+    
+    <script type="text/javascript" >
+        function FixTableHeader() {
+            var t = document.getElementById("table");
+            var thead = t.getElementsByTagName("thead")[0];
+            var t1 = t.cloneNode(false);
+            t1.appendChild(thead);
+            document.getElementById("tableHeader").appendChild(t1)
+        }
+        window.onload = FixTableHeader;
+    </script>
+<%--<script src="Scripts/jquery-3.1.1.min.js" type="text/javascript"></script>
     <script src="Scripts/ScrollableGridPlugin.js" type="text/javascript"></script>
     <script type="text/javascript">
         $(document).ready(function () {
             $('#<%=gvTest.ClientID %>').Scrollable({
                 ScrollHeight: 700,
-                Width: 1424
+                Width: 1425
             });
         });
-    </script>
+    </script>--%>
     <title></title>
 </head>
 <body>
     <form id="form1" runat="server">
-        <div id ="left">
+        <div id ="noleft">
         <asp:DropDownList ID="ddlDep" runat="server" DataSourceID="sqsDep" DataTextField="strDepart" DataValueField="strDepart">
         </asp:DropDownList>
         <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="sdsWeek" DataTextField="detail" DataValueField="id">
@@ -45,81 +44,71 @@
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="sdsWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id],'第'+CAST(id as varchar(10)) + '周 ' + datePeriod  as detail FROM [WeekStartEnd]"></asp:SqlDataSource>
         <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strDepart] FROM [RoomDetail]"></asp:SqlDataSource>
-            <asp:ListView ID="ListView1" runat="server" DataSourceID="sdsRoom" EnableModelValidation="True">
-                <AlternatingItemTemplate>
-                    <tr style="">
-                        <td>
-                            <asp:Label ID="strRoomNameLabel" runat="server" Text='<%# Eval("strRoomName") %>' />
-                        </td>
-                    </tr>
-                </AlternatingItemTemplate>
-                <EditItemTemplate>
-                    <tr style="">
-                        <td>
-                            <asp:Button ID="UpdateButton" runat="server" CommandName="Update" Text="更新" />
-                            <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="取消" />
-                        </td>
-                        <td>
-                            <asp:TextBox ID="strRoomNameTextBox" runat="server" Text='<%# Bind("strRoomName") %>' />
-                        </td>
-                    </tr>
-                </EditItemTemplate>
-                <EmptyDataTemplate>
-                    <table runat="server" style="">
+        </div>
+        <div id="tableHeader" style="width: 1000px;MARGIN-RIGHT: auto; MARGIN-LEFT: auto; "></div>
+        <div id="right" style="overflow: scroll; height: 700px; width: 1000px;MARGIN-RIGHT: auto; MARGIN-LEFT: auto; "  >
+            <table id="table" style="table-layout: fixed;width:800px" border="1">
+                <thead>
+                <tr id="thead" style="background-color: #BEBEBE">
+                    <th>
+                        查询
+                    </th>
+                    <th>
+                        星期一
+                    </th>
+                    <th>
+                        星期二
+                    </th>
+                    <th>
+                        星期三
+                    </th>
+                    <th>
+                        星期四
+                    </th>
+                    <th>
+                        星期五
+                    </th>
+                    <th>
+                        星期六
+                    </th>
+                    <th>
+                        星期日
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <asp:Repeater ID="Repeater1" runat="server">
+                    <ItemTemplate>
                         <tr>
-                            <td>未返回数据。</td>
-                        </tr>
-                    </table>
-                </EmptyDataTemplate>
-                <InsertItemTemplate>
-                    <tr style="">
-                        <td>
-                            <asp:Button ID="InsertButton" runat="server" CommandName="Insert" Text="插入" />
-                            <asp:Button ID="CancelButton" runat="server" CommandName="Cancel" Text="清除" />
-                        </td>
-                        <td>
-                            <asp:TextBox ID="strRoomNameTextBox" runat="server" Text='<%# Bind("strRoomName") %>' />
-                        </td>
-                    </tr>
-                </InsertItemTemplate>
-                <ItemTemplate>
-                    <tr style="">
-                        <td>
-                            <asp:Label ID="strRoomNameLabel" runat="server" Text='<%# Eval("strRoomName") %>' />
-                        </td>
-                    </tr>
-                </ItemTemplate>
-                <LayoutTemplate>
-                    <table runat="server">
-                        <tr runat="server">
-                            <td runat="server">
-                                <table id="itemPlaceholderContainer" runat="server" border="0" style="">
-                                    <tr runat="server" style="">
-                                        <th runat="server">教室列表</th>
-                                    </tr>
-                                    <tr id="itemPlaceholder" runat="server">
-                                    </tr>
-                                </table>
+                            <td>
+                                <%#DataBinder.Eval(Container.DataItem, "查询")%>
+                            </td>
+                            <td>
+                                <%#DataBinder.Eval(Container.DataItem, "星期一")%>
+                            </td>
+                            <td>
+                                <%#DataBinder.Eval(Container.DataItem, "星期二")%>
+                            </td>
+                            <td>
+                                <%#DataBinder.Eval(Container.DataItem, "星期三")%>
+                            </td>
+                            <td>
+                                <%#DataBinder.Eval(Container.DataItem, "星期四")%>
+                            </td>
+                            <td>
+                                <%#DataBinder.Eval(Container.DataItem, "星期五")%>
+                            </td>
+                            <td>
+                                <%#DataBinder.Eval(Container.DataItem, "星期六")%>
+                            </td>
+                            <td>
+                                <%#DataBinder.Eval(Container.DataItem, "星期日")%>
                             </td>
                         </tr>
-                        <tr runat="server">
-                            <td runat="server" style=""></td>
-                        </tr>
-                    </table>
-                </LayoutTemplate>
-                <SelectedItemTemplate>
-                    <tr style="">
-                        <td>
-                            <asp:Label ID="strRoomNameLabel" runat="server" Text='<%# Eval("strRoomName") %>' />
-                        </td>
-                    </tr>
-                </SelectedItemTemplate>
-            </asp:ListView>        
-        </div>
-        <div id="Rtop"></div>
-        <div id="right">
-            <asp:GridView ID="gvTest" runat="server" AutoGenerateColumns="true" HorizontalAlign="Center" style="table-layout: fixed" OnRowDataBound="gvTest_RowDataBound">
-            </asp:GridView>            
+                    </ItemTemplate>
+                 </asp:Repeater>
+             </tbody>
+        </table>       
         </div>    
         
     </form>

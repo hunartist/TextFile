@@ -13,16 +13,16 @@ public partial class roomQueryReverse : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //PrintTab(7, "gvTest", "多媒体");
-        int weekNum = CommonClass.getCurrentWeek();        
+        int CweekNum = CommonClass.getCurrentWeek();        
 
         if (Page.IsPostBack == false)
         {
-            ddlWeek.SelectedValue = weekNum.ToString();
+            ddlWeek.SelectedValue = CweekNum.ToString();
         }
-        
+
     }
 
-    protected void PrintTab(int weekNum,  string departmentName)
+    protected DataTable PrintTab(int weekNum,  string departmentName)
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
@@ -126,96 +126,29 @@ public partial class roomQueryReverse : System.Web.UI.Page
         //修改行标题
         for (int i = 1; i < 8; i++)
         {
-            dtSchedule.Columns[i].ColumnName = "星期" + WeekConvertToChinese(i);
+            dtSchedule.Columns[i].ColumnName = "星期" + CommonClass.WeekConvertToChinese(i);
         }
         //修改列标题
         for (int i = 0; i < 10; i++)
         {
-            dtSchedule.Rows[i][0] = "第" + ConvertToChinese(i + 1) + "节";
+            dtSchedule.Rows[i][0] = "第" + CommonClass.ConvertToChinese(i + 1) + "节";
         }
 
-        //gridview不写死
-        //GridView1.DataSource = dtSchedule;
-        //GridView1.DataBind();
-        gvTest.DataSource = dtSchedule;
-        try
-        {
-            gvTest.DataBind();
-        }
-        catch (Exception)
-        {
 
-            throw;
-        }
-        
-
-
-        //合并单元格
-        for (int i = 0; i < table.Rows.Count; i++)
-            GroupCol(gvTest, tempArray[i][0], tempArray[i][1], tempArray[i][2]);
+        //gvTest.DataSource = dtSchedule;
+        //gvTest.DataBind(); 
 
         //dispose
-        dtSchedule.Dispose();
         table.Dispose();
         ds.Dispose();
         sda.Dispose();
         con.Dispose();
 
+        return dtSchedule;
+
     }
 
-    //根据DataTable动态生成GridView
-    public static GridView DynamicGenerateColumns(GridView gv, DataTable dt)
-    {
-        // 把GridView的自动产生列设置为false,否则会出现重复列
-        gv.AutoGenerateColumns = false;
 
-        // 清空所有的Columns
-        gv.Columns.Clear();
-
-        // 遍历DataTable 的每个Columns,然后添加到GridView中去
-        foreach (DataColumn item in dt.Columns)
-        {
-            //if (item.ColumnName == "选择")
-            //{
-            //    CheckBoxField chCol = new CheckBoxField();
-            //    chCol.HeaderText = item.ColumnName;
-            //    chCol.DataField = item.ColumnName;
-            //    chCol.Visible = true;
-            //    gv.Columns.Add(chCol);
-            //    continue;
-            //}
-            BoundField col = new BoundField();
-            col.HeaderText = item.ColumnName;
-            col.HtmlEncode = false;
-            col.DataField = item.ColumnName;
-            col.Visible = true;
-            gv.Columns.Add(col);
-        }
-        return gv;
-    }
-
-    /// <summary>
-    /// 合并某列中的多个单元格
-    /// </summary>
-    /// <param name="gvTest"></param>
-    /// <param name="cols">要合并的那一列</param>
-    /// <param name="sRow">开始行</param>
-    /// <param name="eRow">结束行</param>
-    public static void GroupCol(GridView gvTest, int cols, int sRow, int eRow)
-    {
-        TableCell oldTc = gvTest.Rows[sRow].Cells[cols];
-        for (int i = 1; i <= eRow - sRow; i++)
-        {
-            TableCell tc = gvTest.Rows[sRow + i].Cells[cols];
-            tc.Visible = false;
-            if (oldTc.RowSpan == 0)
-            {
-                oldTc.RowSpan = 1;
-            }
-            oldTc.RowSpan++;
-            oldTc.VerticalAlign = VerticalAlign.Middle;
-        }
-    }
 
     protected void gvTest_RowDataBound(object sender, GridViewRowEventArgs e)
     {
@@ -227,71 +160,26 @@ public partial class roomQueryReverse : System.Web.UI.Page
                 cell.Text = Server.HtmlDecode(cell.Text); //注意：此处所有的列所有的html代码都会按照html格式输出，如果只需要其中的哪一列的数据需要转换，此处需要小的修改即可。
             }
         }
-        e.Row.Attributes.Add("style", "word-break:break-all;word-wrap:break-word");
-
+        e.Row.Attributes.Add("style", "word-break:break-all;word-wrap:break-word");        
     }
-
-    //protected void GridView1_RowDataBound1(object sender, GridViewRowEventArgs e)
-    //{
-    //    if (e.Row.RowType == DataControlRowType.DataRow)
-    //    {
-    //        TableCellCollection cells = e.Row.Cells;
-    //        foreach (TableCell cell in cells)
-    //        {
-    //            cell.Text = Server.HtmlDecode(cell.Text); //注意：此处所有的列所有的html代码都会按照html格式输出，如果只需要其中的哪一列的数据需要转换，此处需要小的修改即可。
-    //        }
-    //    }
-    //}
-
-    string ConvertToChinese(int x)
-    {
-        string cstr = "";
-        switch (x)
-        {
-            case 0: cstr = "零"; break;
-            case 1: cstr = "一"; break;
-            case 2: cstr = "二"; break;
-            case 3: cstr = "三"; break;
-            case 4: cstr = "四"; break;
-            case 5: cstr = "五"; break;
-            case 6: cstr = "六"; break;
-            case 7: cstr = "七"; break;
-            case 8: cstr = "八"; break;
-            case 9: cstr = "九"; break;
-            case 10: cstr = "十"; break;
-        }
-        return (cstr);
-    }
-    //转换星期几
-    string WeekConvertToChinese(int x)
-    {
-        string cstr = "";
-        switch (x)
-        {
-            case 1: cstr = "一"; break;
-            case 2: cstr = "二"; break;
-            case 3: cstr = "三"; break;
-            case 4: cstr = "四"; break;
-            case 5: cstr = "五"; break;
-            case 6: cstr = "六"; break;
-            case 7: cstr = "日"; break;
-        }
-        return (cstr);
-    }
-
 
 
     protected void btSearch_Click(object sender, EventArgs e)
     {
-        PrintTab(Convert.ToInt16(ddlWeek.SelectedValue),  ddlDep.SelectedValue);
-        //for (int i = 0;i < gvTest.Rows.Count; i++)
+        //gvTest.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), ddlDep.SelectedValue);
+        //gvTest.DataBind();
+
+        Repeater1.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), ddlDep.SelectedValue);
+        Repeater1.DataBind();
+
+        //for (int i = 0; i < gvTest.Rows.Count; i++)
         //{
         //    for (int j = 0; j < gvTest.Rows[0].Cells.Count; j++)
         //    {
         //        gvTest.Rows[i].Cells[j].Width = 80;
         //    }
         //}
-        
+
     }
 
 

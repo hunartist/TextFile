@@ -161,4 +161,41 @@ public class CommonClass
     }
 
 
+    public static string ConvertToChinese(int x)
+    {
+        string cstr = "";
+        switch (x)
+        {
+            case 0: cstr = "零"; break;
+            case 1: cstr = "一"; break;
+            case 2: cstr = "二"; break;
+            case 3: cstr = "三"; break;
+            case 4: cstr = "四"; break;
+            case 5: cstr = "五"; break;
+            case 6: cstr = "六"; break;
+            case 7: cstr = "七"; break;
+            case 8: cstr = "八"; break;
+            case 9: cstr = "九"; break;
+            case 10: cstr = "十"; break;
+        }
+        return (cstr);
+    }
+    //转换星期几
+    public static string WeekConvertToChinese(int x)
+    {
+        string cstr = "";
+        switch (x)
+        {
+            case 1: cstr = "一"; break;
+            case 2: cstr = "二"; break;
+            case 3: cstr = "三"; break;
+            case 4: cstr = "四"; break;
+            case 5: cstr = "五"; break;
+            case 6: cstr = "六"; break;
+            case 7: cstr = "日"; break;
+        }
+        return (cstr);
+    }
+
+
 }
