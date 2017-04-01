@@ -7,6 +7,16 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
     <title></title>
+    <script type="text/javascript" >
+        function FixTableHeader() {
+            var t = document.getElementById("table");
+            var thead = t.getElementsByTagName("thead")[0];
+            var t1 = t.cloneNode(false);
+            t1.appendChild(thead);
+            document.getElementById("tableHeader").appendChild(t1)
+        }
+        window.onload = FixTableHeader;
+    </script>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -94,11 +104,71 @@
                 </SelectedItemTemplate>
             </asp:ListView>        
         </div>
-        <div >
-        <asp:placeholder id="GridViewPlaceHolder" runat="Server"/>        
-            
-        </div>    
-        
+        <div class="righttop" id="tableHeader" ></div>
+        <div class="right"   >
+            <table id="table" border="1">
+                <thead>
+                <tr id="thead" >
+                    <th>
+                        查询
+                    </th>
+                    <th>
+                        星期一
+                    </th>
+                    <th>
+                        星期二
+                    </th>
+                    <th>
+                        星期三
+                    </th>
+                    <th>
+                        星期四
+                    </th>
+                    <th>
+                        星期五
+                    </th>
+                    <th>
+                        星期六
+                    </th>
+                    <th>
+                        星期日
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <asp:Repeater ID="Repeater1" runat="server">
+                    <ItemTemplate>
+                        <tr>
+                            <td id="td0" runat="server">
+                                <%#DataBinder.Eval(Container.DataItem, "查询")%>
+                            </td>
+                            <td id="td1" runat="server">
+                                <%#DataBinder.Eval(Container.DataItem, "星期一")%>
+                            </td>
+                            <td id="td2" runat="server">
+                                <%#DataBinder.Eval(Container.DataItem, "星期二")%>
+                            </td>
+                            <td id="td3" runat="server">
+                                <%#DataBinder.Eval(Container.DataItem, "星期三")%>
+                            </td>
+                            <td id="td4" runat="server">
+                                <%#DataBinder.Eval(Container.DataItem, "星期四")%>
+                            </td>
+                            <td id="td5" runat="server">
+                                <%#DataBinder.Eval(Container.DataItem, "星期五")%>
+                            </td>
+                            <td id="td6" runat="server">
+                                <%#DataBinder.Eval(Container.DataItem, "星期六")%>
+                            </td>
+                            <td id="td7" runat="server">
+                                <%#DataBinder.Eval(Container.DataItem, "星期日")%>
+                            </td>
+                        </tr>
+                    </ItemTemplate>
+                 </asp:Repeater>
+             </tbody>
+        </table>       
+        </div>
     </form>
 </body>
 </html>
