@@ -7,6 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Data;
 using System.Text.RegularExpressions;
+using System.Web.UI.HtmlControls;
 
 public partial class roomQueryReverse : System.Web.UI.Page
 {
@@ -118,6 +119,7 @@ public partial class roomQueryReverse : System.Web.UI.Page
                 if (section == endNum)//判断课程结束时间，记录位置
                 {
                     tempArray[i][2] = j;//记录课结束时间
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString().Replace(Convert.ToString(table.Rows[i]["strRoom"]) + "<br />", "");
                     break;
                 }
             }
@@ -148,29 +150,61 @@ public partial class roomQueryReverse : System.Web.UI.Page
 
     }
 
+    private void DataBindRepeater()
+    {        
+        this.Repeater1.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), ddlDep.SelectedValue);
+        this.Repeater1.DataBind();
 
-
-    protected void gvTest_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        if (e.Row.RowType == DataControlRowType.DataRow)
+        for (int i = 1; i <= 7; i++) // 遍历每一列
         {
-            TableCellCollection cells = e.Row.Cells;
-            foreach (TableCell cell in cells)
-            {
-                cell.Text = Server.HtmlDecode(cell.Text); //注意：此处所有的列所有的html代码都会按照html格式输出，如果只需要其中的哪一列的数据需要转换，此处需要小的修改即可。
-            }
+            string tdTd = "td";
+            string tdIdName = tdTd + i.ToString();
+            MergeCell(tdIdName); // 把当前列的td的ID文本作为方法的参数
         }
-        e.Row.Attributes.Add("style", "word-break:break-all;word-wrap:break-word");        
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tdIdName">当前列当前行的 td 的ID文本</param>
+    private void MergeCell(string tdIdName)
+    {
+        for (int i = Repeater1.Items.Count - 1; i > 0; i--) // Repeater1.Items.Count - 1 数据总行数（数据从0开始）  遍历当前列的每一行
+        {
+            MergeCellSet(tdIdName, i);
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="tdIdName1">当前列当前行的 td 的ID文本</param>
+    /// <param name="i">当前行</param>
+    private void MergeCellSet(string tdIdName1, int i)
+    {
+        HtmlTableCell cellPrev = Repeater1.Items[i - 1].FindControl(tdIdName1) as HtmlTableCell; // 获取下一行当前列的 td 所在的单元格
+        HtmlTableCell cell = Repeater1.Items[i].FindControl(tdIdName1) as HtmlTableCell; // 获取当前行当前列的 td 所在的单元格
+        cell.RowSpan = (cell.RowSpan == -1) ? 1 : cell.RowSpan; // 获取当前行当前列单元格跨越的行数 
+        cellPrev.RowSpan = (cellPrev.RowSpan == -1) ? 1 : cellPrev.RowSpan; // 获取下一行当前列单元格跨越的行数 
+        if (cell.InnerText == cellPrev.InnerText)
+        {
+            // 让下一行的当前单元格的跨越行数 + 当前行的跨越行数
+            cellPrev.RowSpan += cell.RowSpan;
+            cell.Visible = false;  // 隐藏当前行
+
+            //关键代码，再判断执行第2列的合并单元格方法
+        }
     }
 
 
     protected void btSearch_Click(object sender, EventArgs e)
     {
-        //gvTest.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), ddlDep.SelectedValue);
-        //gvTest.DataBind();
+        //Repeater1.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), ddlDep.SelectedValue);
+        //Repeater1.DataBind();
 
-        Repeater1.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), ddlDep.SelectedValue);
-        Repeater1.DataBind();
+        DataBindRepeater();
+        
+
 
         //for (int i = 0; i < gvTest.Rows.Count; i++)
         //{

@@ -46,7 +46,7 @@
         <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strDepart] FROM [RoomDetail]"></asp:SqlDataSource>
         </div>
         <div id="tableHeader" style="width: 1000px;MARGIN-RIGHT: auto; MARGIN-LEFT: auto; "></div>
-        <div id="right" style="overflow: scroll; height: 700px; width: 1000px;MARGIN-RIGHT: auto; MARGIN-LEFT: auto; "  >
+        <div id="right" style="overflow: scroll; height: 600px; width: 1000px;MARGIN-RIGHT: auto; MARGIN-LEFT: auto; "  >
             <table id="table" style="table-layout: fixed;width:800px" border="1">
                 <thead>
                 <tr id="thead" style="background-color: #BEBEBE">
@@ -80,28 +80,28 @@
                 <asp:Repeater ID="Repeater1" runat="server">
                     <ItemTemplate>
                         <tr>
-                            <td>
+                            <td id="td0" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "查询")%>
                             </td>
-                            <td>
+                            <td id="td1" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "星期一")%>
                             </td>
-                            <td>
+                            <td id="td2" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "星期二")%>
                             </td>
-                            <td>
+                            <td id="td3" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "星期三")%>
                             </td>
-                            <td>
+                            <td id="td4" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "星期四")%>
                             </td>
-                            <td>
+                            <td id="td5" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "星期五")%>
                             </td>
-                            <td>
+                            <td id="td6" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "星期六")%>
                             </td>
-                            <td>
+                            <td id="td7" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "星期日")%>
                             </td>
                         </tr>
