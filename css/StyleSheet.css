@@ -12,30 +12,32 @@
 }
 
 .left {
-    position: fixed; top: 0px; left: 0px; width: 20%; z-index: 1050;
-    /*position:fixed; position:absolute;left:10px;*/
+    position: fixed; top: 0px; left: 0px; width: 20%; z-index: 1050;    
     float: left; height: 100%; width: 12%; margin: 0px; overflow-y:auto; 
 }
 
 .righttop {
-    position:fixed; left:15%; height:5%; width: 80%;
+   position:relative;left:14.5%;
+    height:5%; width: 85%;
 }
 
 .right {
-    position:fixed;left:15%;top:5%; overflow: scroll; height: 92%; width: 81%;
+   position:fixed;top:5%;left:15%;
+   overflow: scroll; height: 92%; width: 85%;
 }
 
 .centertop {
-    margin-top:auto; width: 100%;height:5%;
+    height:5%; width: 99%;
 }
 
 .center {
-    position:fixed; overflow: scroll; height: 92%; width: 100%;
+    position:fixed; overflow: scroll; height: 92%; width: 99%;
 }
 
 #table {
     table-layout: fixed;width:100%; 
 }
+
 
 .tableShow {
     font-size:larger;
