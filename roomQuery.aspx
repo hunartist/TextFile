@@ -10,7 +10,7 @@
 </head>
 <body>
     <form id="form1" runat="server">
-        <div id ="left">
+        <div class="left">
         <asp:DropDownList ID="ddlDep" runat="server" DataSourceID="sqsDep" DataTextField="strDepart" DataValueField="strDepart">
         </asp:DropDownList>
         <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="sdsWeek" DataTextField="detail" DataValueField="id">
@@ -22,7 +22,7 @@
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="sdsWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id],'第'+CAST(id as varchar(10)) + '周 ' + datePeriod  as detail FROM [WeekStartEnd]"></asp:SqlDataSource>
-        <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strDepart] FROM [RoomDetail]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail] order by 1 desc"></asp:SqlDataSource>
             <asp:ListView ID="ListView1" runat="server" DataSourceID="sdsRoom" EnableModelValidation="True">
                 <AlternatingItemTemplate>
                     <tr style="">
@@ -94,7 +94,7 @@
                 </SelectedItemTemplate>
             </asp:ListView>        
         </div>
-        <div id="right">
+        <div >
         <asp:placeholder id="GridViewPlaceHolder" runat="Server"/>        
             
         </div>    

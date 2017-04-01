@@ -43,13 +43,13 @@
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="sdsWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id],'第'+CAST(id as varchar(10)) + '周 ' + datePeriod  as detail FROM [WeekStartEnd]"></asp:SqlDataSource>
-        <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strDepart] FROM [RoomDetail]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail] order by 1 desc"></asp:SqlDataSource>
         </div>
-        <div id="tableHeader" style="width: 1000px;MARGIN-RIGHT: auto; MARGIN-LEFT: auto; "></div>
-        <div id="right" style="overflow: scroll; height: 600px; width: 1000px;MARGIN-RIGHT: auto; MARGIN-LEFT: auto; "  >
-            <table id="table" style="table-layout: fixed;width:800px" border="1">
+        <div class="righttop" id="tableHeader" ></div>
+        <div class="right"   >
+            <table id="table" border="1">
                 <thead>
-                <tr id="thead" style="background-color: #BEBEBE">
+                <tr id="thead" >
                     <th>
                         查询
                     </th>
