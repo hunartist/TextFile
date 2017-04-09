@@ -105,7 +105,7 @@ public class CommonClass
         int startDate = Convert.ToDateTime(table.Rows[0][2]).DayOfYear;
         int maxWeek = Convert.ToInt16(table.Rows[0][1]);
         //一.找到第一周的最后一天（先获取1月1日是星期几，从而得知第一周周末是几）
-        int firstWeekend = 7 - Convert.ToInt32(DateTime.Parse(DateTime.Today.Year + "-1-1").DayOfWeek);
+        int firstWeekend = 7 - Convert.ToInt32(DateTime.Parse(DateTime.Today.Year + "-1-1").DayOfWeek)+1;
         //二.获取今天是一年当中的第几天
         int currentDay = DateTime.Today.DayOfYear;
         //三.（今天 减去 第一周周末）/7 等于 距第一周有多少周 再加上第一周的1 就是今天是今年的第几周了
