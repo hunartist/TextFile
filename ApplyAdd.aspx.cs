@@ -81,9 +81,9 @@ public partial class ApplyAdd : System.Web.UI.Page
         }
 
         SqlDataSourceRoomApply.Insert();
-        string strMsg = "操作成功，选择“确定”进入查询界面，选择“取消”进入编辑界面";
-        string strUrl_Yes = "RoomApply.aspx";
-        string strUrl_No = "ApplyEdit.aspx";
+        string strMsg = "操作成功，是否返回编辑界面，选择“确定”进入编辑界面，选择“取消”进入查询界面";
+        string strUrl_Yes = "ApplyEdit.aspx";
+        string strUrl_No = "RoomApply.aspx" ;
         Response.Write("<Script Language='JavaScript'>if ( window.confirm('" + strMsg + "')) {  window.location.href='" + strUrl_Yes +
                                 "' } else {window.location.href='" + strUrl_No + "' };</script>");
     }
