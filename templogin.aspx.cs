@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 using System.Web.Security;
@@ -19,19 +20,50 @@ public partial class _Default : System.Web.UI.Page
     }
     protected void Button1_Click(object sender, EventArgs e)
     {
-        if (TextBox1.Text == "test" && TextBox2.Text == "ipconfig") //可以从数据库中用户
+        string uName = TextBox1.Text;
+        string uPW = TextBox2.Text;
+
+        SqlConnection con = CommonClass.GetSqlConnection();
+        SqlDataAdapter sda = new SqlDataAdapter();
+        sda.SelectCommand = new SqlCommand("select * from raUser where name = '" + uName + "' and pw = '" + uPW + "'", con);
+        DataSet ds = new DataSet();
+        sda.Fill(ds);
+        DataTable table = new DataTable();
+        table = ds.Tables[0];
+        DataTable dtSchedule = new DataTable();
+
+        if (table.Rows.Count == 1)
         {
-            Session["user"] = TextBox1.Text;
-            Session["dep"] = "0s"; 
+            Session["user"] = table.Rows[0]["name"].ToString();
+            Session["dep"] = table.Rows[0]["Cdep"].ToString();
             Response.Redirect("ApplyEdit.aspx");
         }
         else
         {
-            //Page.RegisterStartupScript("javascript", "<script language=javascript>alert('用户名或密码错误！');</script>");
             Response.Write("<script>alert('用户名或密码错误！')</script>");
             setTB();
             return;
         }
+
+        //if (TextBox1.Text == "test" && TextBox2.Text == "ipconfig") //可以从数据库中用户
+        //{
+        //    Session["user"] = TextBox1.Text;
+        //    Session["dep"] = "0s"; 
+        //    Response.Redirect("ApplyEdit.aspx");
+        //}
+        //if (TextBox1.Text == "other" && TextBox2.Text == "ipconfig") //可以从数据库中用户
+        //{
+        //    Session["user"] = TextBox1.Text;
+        //    Session["dep"] = "1o";
+        //    Response.Redirect("ApplyEdit.aspx");
+        //}
+        //else
+        //{
+        //    //Page.RegisterStartupScript("javascript", "<script language=javascript>alert('用户名或密码错误！');</script>");
+        //    Response.Write("<script>alert('用户名或密码错误！')</script>");
+        //    setTB();
+        //    return;
+        //}
     }
     protected void Button2_Click(object sender, EventArgs e)
     {
