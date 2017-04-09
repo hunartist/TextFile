@@ -1,5 +1,7 @@
 ﻿select * from RoomApply
 select * from RoomApplySub
+SELECT distinct RTRIM(strDepart) as strDepart FROM [RoomDetail] WHERE [strDepart] in ('多媒体','0sxy')
+select * from [RoomDetail]
 --delete from RoomApplySub
 --delete from RoomApply
 

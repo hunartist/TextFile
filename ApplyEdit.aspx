@@ -49,14 +49,18 @@
                     Name ="NameQuery" ControlID="tbNameQuery" PropertyName="Text" />
             </FilterParameters>
         </asp:SqlDataSource>       
-        <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail]  order by 1 desc"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strDepart] FROM [RoomDetail] WHERE ([strCDep] = @strCDep) order by [strDepart] desc" >
+            <SelectParameters>
+                <asp:SessionParameter Name="strCDep" SessionField="dep" Type="String" />
+            </SelectParameters>
+        </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [strRoomName] FROM [RoomDetail] WHERE ([strDepart] = @strDepart)">
             <SelectParameters>
                 <asp:ControlParameter ControlID="DropDownListDepart" Name="strDepart" PropertyName="SelectedValue" Type="String" />
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
-        <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
+        <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
         <asp:Button ID="btDepFlit" runat="server" Text="部门过滤" OnClick="btDepFlit_Click" />
         <div>
             <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName"></asp:DropDownList>            

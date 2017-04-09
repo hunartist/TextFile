@@ -22,6 +22,7 @@ public partial class _Default : System.Web.UI.Page
         if (TextBox1.Text == "test" && TextBox2.Text == "ipconfig") //可以从数据库中用户
         {
             Session["user"] = TextBox1.Text;
+            Session["dep"] = "0s"; 
             Response.Redirect("ApplyEdit.aspx");
         }
         else
