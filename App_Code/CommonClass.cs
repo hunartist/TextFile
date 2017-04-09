@@ -46,6 +46,19 @@ public class CommonClass
         }
     }
 
+    //根据sqlCommand返回DataTable类型变量
+    public static DataTable getDataTable(string sqlCom)
+    {
+        SqlConnection con = CommonClass.GetSqlConnection();
+        SqlDataAdapter sda = new SqlDataAdapter();
+        sda.SelectCommand = new SqlCommand(sqlCom, con);
+        DataSet ds = new DataSet();
+        sda.Fill(ds);
+        DataTable table = new DataTable();
+        table = ds.Tables[0];
+        return table;
+    }
+
     public static string CheckApply(string roomN,int dayW,int newSN,int newEN,int newSW,int newEW,string idN)
     {
         string msg = "OK";

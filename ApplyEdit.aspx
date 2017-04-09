@@ -67,6 +67,7 @@
             <asp:Button ID="btFliter" runat="server" Text="教室过滤" OnClick="btFliter_Click" />
             <asp:TextBox ID="tbNameQuery" runat="server"></asp:TextBox>
             <asp:Button ID="btSearch" runat="server" Text="搜索课程名称" OnClick="btSearch_Click" />
+            <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
         </div>        
         <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
         <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>

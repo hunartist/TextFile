@@ -219,4 +219,10 @@ public partial class NextWebF : System.Web.UI.Page
         ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
     }
+
+    protected void btAbandon_Click(object sender, EventArgs e)
+    {
+        Session.Abandon();
+        Response.Redirect("templogin.aspx");
+    }
 }

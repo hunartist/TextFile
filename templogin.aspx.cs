@@ -22,15 +22,9 @@ public partial class _Default : System.Web.UI.Page
     {
         string uName = TextBox1.Text;
         string uPW = TextBox2.Text;
-
-        SqlConnection con = CommonClass.GetSqlConnection();
-        SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select * from raUser where name = '" + uName + "' and pw = '" + uPW + "'", con);
-        DataSet ds = new DataSet();
-        sda.Fill(ds);
+                
         DataTable table = new DataTable();
-        table = ds.Tables[0];
-        DataTable dtSchedule = new DataTable();
+        table = CommonClass.getDataTable("select * from raUser where name = '" + uName + "' and pw = '" + uPW + "'");     
 
         if (table.Rows.Count == 1)
         {
