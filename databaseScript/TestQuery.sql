@@ -24,3 +24,5 @@ select * from
 	inner join RoomApplySub s on a.id = s.F_id) as aa 
 inner join RoomDetail d on aa.strRoom = d.strRoomName -- and aa.intWeek = 7
 where aa.intWeek = 7 and d.strDepart= '多媒体'
+
+select * from raUser 
