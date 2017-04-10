@@ -46,6 +46,8 @@ public partial class roomapply : System.Web.UI.Page
         gvTitle.ID = gvName + "Title";
         gvTitle.HorizontalAlign = HorizontalAlign.Center;
         gvTitle.BorderColor = System.Drawing.Color.Transparent;//无色
+        gvTitle.GridLines = GridLines.Horizontal;
+        gvTitle.BorderWidth = 0;
         gvTitle.ShowHeader = false;
 
         DataTable dtTitle = new DataTable();
@@ -63,7 +65,7 @@ public partial class roomapply : System.Web.UI.Page
         GridViewPlaceHolder.Controls.Add(gvTemp);
 
         //添加八列
-        dtSchedule.Columns.Add("<a href='ipmsg.aspx?ipadd=" + RoomName + "' target='_blank'>详细</a>");
+        dtSchedule.Columns.Add("<a href='RoomDetail.aspx?qsRoomName=" + RoomName + "' target='_blank'>星期<br />节次</a>");
         for (int i=1;i<8;i++)
         {
             dtSchedule.Columns.Add(Convert.ToString(i));
@@ -340,6 +342,26 @@ public partial class roomapply : System.Web.UI.Page
                 return;
             }
         }
+    }
+
+
+
+    protected void btExcel_Click(object sender, EventArgs e)
+    {
+        string html = HdnValue.Value;
+        ExportToExcel(ref html, "MyReport");
+    }
+
+    public void ExportToExcel(ref string html, string fileName)
+    {
+        html = html.Replace("&gt;", ">");
+        html = html.Replace("&lt;", "<");
+        HttpContext.Current.Response.ClearContent();
+        HttpContext.Current.Response.ContentEncoding = System.Text.Encoding.UTF8;
+        HttpContext.Current.Response.AddHeader("content-disposition", "attachment;filename=" + System.Web.HttpUtility.UrlEncode(fileName, System.Text.Encoding.UTF8) + "_" + DateTime.Now.ToString("M_dd_yyyy_H_M_s") + ".doc");
+        HttpContext.Current.Response.ContentType = "application/ms-word";
+        HttpContext.Current.Response.Write(html);
+        HttpContext.Current.Response.End();
     }
 }
 
