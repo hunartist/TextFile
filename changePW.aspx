@@ -14,13 +14,13 @@
         <asp:TextBox ID="tbName" runat="server" ReadOnly="true"></asp:TextBox>
         <br />
         <asp:Label ID="lbOldPW" runat="server" Text="旧密码" AssociatedControlID ="tbOldPW"></asp:Label>
-        <asp:TextBox ID="tbOldPW" runat="server"></asp:TextBox>
+        <asp:TextBox ID="tbOldPW" runat="server" TextMode="Password"></asp:TextBox>
         <br />
         <asp:Label ID="lbNewPW1" runat="server" Text="新密码" AssociatedControlID ="tbNewPW1"></asp:Label>
-        <asp:TextBox ID="tbNewPW1" runat="server"></asp:TextBox>
+        <asp:TextBox ID="tbNewPW1" runat="server" TextMode="Password"></asp:TextBox>
         <br />
         <asp:Label ID="lbNewPW2" runat="server" Text="确认新密码" AssociatedControlID ="tbNewPW2"></asp:Label>
-        <asp:TextBox ID="tbNewPW2" runat="server"></asp:TextBox>
+        <asp:TextBox ID="tbNewPW2" runat="server" TextMode="Password"></asp:TextBox>
         <br />
         <asp:Button ID="btOK" runat="server" Text="确定" OnClick="btOK_Click" />
     </div>
