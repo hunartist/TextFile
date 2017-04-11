@@ -54,7 +54,7 @@
         </asp:DropDownList>
         <br />
         <asp:Label ID="lbStartN" runat="server" Text="开始节次"></asp:Label>
-        <asp:DropDownList ID="ddlStartN" runat="server">
+        <asp:DropDownList ID="ddlStartN" runat="server" AutoPostBack="True" OnSelectedIndexChanged="ddlStartN_SelectedIndexChanged">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
             <asp:ListItem>3</asp:ListItem>

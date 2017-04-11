@@ -15,6 +15,7 @@ public partial class ApplyAdd : System.Web.UI.Page
                 Response.Redirect("tempLogin.aspx");
 
         }
+        ddlEndN.SelectedValue = "2";
     }
 
     protected void ButtonSave_Click(object sender, EventArgs e)
@@ -91,5 +92,14 @@ public partial class ApplyAdd : System.Web.UI.Page
     protected void ddlStartW_SelectedIndexChanged(object sender, EventArgs e)
     {
         ddlEndW.SelectedValue = ddlStartW.SelectedValue;
+    }
+
+    protected void ddlStartN_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if((Convert.ToInt16(ddlStartN.SelectedValue) == 1) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 3 )) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 5)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 7)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 9)))
+        {
+            ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
+        }
+        
     }
 }
