@@ -5,7 +5,8 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-<link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
+<link rel="stylesheet" type="text/css" href="css/StyleSheet.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="css/PrintCss.css" media="print" />
     <script src="Scripts/jquery-3.1.1.js" type="text/javascript"></script>    
     <script type="text/javascript" >
         function ExportDivDataToExcel()
@@ -35,7 +36,7 @@
              <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail] order by 1 desc"></asp:SqlDataSource>
              <asp:HyperLink ID="hlLogin" runat="server" NavigateUrl="~/templogin.aspx" target="_blank">登录</asp:HyperLink>
              <asp:Button ID="btExcel" runat="server" onclick="btExcel_Click" Text="导出" OnClientClick="ExportDivDataToExcel()"/>
-             <asp:Button ID="btPrint" runat="server" Text="打印" OnClientClick="window.print();" />
+             <asp:Label ID="lbPrint" runat="server" Text="打印请查询后按ctrl+p" ToolTip="建议使用Chrome浏览器打印，可选择是否显示页眉页脚、缩放页面范围大小等"/>
             </div>
         <div id="divExport">        
              <asp:placeholder id="GridViewPlaceHolder" runat="Server"/>                       

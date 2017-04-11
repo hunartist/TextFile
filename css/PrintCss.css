@@ -1,0 +1,28 @@
+﻿body {
+  font-family: "lucida sans unicode",georgia;
+  font-size: 12pt;
+  color: #000000;
+  background-color: #FFFFFF;
+  background-image: none;
+}
+
+a {
+  text-decoration: underline;
+  color: #000000;
+}
+
+img {
+  border: 0;
+}
+
+#header,             /* 页眉 */
+#footer,             /* 页脚 */
+#sidebar,            /* 侧边栏 */
+#commentform,        /* 评论输入表单 */
+#navigation {        /* 页面导航 */
+	display: none;
+}
+
+.noprint {
+    display:none;
+}

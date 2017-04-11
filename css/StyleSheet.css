@@ -41,37 +41,3 @@
 .tableShow {
     position:fixed; margin-right:auto;width:80%;
 }
-
-@media print{
-    h1 {
-      color: #000;
-      background: none;
-   }
-
-   nav, aside {
-      display: none;
-   }
-
-   body, article {
-      width: 100%;
-      margin: 0;
-      padding: 0;
-   }
-
-   @page {
-      margin: 2cm;
-   }
-
-   article a {
-      font-weight: bolder;
-      text-decoration: none;
-   }
-
-   article a[href^=http]:after {
-      content:" <" attr(href) "> ";
-   }
-
-    .noprint{
-        display:none;
-    }
-}
