@@ -7,7 +7,7 @@ using System.Web.UI.WebControls;
 using System.Data.SqlClient;
 using System.Data;
 using System.Text.RegularExpressions;
-
+using System.Web.UI.HtmlControls;
 
 public partial class roomapply : System.Web.UI.Page
 {
@@ -63,6 +63,11 @@ public partial class roomapply : System.Web.UI.Page
         gvTemp.ID = gvName;
         gvTemp.HorizontalAlign = HorizontalAlign.Center;
         GridViewPlaceHolder.Controls.Add(gvTemp);
+
+        HtmlGenericControl spanTemp = new HtmlGenericControl("div");//创建一个span标签
+        spanTemp.ID= "div" + gvName;
+        spanTemp.Style.Add("page-break-before", "always");//属性
+        GridViewPlaceHolder.Controls.Add(spanTemp); //添加到页面 
 
         //添加八列
         dtSchedule.Columns.Add("<a href='RoomDetail.aspx?qsRoomName=" + RoomName + "' target='_blank'>星期<br />节次</a>");

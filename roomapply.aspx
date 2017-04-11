@@ -24,7 +24,7 @@
         <div align="center">
              <asp:Label ID="lbTitle" runat="server" Text="lbTitle"></asp:Label>
         </div>
-        <div>
+        <div class="noprint">
              <asp:DropDownList ID="DropDownListWeek" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="detail" DataValueField="id"></asp:DropDownList>
              <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
              <asp:Button ID="Button1" runat="server" Text="查询" OnClick="Button1_Click" />
@@ -35,6 +35,7 @@
              <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail] order by 1 desc"></asp:SqlDataSource>
              <asp:HyperLink ID="hlLogin" runat="server" NavigateUrl="~/templogin.aspx" target="_blank">登录</asp:HyperLink>
              <asp:Button ID="btExcel" runat="server" onclick="btExcel_Click" Text="导出" OnClientClick="ExportDivDataToExcel()"/>
+             <asp:Button ID="btPrint" runat="server" Text="打印" OnClientClick="window.print();" />
             </div>
         <div id="divExport">        
              <asp:placeholder id="GridViewPlaceHolder" runat="Server"/>                       
