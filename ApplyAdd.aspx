@@ -33,7 +33,7 @@
                 <asp:SessionParameter Name="strCDep" SessionField="dep" Type="String" />
             </SelectParameters>
         </asp:SqlDataSource>
-        <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceYear" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [yearID] FROM [TitleStartEnd] WHERE [currentFlag] = 'true'"></asp:SqlDataSource>
 
         <asp:Label ID="lbYear" runat="server" Text="学期"></asp:Label>
@@ -70,7 +70,7 @@
         <asp:Label ID="lbEndN" runat="server" Text="结束节次"></asp:Label>
         <asp:DropDownList ID="ddlEndN" runat="server">
             <asp:ListItem>1</asp:ListItem>
-            <asp:ListItem>2</asp:ListItem>
+            <asp:ListItem Selected="True">2</asp:ListItem>
             <asp:ListItem>3</asp:ListItem>
             <asp:ListItem>4</asp:ListItem>
             <asp:ListItem>5</asp:ListItem>
@@ -82,10 +82,10 @@
         </asp:DropDownList>
         <br />
         <asp:Label ID="lbStartW" runat="server" Text="开始周"></asp:Label>
-        <asp:DropDownList ID="ddlStartW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="id" DataValueField="id" AutoPostBack="True" OnSelectedIndexChanged="ddlStartW_SelectedIndexChanged"></asp:DropDownList>
+        <asp:DropDownList ID="ddlStartW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="intWeek" DataValueField="intWeek" AutoPostBack="True" OnSelectedIndexChanged="ddlStartW_SelectedIndexChanged"></asp:DropDownList>
         <br />
         <asp:Label ID="lbEndW" runat="server" Text="结束周"></asp:Label>
-        <asp:DropDownList ID="ddlEndW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="id" DataValueField="id"></asp:DropDownList>
+        <asp:DropDownList ID="ddlEndW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
         <br />
         <asp:Label ID="lbName" runat="server" Text="课程名称"></asp:Label>
         <asp:TextBox ID="tbName" runat="server"></asp:TextBox>
@@ -97,7 +97,9 @@
         <asp:TextBox ID="tbTeacher" runat="server"></asp:TextBox>
     </div>
         <asp:Button ID="ButtonSave" runat="server" Text="保存" OnClick="ButtonSave_Click" />
-        <asp:HyperLink ID="hlEdit" runat="server" NavigateUrl="~/ApplyEdit.aspx">返回编辑（不保存）</asp:HyperLink>
+        <br />
+        <br />
+        <asp:HyperLink ID="hlEdit" runat="server" NavigateUrl="~/ApplyEdit.aspx" >返回编辑（不保存）</asp:HyperLink>        
     </form>
 </body>
 </html>
