@@ -27,7 +27,7 @@ public partial class roomQueryReverse : System.Web.UI.Page
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select * from (select distinct s.intWeek, RTRIM(a.strRoom) as strRoom,a.intDay,a.intStartNum,a.intEndNum from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.strRoom = d.strRoomName where aa.intWeek = '" + weekNum + "' and d.strDepart= '" + departmentName + "'", con);
+        sda.SelectCommand = new SqlCommand("select aaa.*,t.currentFlag from (select  aa.*,d.strRoomName,d.strDepart,d.strCDep from (select distinct s.intWeek, RTRIM(a.strRoom) as strRoom,a.intDay,a.intStartNum,a.intEndNum,a.yearID from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.strRoom = d.strRoomName where aa.intWeek = '" + weekNum + "' and d.strDepart= '" + departmentName + "') as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
