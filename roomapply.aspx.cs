@@ -34,7 +34,7 @@ public partial class roomapply : System.Web.UI.Page
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select * from (select aa.*,d.strRoomName,d.strDepart,d.strCDep,w.datePeriod,w.yearID from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = " + weekNum + " inner join WeekStartEnd w on  w.intWeek = " + weekNum + "	where d.strRoomName = '" + RoomName + "' and d.strDepart= '" + departmentName + "' ) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'", con);
+        sda.SelectCommand = new SqlCommand("select aaa.*,t.currentFlag from (select aa.*,d.strRoomName,d.strDepart,d.strCDep,w.datePeriod,w.yearID from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = " + weekNum + " inner join WeekStartEnd w on  w.intWeek = " + weekNum + "	where d.strRoomName = '" + RoomName + "' and d.strDepart= '" + departmentName + "' ) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();

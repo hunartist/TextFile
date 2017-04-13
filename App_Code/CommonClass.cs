@@ -66,7 +66,7 @@ public class CommonClass
         //取修改记录所对应的教室(strRoom)在特定日期（周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）有课，记入临时表table（不包含待修改记录本身）
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand(" select distinct s.intWeek,a.intStartNum,a.intEndNum from RoomApply a,RoomApplySub s  where a.id = s.f_id and a.strRoom = '" + roomN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "'", con);
+        sda.SelectCommand = new SqlCommand(" select aa.intWeek,aa.intStartNum,aa.intEndNum from (select distinct s.intWeek,a.intStartNum,a.intEndNum,a.yearID from RoomApply a,RoomApplySub s  where a.id = s.f_id and a.strRoom = '" + roomN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "' ) as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' ", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -141,10 +141,10 @@ public class CommonClass
 
     public static string getTitle()
     {
-        //获取当前日期在该学期第几周内
+        //获取currentFlag为true的学期标题
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select * from TitleStartEnd where currentFlag = 'true'", con);
+        sda.SelectCommand = new SqlCommand("select top 1 * from TitleStartEnd where currentFlag = 'true'", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();

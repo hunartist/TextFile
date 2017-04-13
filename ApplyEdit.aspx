@@ -11,7 +11,7 @@
     </script>
     <form id="form1" method="post" runat="server" enableviewstate="True">
     
-        <asp:SqlDataSource ID="SqlDataSourceRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP order by a.id desc"
+        <asp:SqlDataSource ID="SqlDataSourceRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="select aa.*,t.currentFlag from (select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP ) as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true'  order by aa.id desc"
             UpdateCommandType ="StoredProcedure" UpdateCommand="RoomApplyAction" 
             DeleteCommandType ="StoredProcedure" DeleteCommand="RoomApplyAction"
             >
@@ -59,14 +59,18 @@
                 <asp:ControlParameter ControlID="DropDownListDepart" Name="strDepart" PropertyName="SelectedValue" Type="String" />
             </SelectParameters>
         </asp:SqlDataSource>
-        <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id] FROM [WeekStartEnd]"></asp:SqlDataSource>
+        <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
         <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
-        <asp:Button ID="btDepFlit" runat="server" Text="部门过滤" OnClick="btDepFlit_Click" />
-        <div>
-            <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName"></asp:DropDownList>            
-            <asp:Button ID="btFliter" runat="server" Text="教室过滤" OnClick="btFliter_Click" />
-            <asp:TextBox ID="tbNameQuery" runat="server"></asp:TextBox>
-            <asp:Button ID="btSearch" runat="server" Text="搜索课程名称" OnClick="btSearch_Click" />
+        <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />        
+        <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName" AppendDataBoundItems="true">
+            <asp:ListItem>all</asp:ListItem>
+        </asp:DropDownList>            
+        <asp:Button ID="btFliter" runat="server" Text="教室筛选" OnClick="btFliter_Click" />
+        <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
+        <asp:Button ID="btWeekFlit" runat="server" Text="教室周筛选" OnClick="btWeekFlit_Click"/>
+        <asp:TextBox ID="tbNameQuery" runat="server"></asp:TextBox>
+        <asp:Button ID="btSearch" runat="server" Text="搜索课程名称" OnClick="btSearch_Click" />        
+        <div>            
             <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
             <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
         </div>        
@@ -110,7 +114,7 @@
                 <asp:BoundField DataField="intEndNum" HeaderText="结束节次" SortExpression="intEndNum" />
                 <asp:TemplateField HeaderText="开始周" SortExpression="intStartWeek">
                     <EditItemTemplate>
-                        <asp:DropDownList ID="ddlStartWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="id" DataValueField="id" SelectedValue='<%# Bind("intStartWeek") %>'>
+                        <asp:DropDownList ID="ddlStartWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek" SelectedValue='<%# Bind("intStartWeek") %>'>
                         </asp:DropDownList>
                     </EditItemTemplate>
                     <ItemTemplate>
@@ -119,7 +123,7 @@
                 </asp:TemplateField>           
                 <asp:TemplateField HeaderText="结束周" SortExpression="intEndWeek">
                     <EditItemTemplate>
-                        <asp:DropDownList ID="ddlEndWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="id" DataValueField="id" SelectedValue='<%# Bind("intEndWeek") %>'>
+                        <asp:DropDownList ID="ddlEndWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek" SelectedValue='<%# Bind("intEndWeek") %>'>
                         </asp:DropDownList>
                     </EditItemTemplate>
                     <ItemTemplate>
