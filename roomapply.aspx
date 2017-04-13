@@ -26,13 +26,13 @@
              <asp:Label ID="lbTitle" runat="server" Text="lbTitle"></asp:Label>
         </div>
         <div class="noprint">
-             <asp:DropDownList ID="DropDownListWeek" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="detail" DataValueField="id"></asp:DropDownList>
+             <asp:DropDownList ID="DropDownListWeek" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoomDetail" DataTextField="detail" DataValueField="intWeek"></asp:DropDownList>
              <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
              <asp:Button ID="Button1" runat="server" Text="查询" OnClick="Button1_Click" />
              <asp:HyperLink ID="hlRoomQuery" runat="server" NavigateUrl="~/roomQuery.aspx" target="_blank">整体查询</asp:HyperLink>
              <asp:HyperLink ID="hlRoomQueryR" runat="server" NavigateUrl="~/roomQueryReverse.aspx" target="_blank">查询空教室</asp:HyperLink>
              <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-             <asp:SqlDataSource ID="SqlDataSourceRoomDetail" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id],'第'+CAST(id as varchar(10)) + '周 ' + datePeriod  as detail FROM [WeekStartEnd]"></asp:SqlDataSource>
+             <asp:SqlDataSource ID="SqlDataSourceRoomDetail" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek],'第'+CAST(w.intWeek as varchar(10)) + '周 ' + w.datePeriod  as detail FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
              <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail] order by 1 desc"></asp:SqlDataSource>
              <asp:HyperLink ID="hlLogin" runat="server" NavigateUrl="~/templogin.aspx" target="_blank">登录</asp:HyperLink>
              <asp:Button ID="btExcel" runat="server" onclick="btExcel_Click" Text="导出" OnClientClick="ExportDivDataToExcel()"/>

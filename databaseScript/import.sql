@@ -7,16 +7,16 @@
 --''611(74)'',''612(60)'',''613(74)'',''614(60)'',''616(60)'',''报告厅'',''录播室''
 DECLARE	@return_value Int
 EXEC	@return_value = [dbo].[import]
-		@strRoom_iGroup = '''301(120)'',''302(108)'',''304(120)'',''306(120)'',''412(108)'',''510(108)'',''512(108)'',''602(108)'',''603(74)'',''604(60)'',''605(118)'',''607(74)'',''609(74)'',''610(60)'',''611(74)'',''612(60)'',''613(74)'',''614(60)'',''616(60)''',
-		@intDay_i = 1,
+		@strRoom_iGroup = '''301(120)''',
+		@intDay_i = 2,
 		@intStartNum_i = 9,
 		@intEndNum_i = 10,
-		@intStartWeek_i = 5,
-		@intEndWeek_i = 17,
-		@strName_i = N'初始数据',
-		@strClass_i = N'初始数据',
-		@strTeacher_i = N'初始数据',
-		@strYearID_i = N'1617_2'
+		@intStartWeek_i = 1,
+		@intEndWeek_i = 10,
+		@strName_i = N'2初始数据16171',
+		@strClass_i = N'2初始数据16171',
+		@strTeacher_i = N'2初始数据16171',
+		@strYearID_i = N'1617_1'
 		SELECT	@return_value as 'Return Value'
 
 DECLARE	@return_value Int

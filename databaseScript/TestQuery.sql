@@ -1,5 +1,5 @@
-﻿select * from RoomApply
-select * from RoomApplySub
+﻿select * from RoomApply where strRoom = '301(120)' order by yearID
+select * from RoomApplySub where F_id = '170411214413import01'
 SELECT distinct RTRIM(strDepart) as strDepart FROM [RoomDetail] WHERE [strDepart] in ('多媒体','0sxy')
 select * from [RoomDetail]
 --delete from RoomApplySub
@@ -10,19 +10,40 @@ select * from [RoomDetail]
 select a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strName,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.Id=s.F_id 
 
 --select * from 
---	(select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,
---	RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher from RoomApply a 
---	inner join RoomApplySub s on a.id = s.F_id) as aa 
---right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = 7
---inner join WeekStartEnd w on  w.id = 7 
---where aa.intWeek = 7 and d.strDepart= '多媒体'
---where d.strRoomName = '501' and d.strDepart= '0sxy'
+--	(select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.yearID,
+--	a.intEndNum,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher 
+--	from RoomApply a 
+--	inner join RoomApplySub s on a.id = s.F_id) as aa
+--right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = 1
+--inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true'
+--inner join WeekStartEnd w on  w.intWeek = 1 and aa.yearID = w.yearID
+--where d.strRoomName = '301(120)' and d.strDepart= '多媒体'
 
-select * from 
-	(select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum
-	 from RoomApply a 
-	inner join RoomApplySub s on a.id = s.F_id) as aa 
-inner join RoomDetail d on aa.strRoom = d.strRoomName -- and aa.intWeek = 7
-where aa.intWeek = 7 and d.strDepart= '多媒体'
 
-select * from raUser 
+SELECT [intWeek],'第'+CAST(intWeek as varchar(10)) + '周 ' + datePeriod  as detail FROM [WeekStartEnd] w
+inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'
+
+
+select * from (
+	select aa.*,d.strRoomName,d.strDepart,d.strCDep,w.datePeriod,w.yearID from 
+		(select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,
+		RTRIM(a.strTeacher) as strTeacher 
+		from RoomApply a 
+		inner join RoomApplySub s on a.id = s.F_id) as aa 
+	right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = 1
+	inner join WeekStartEnd w on  w.intWeek = 1
+	where d.strRoomName = '302(108)' and d.strDepart= '多媒体') as aaa
+inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' 
+
+"select * from (
+	select aa.*,d.strRoomName,d.strDepart,d.strCDep,w.datePeriod,w.yearID from 
+		(select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,
+		RTRIM(a.strTeacher) as strTeacher 
+		from RoomApply a 
+		inner join RoomApplySub s on a.id = s.F_id) as aa 
+	right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = "+weekNum+"
+	inner join WeekStartEnd w on  w.intWeek = "+weekNum+"
+	where d.strRoomName = '"+RoomName+"' and d.strDepart= '"+departmentName+"' ) as aaa
+inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'"
+
+"select * from (select aa.*,d.strRoomName,d.strDepart,d.strCDep,w.datePeriod,w.yearID from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa right join RoomDetail d on aa.strRoom = d.strRoomName and aa.intWeek = "+weekNum+" inner join WeekStartEnd w on  w.intWeek = "+weekNum+"	where d.strRoomName = '"+RoomName+"' and d.strDepart= '"+departmentName+"' ) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'"
