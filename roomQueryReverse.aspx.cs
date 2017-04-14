@@ -116,6 +116,10 @@ public partial class roomQueryReverse : System.Web.UI.Page
                     //dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoom"]) + "<br />";
                     dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString().Replace(Convert.ToString(table.Rows[i]["strRoom"]) + "<br />", "");
                 }
+                if ((Convert.ToInt16(section) > Convert.ToInt16(startNum)) && (Convert.ToInt16(section) < Convert.ToInt16(endNum)))
+                {
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString().Replace(Convert.ToString(table.Rows[i]["strRoom"]) + "<br />", "");
+                }
                 if (section == endNum)//判断课程结束时间，记录位置
                 {
                     tempArray[i][2] = j;//记录课结束时间
