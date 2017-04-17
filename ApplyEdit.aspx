@@ -5,6 +5,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>edit</title>
+    <script src="Scripts/jquery-3.1.1.js" type="text/javascript"></script>  
+    <script type="text/javascript">   
+        $(function() {   
+        $("#TextBox1").keyup(function() {   
+        var filterText = $(this).val();   
+            $("#<%=GridView10.ClientID %> tr").not(":first").hide().filter(":contains('" + filterText + "')").show();;   
+        }).keyup();   
+        });   
+    </script>   
 </head>
 <body>
     <script language="C#" runat="server">
@@ -44,10 +53,6 @@
             <SelectParameters>
                 <asp:ControlParameter ControlID ="DropDownListDepart" Name ="depN_CP" PropertyName ="SelectedValue" Type ="String" />
             </SelectParameters>
-            <FilterParameters>
-                <asp:ControlParameter
-                    Name ="NameQuery" ControlID="tbNameQuery" PropertyName="Text" />
-            </FilterParameters>
         </asp:SqlDataSource>       
         <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strDepart] FROM [RoomDetail] WHERE ([strCDep] = @strCDep) order by [strDepart] desc" >
             <SelectParameters>
@@ -62,12 +67,9 @@
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
         <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
         <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />        
-        <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName" AppendDataBoundItems="false"></asp:DropDownList>            
-        <asp:Button ID="btFliter" runat="server" Text="教室筛选" OnClick="btFliter_Click" />
         <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
-        <asp:Button ID="btWeekFlit" runat="server" Text="教室周筛选" OnClick="btWeekFlit_Click"/>
-        <asp:TextBox ID="tbNameQuery" runat="server"></asp:TextBox>
-        <asp:Button ID="btSearch" runat="server" Text="搜索课程名称" OnClick="btSearch_Click" />        
+        <asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>
+        <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
         <div>            
             <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
             <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
@@ -78,7 +80,7 @@
         <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
         <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>
 
-        <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowPaging="True" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="14">
+        <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="14">
             <Columns>
                 <%--<asp:BoundField DataField="intStartWeek" HeaderText="开始周" SortExpression="intStartWeek" />--%>     
                 <%--<asp:BoundField DataField="intEndWeek" HeaderText="结束周" SortExpression="intEndWeek" />--%>
