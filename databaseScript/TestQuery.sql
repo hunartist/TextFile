@@ -2,6 +2,8 @@
  --select * from TitleStartEnd
  --select * from WeekStartEnd where intWeek = 1
 
+SELECT distinct [strRoomName] FROM [RoomDetail] 
+
  declare 
  @room varchar(50) = '302(108)' ,
  @week int = 5,
