@@ -193,19 +193,19 @@ public partial class NextWebF : System.Web.UI.Page
     protected void btWeekFlit_Click(object sender, EventArgs e)
     {
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP order by a.id desc";
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP order by a.id desc";
         ControlParameter week_CP = new ControlParameter();
         week_CP.Name = "week_CP";
         week_CP.Type = TypeCode.Int16;
         week_CP.ControlID = "ddlWeek";
         week_CP.PropertyName = "SelectedValue";
         SqlDataSourceRoomApply.SelectParameters.Add(week_CP);
-        //ControlParameter roomN_CP = new ControlParameter();
-        //roomN_CP.Name = "roomN_CP";
-        //roomN_CP.Type = TypeCode.String;
-        //roomN_CP.ControlID = "ddlRoom";
-        //roomN_CP.PropertyName = "SelectedValue";
-        //SqlDataSourceRoomApply.SelectParameters.Add(roomN_CP);
+        ControlParameter depN_CP = new ControlParameter();
+        depN_CP.Name = "depN_CP";
+        depN_CP.Type = TypeCode.String;
+        depN_CP.ControlID = "DropDownListDepart";
+        depN_CP.PropertyName = "SelectedValue";
+        SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
         ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
     }

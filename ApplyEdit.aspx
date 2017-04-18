@@ -5,7 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>edit</title>
-    <script src="Scripts/jquery-3.1.1.js" type="text/javascript"></script>  
+<%--    <script src="Scripts/jquery-3.1.1.js" type="text/javascript"></script>  
     <script type="text/javascript">   
         $(function() {   
         $("#TextBox1").keyup(function() {   
@@ -13,7 +13,7 @@
             $("#<%=GridView10.ClientID %> tr").not(":first").hide().filter(":contains('" + filterText + "')").show();;   
         }).keyup();   
         });   
-    </script>   
+    </script>   --%>
 </head>
 <body>
     <script language="C#" runat="server">
@@ -69,7 +69,7 @@
         <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />        
         <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
         <asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>
-        <asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>
+        <%--<asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>--%>
         <div>            
             <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
             <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
