@@ -54,7 +54,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.Update();
         GridView10.DataBind();
         LabelMsg.Visible = false;
-        DropDownListDepart.Visible = true;
+        btDepFlit.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
 
@@ -66,7 +66,12 @@ public partial class NextWebF : System.Web.UI.Page
     protected void GridView10_RowEditing(object sender, GridViewEditEventArgs e)
     {
         LabelID.Text = GridView10.Rows[e.NewEditIndex].Cells[1].Text;
-        DropDownListDepart.Visible = false;
+        btDepFlit.Visible = false;
+        if (ViewState["selectCom_fil"] != null)
+        {
+            SqlDataSourceRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
+            GridView10.DataBind();
+        }
     }
 
     protected void GridView10_RowUpdating(object sender, GridViewUpdateEventArgs e)
@@ -152,7 +157,7 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void GridView10_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        DropDownListDepart.Visible = true;
+        btDepFlit.Visible = true;
     }
 
     protected void GridView10_RowDeleted(object sender, GridViewDeletedEventArgs e)
@@ -172,7 +177,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.Delete();
         GridView10.DataBind();
         LabelMsg.Visible = false;
-        DropDownListDepart.Visible = true;
+        btDepFlit.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
 
@@ -192,8 +197,29 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void btWeekFlit_Click(object sender, EventArgs e)
     {
+        string s = string.Empty;
+        foreach (ListItem li in liboRoom.Items)
+        {
+            if (li.Selected == true)
+                s += "'" + li.Value.Trim() + "',";
+        }
+
+        if (s != string.Empty)
+        {
+            s = s.Substring(0, s.Length - 1); // chop off trailing ,   
+        }
+        else
+        {
+            foreach (ListItem li in liboRoom.Items)
+            {
+                s += "'" + li.Value.Trim() + "',";                
+            }
+            s = s.Substring(0, s.Length - 1); // chop off trailing , 
+        }
+
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP order by a.id desc";
+        //SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in (@room_P) order by a.id desc";
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in ({0}) order by a.id desc", s);
         ControlParameter week_CP = new ControlParameter();
         week_CP.Name = "week_CP";
         week_CP.Type = TypeCode.Int16;
@@ -208,6 +234,14 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
         ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
+
+        //Parameter room_P = new Parameter();
+        //room_P.Name = "room_P";
+        //room_P.Type = TypeCode.String;
+        //room_P.DefaultValue = Session["liboxSel"].ToString();
+        //SqlDataSourceRoomApply.SelectParameters.Add(room_P);
+        //ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
+        //GridView10.DataBind();
     }
 
     protected void btAbandon_Click(object sender, EventArgs e)
@@ -215,4 +249,21 @@ public partial class NextWebF : System.Web.UI.Page
         Session.Abandon();
         Response.Redirect("templogin.aspx");
     }
+
+    //protected void liboRoom_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    string s = string.Empty;
+    //    foreach (ListItem li in liboRoom.Items)
+    //    {
+    //        if (li.Selected == true)
+    //            s += "'"+li.Value.Trim() + "',";
+    //    }
+
+    //    if (s != string.Empty)
+    //    {
+    //        s = s.Substring(0, s.Length - 1); // chop off trailing ,
+    //        Session["liboxSel"] += s;
+
+    //    }
+    //}
 }

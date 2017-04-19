@@ -5,6 +5,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
     <title>edit</title>
+    <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
 <%--    <script src="Scripts/jquery-3.1.1.js" type="text/javascript"></script>  
     <script type="text/javascript">   
         $(function() {   
@@ -65,21 +66,26 @@
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
-        <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
-        <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />        
-        <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
-        <asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>
-        <%--<asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>--%>
-        <div>            
-            <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
-            <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
-        </div>        
-        <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
-        <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>
+        <div class="left">
+            <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
+            <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />  
+            <br />      
+            <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
+            <asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>
+            <br />  
+            <asp:ListBox ID="liboRoom" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName" Rows="30" SelectionMode="Multiple"></asp:ListBox>
+            <%--<asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>--%>
+            <div>            
+                <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
+                <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
+            </div>        
+            <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
+            <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>
 
-        <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
-        <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>
-
+            <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
+            <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>
+        </div>
+        <div class="righttop">
         <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="14">
             <Columns>
                 <%--<asp:BoundField DataField="intStartWeek" HeaderText="开始周" SortExpression="intStartWeek" />--%>     
@@ -90,14 +96,14 @@
                                 CommandName="Delete" Text="删除" OnClientClick="return confirm('是否删除该记录？');"></asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:TemplateField HeaderText="id" InsertVisible="False" SortExpression="id">
+                <%--<asp:TemplateField HeaderText="id" InsertVisible="False" SortExpression="id">
                     <EditItemTemplate>
                         <asp:Label ID="Label1" runat="server" Text='<%# Eval("id") %>'></asp:Label>
                     </EditItemTemplate>
                     <ItemTemplate>
                         <asp:Label ID="Label2" runat="server" Text='<%# Bind("id") %>'></asp:Label>
                     </ItemTemplate>
-                </asp:TemplateField>
+                </asp:TemplateField>--%>
 
                 <asp:TemplateField HeaderText="教室" SortExpression="strRoom">
                     <EditItemTemplate>
@@ -137,7 +143,7 @@
             </Columns>
             <PagerSettings FirstPageText="首页" LastPageText="末页" Mode="NumericFirstLast" NextPageText="下一页" PreviousPageText="上一页" />
         </asp:GridView>   
-
+        </div>
     </form>
 </body>
 </html>
