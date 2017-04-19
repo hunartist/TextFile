@@ -66,14 +66,14 @@
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
-        <div class="left" runat="Server" id="leftTool">  
-            <asp:Literal ID="LiteralID" runat="server"></asp:Literal>
-            <br />
+        <div class="left" runat="Server" id="leftTool">              
             <%--<asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>--%>
             <%--<asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>--%>       
             <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
             <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />  
             <br />      
+            <asp:Button ID="btTotalSearchUp" runat="server" Text="筛选" OnClick="btTotalSearch_Click" />
+            <br />
             <asp:TextBox ID="tbSearch" runat="server"></asp:TextBox>
             <%--<asp:Button ID="btSearch" runat="server" Text="搜索（名称、教师、班级）" OnClick="btSearch_Click" />--%>
             <br />
@@ -153,6 +153,7 @@
             </Columns>
             <PagerSettings FirstPageText="首页" LastPageText="末页" Mode="NumericFirstLast" NextPageText="下一页" PreviousPageText="上一页" />
         </asp:GridView>   
+        <asp:Literal ID="LiteralID" runat="server"></asp:Literal>
         </div>
     </form>
 </body>

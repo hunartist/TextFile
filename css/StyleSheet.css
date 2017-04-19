@@ -41,3 +41,7 @@
 .tableShow {
     position:fixed; margin-right:auto;width:80%;
 }
+
+#LiteralID {
+    font-size:xx-small;
+}

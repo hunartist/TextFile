@@ -30,7 +30,7 @@ public partial class NextWebF : System.Web.UI.Page
             SqlDataSourceRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
         }
 
-        LiteralID.Text = "pageLoad";
+        LiteralID.Text = "";
         GridView10.DataKeyNames = new string[] { "id" };
 
 
@@ -160,7 +160,7 @@ public partial class NextWebF : System.Web.UI.Page
     {
         btDepFlit.Visible = true;
         leftTool.Visible = true;
-        LiteralID.Text = "canceled";
+        LiteralID.Text = "";
     }
 
     protected void GridView10_RowDeleted(object sender, GridViewDeletedEventArgs e)
