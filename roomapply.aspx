@@ -39,7 +39,7 @@
                 $(this).css("background", "url(img/backtop2013.png) no-repeat 0px 0px");
             });
             $("#gotop").mouseout(function(e) {
-                $(this).css("background", "url(img/backtop2013.png) no-repeat 0px 0px");
+                $(this).css("background", "url(img/backtop2013.png) no-repeat -70px 0px");
             });
             goTop();//实现回到顶部元素的渐显与渐隐
         });
