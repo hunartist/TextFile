@@ -66,10 +66,13 @@
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
-        <div class="left">
+        <div class="left">            
             <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
             <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />  
             <br />      
+            <asp:TextBox ID="tbSearch" runat="server"></asp:TextBox>
+            <asp:Button ID="btSearch" runat="server" Text="搜索（名称、教师、班级）" OnClick="btSearch_Click" />
+            <br />
             <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
             <asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>
             <br />  

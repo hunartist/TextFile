@@ -312,4 +312,17 @@ public partial class NextWebF : System.Web.UI.Page
         ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
     }
+
+    protected void btSearch_Click(object sender, EventArgs e)
+    {
+        SqlDataSourceRoomApply.SelectParameters.Clear();
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and ((a.strName like '%'+ @Name_CP + '%') or (a.strTeacher like '%'+ @Name_CP + '%') or (a.strClass like '%'+ @Name_CP + '%'))";
+        ControlParameter Name_CP = new ControlParameter();
+        Name_CP.Name = "Name_CP";
+        Name_CP.Type = TypeCode.String;
+        Name_CP.ControlID = "tbSearch";
+        Name_CP.PropertyName = "Text";
+        SqlDataSourceRoomApply.SelectParameters.Add(Name_CP);
+        GridView10.DataBind();
+    }
 }
