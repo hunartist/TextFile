@@ -23,13 +23,17 @@ public partial class NextWebF : System.Web.UI.Page
                 Response.Redirect("tempLogin.aspx");
 
         }
-        LabelID.Visible = false;
+        //LabelID.Visible = true;
         //LabelMsg.Visible = false;
         if(ViewState["selectCom_fil"] != null)
         {
             SqlDataSourceRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
         }
-        
+
+        LiteralID.Text = "pageLoad";
+        GridView10.DataKeyNames = new string[] { "id" };
+
+
     }
 
 
@@ -55,18 +59,21 @@ public partial class NextWebF : System.Web.UI.Page
         GridView10.DataBind();
         //LabelMsg.Visible = false;
         btDepFlit.Visible = true;
+        leftTool.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
 
     protected void GridView10_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
     {
-        LabelID.Text = GridView10.Rows[e.NewSelectedIndex].Cells[1].Text;
+        //LabelID.Text = GridView10.Rows[e.NewSelectedIndex].Cells[1].Text;
     }
 
     protected void GridView10_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        LabelID.Text = GridView10.Rows[e.NewEditIndex].Cells[1].Text;
+        LiteralID.Text = GridView10.DataKeys[e.NewEditIndex]["id"].ToString();
+        //LabelID.Text = GridView10.Rows[e.NewEditIndex].Cells[1].Text;
         btDepFlit.Visible = false;
+        leftTool.Visible = false;
         if (ViewState["selectCom_fil"] != null)
         {
             SqlDataSourceRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
@@ -152,6 +159,8 @@ public partial class NextWebF : System.Web.UI.Page
     protected void GridView10_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
         btDepFlit.Visible = true;
+        leftTool.Visible = true;
+        LiteralID.Text = "canceled";
     }
 
     protected void GridView10_RowDeleted(object sender, GridViewDeletedEventArgs e)
@@ -172,6 +181,7 @@ public partial class NextWebF : System.Web.UI.Page
         GridView10.DataBind();
         //LabelMsg.Visible = false;
         btDepFlit.Visible = true;
+        leftTool.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
 

@@ -66,8 +66,12 @@
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
-        <div class="left">            
-            <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="False" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
+        <div class="left" runat="Server" id="leftTool">  
+            <asp:Literal ID="LiteralID" runat="server"></asp:Literal>
+            <br />
+            <%--<asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>--%>
+            <%--<asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>--%>       
+            <asp:DropDownList ID="DropDownListDepart" runat="server" AutoPostBack="True" DataSourceID="SqlDataSourceDepartment" DataTextField="strDepart" DataValueField="strDepart"></asp:DropDownList>
             <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />  
             <br />      
             <asp:TextBox ID="tbSearch" runat="server"></asp:TextBox>
@@ -87,10 +91,7 @@
             <div>            
                 <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
                 <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
-            </div>        
-            <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
-            <%--<asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>--%>
-
+            </div>          
             <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
             <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>
         </div>
@@ -105,14 +106,14 @@
                                 CommandName="Delete" Text="删除" OnClientClick="return confirm('是否删除该记录？');"></asp:LinkButton>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <%--<asp:TemplateField HeaderText="id" InsertVisible="False" SortExpression="id">
+                <asp:TemplateField HeaderText="id" InsertVisible="False" SortExpression="id" Visible ="false">
                     <EditItemTemplate>
                         <asp:Label ID="Label1" runat="server" Text='<%# Eval("id") %>'></asp:Label>
                     </EditItemTemplate>
                     <ItemTemplate>
                         <asp:Label ID="Label2" runat="server" Text='<%# Bind("id") %>'></asp:Label>
                     </ItemTemplate>
-                </asp:TemplateField>--%>
+                </asp:TemplateField>
 
                 <asp:TemplateField HeaderText="教室" SortExpression="strRoom">
                     <EditItemTemplate>
