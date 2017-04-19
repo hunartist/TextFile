@@ -282,4 +282,34 @@ public partial class NextWebF : System.Web.UI.Page
             li.Selected = false;
         }
     }
+
+    protected void btRoomFlit_Click(object sender, EventArgs e)
+    {
+        string s = string.Empty;
+        foreach (ListItem li in liboRoom.Items)
+        {
+            if (li.Selected == true)
+                s += "'" + li.Value.Trim() + "',";
+        }
+
+        if (s != string.Empty)
+        {
+            s = s.Substring(0, s.Length - 1); // chop off trailing ,   
+        }
+        else
+        {
+            foreach (ListItem li in liboRoom.Items)
+            {
+                s += "'" + li.Value.Trim() + "',";
+            }
+            s = s.Substring(0, s.Length - 1); // chop off trailing , 
+        }
+
+
+        SqlDataSourceRoomApply.SelectParameters.Clear();
+        //SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in (@room_P) order by a.id desc";
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) order by a.id desc", s);        
+        ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
+        GridView10.DataBind();
+    }
 }

@@ -78,6 +78,8 @@
             <asp:Button ID="btRoomAll" runat="server" Text="教室全选" OnClick="btRoomAll_Click" />
             <br /> 
             <asp:Button ID="btRoomNone" runat="server" Text="教室选择清除" OnClick="btRoomNone_Click" />
+            <br /> 
+            <asp:Button ID="btRoomFlit" runat="server" Text="教室筛选（所有周）" OnClick="btRoomFlit_Click" />
             <%--<asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>--%>
             <div>            
                 <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
