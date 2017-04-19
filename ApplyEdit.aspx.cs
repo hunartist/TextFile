@@ -24,7 +24,7 @@ public partial class NextWebF : System.Web.UI.Page
 
         }
         LabelID.Visible = false;
-        LabelMsg.Visible = false;
+        //LabelMsg.Visible = false;
         if(ViewState["selectCom_fil"] != null)
         {
             SqlDataSourceRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
@@ -53,7 +53,7 @@ public partial class NextWebF : System.Web.UI.Page
 
         SqlDataSourceRoomApply.Update();
         GridView10.DataBind();
-        LabelMsg.Visible = false;
+        //LabelMsg.Visible = false;
         btDepFlit.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
@@ -85,8 +85,9 @@ public partial class NextWebF : System.Web.UI.Page
         }
         catch
         {
-            LabelMsg.Visible = true;
-            LabelMsg.Text = "日期只能填数字1至数字7";
+            //LabelMsg.Visible = true;
+            //LabelMsg.Text = "日期只能填数字1至数字7";
+            Response.Write("<script>alert('日期只能填数字1至数字7')</script>");
             e.Cancel = true;
         }
         try
@@ -95,21 +96,18 @@ public partial class NextWebF : System.Web.UI.Page
             regnum.Validate(e.NewValues["intEndNum"]);
         }
         catch
-        {
-            LabelMsg.Visible = true;
-            LabelMsg.Text = "节次只能填数字1至数字10";
+        {            
+            Response.Write("<script>alert('节次只能填数字1至数字10')</script>");
             e.Cancel = true;
         }
         if (Convert.ToInt16(e.NewValues["intStartNum"])> Convert.ToInt16(e.NewValues["intEndNum"]))
-        {
-            LabelMsg.Visible = true;
-            LabelMsg.Text = "开始节次不能大于结束节次";
+        {            
+            Response.Write("<script>alert('开始节次不能大于结束节次')</script>");
             e.Cancel = true;
         }
         if (Convert.ToInt16(e.NewValues["intStartWeek"]) > Convert.ToInt16(e.NewValues["intEndWeek"]))
         {
-            LabelMsg.Visible = true;
-            LabelMsg.Text = "开始周不能大于结束周";
+            Response.Write("<script>alert('开始周不能大于结束周')</script>");
             e.Cancel = true;
         }
 
@@ -118,20 +116,17 @@ public partial class NextWebF : System.Web.UI.Page
         string TeacherN = Convert.ToString(e.NewValues["strTeacher"]);
         if (NameN == "")
         {
-            LabelMsg.Visible = true;
-            LabelMsg.Text = "课程名未填写";
+            Response.Write("<script>alert('课程名未填写')</script>");
             e.Cancel = true;            
         }
         if (ClassN == "")
         {
-            LabelMsg.Visible = true;
-            LabelMsg.Text = "班级未填写";
+            Response.Write("<script>alert('班级未填写')</script>");
             e.Cancel = true;            
         }
         if (TeacherN == "")
         {
-            LabelMsg.Visible = true;
-            LabelMsg.Text = "教师未填写";
+            Response.Write("<script>alert('教师未填写')</script>");
             e.Cancel = true;            
         }
 
@@ -145,9 +140,8 @@ public partial class NextWebF : System.Web.UI.Page
         string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, newSW, newEW, idN);
 
         if (checkmsg != "OK")
-        {
-            LabelMsg.Visible = true;
-            LabelMsg.Text = checkmsg;
+        {            
+            Response.Write("<script>alert('" + checkmsg + "')</script>");
             e.Cancel = true;
         }
                     
@@ -176,7 +170,7 @@ public partial class NextWebF : System.Web.UI.Page
 
         SqlDataSourceRoomApply.Delete();
         GridView10.DataBind();
-        LabelMsg.Visible = false;
+        //LabelMsg.Visible = false;
         btDepFlit.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
@@ -267,17 +261,25 @@ public partial class NextWebF : System.Web.UI.Page
     //    }
     //}
 
-    protected void btRoomAll_Click(object sender, EventArgs e)
+    protected void btliboAll_Click(object sender, EventArgs e)
     {
         foreach (ListItem li in liboRoom.Items)
         {
             li.Selected = true;
         }
+        foreach (ListItem li in liboWeek.Items)
+        {
+            li.Selected = true;
+        }
     }
 
-    protected void btRoomNone_Click(object sender, EventArgs e)
+    protected void btliboNone_Click(object sender, EventArgs e)
     {
         foreach (ListItem li in liboRoom.Items)
+        {
+            li.Selected = false;
+        }
+        foreach(ListItem li in liboWeek.Items)
         {
             li.Selected = false;
         }
@@ -323,6 +325,67 @@ public partial class NextWebF : System.Web.UI.Page
         Name_CP.ControlID = "tbSearch";
         Name_CP.PropertyName = "Text";
         SqlDataSourceRoomApply.SelectParameters.Add(Name_CP);
+        GridView10.DataBind();
+    }
+
+    protected void btTotalSearch_Click(object sender, EventArgs e)
+    {
+        string sRoom = string.Empty;
+        foreach (ListItem li in liboRoom.Items)
+        {
+            if (li.Selected == true)
+                sRoom += "'" + li.Value.Trim() + "',";
+        }
+
+        if (sRoom != string.Empty)
+        {
+            sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing ,   
+        }
+        else
+        {
+            foreach (ListItem li in liboRoom.Items)
+            {
+                sRoom += "'" + li.Value.Trim() + "',";
+            }
+            sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing , 
+        }
+
+        string sWeek = string.Empty;
+        foreach (ListItem li in liboWeek.Items)
+        {
+            if (li.Selected == true)
+                sWeek += li.Value.Trim() + ",";
+        }
+
+        if (sWeek != string.Empty)
+        {
+            sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing ,   
+        }
+        else
+        {
+            foreach (ListItem li in liboWeek.Items)
+            {
+                sWeek += li.Value.Trim() + ",";
+            }
+            sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing , 
+        }
+
+        SqlDataSourceRoomApply.SelectParameters.Clear();
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom , sWeek);
+        ControlParameter searchTextBox_CP = new ControlParameter();
+        searchTextBox_CP.Name = "searchTextBox_CP";
+        searchTextBox_CP.Type = TypeCode.String;
+        searchTextBox_CP.ControlID = "tbSearch";
+        searchTextBox_CP.PropertyName = "Text";
+        searchTextBox_CP.DefaultValue = "init";
+        SqlDataSourceRoomApply.SelectParameters.Add(searchTextBox_CP);
+        ControlParameter depN_CP = new ControlParameter();
+        depN_CP.Name = "depN_CP";
+        depN_CP.Type = TypeCode.String;
+        depN_CP.ControlID = "DropDownListDepart";
+        depN_CP.PropertyName = "SelectedValue";
+        SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
+        ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
     }
 }

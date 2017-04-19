@@ -71,31 +71,31 @@
             <asp:Button ID="btDepFlit" runat="server" Text="部门筛选" OnClick="btDepFlit_Click" />  
             <br />      
             <asp:TextBox ID="tbSearch" runat="server"></asp:TextBox>
-            <asp:Button ID="btSearch" runat="server" Text="搜索（名称、教师、班级）" OnClick="btSearch_Click" />
+            <%--<asp:Button ID="btSearch" runat="server" Text="搜索（名称、教师、班级）" OnClick="btSearch_Click" />--%>
             <br />
-            <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
-            <asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>
-            <br />  
+            <%--<asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>--%>
+            <asp:ListBox ID="liboWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek" Rows="30" SelectionMode="Multiple"></asp:ListBox>
+            <%--<asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>--%>
             <asp:ListBox ID="liboRoom" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName" Rows="30" SelectionMode="Multiple"></asp:ListBox>
             <br /> 
-            <asp:Button ID="btRoomAll" runat="server" Text="教室全选" OnClick="btRoomAll_Click" />
+            <asp:Button ID="btliboAll" runat="server" Text="全选" OnClick="btliboAll_Click" />
             <br /> 
-            <asp:Button ID="btRoomNone" runat="server" Text="教室选择清除" OnClick="btRoomNone_Click" />
+            <asp:Button ID="btliboNone" runat="server" Text="选择清除" OnClick="btliboNone_Click" />
             <br /> 
-            <asp:Button ID="btRoomFlit" runat="server" Text="教室筛选（所有周）" OnClick="btRoomFlit_Click" />
-            <%--<asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>--%>
+            <%--<asp:Button ID="btRoomFlit" runat="server" Text="教室筛选（所有周）" OnClick="btRoomFlit_Click" />--%>   
+            <asp:Button ID="btTotalSearch" runat="server" Text="筛选" OnClick="btTotalSearch_Click" /> 
             <div>            
                 <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
                 <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
             </div>        
             <asp:Label ID="LabelID" runat="server" Text="LabelID"></asp:Label>
-            <asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>
+            <%--<asp:Label ID="LabelMsg" runat="server" Text="LabelMsg" ForeColor="Red"></asp:Label>--%>
 
             <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
             <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>
         </div>
         <div class="righttop">
-        <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="14">
+        <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="50" AllowPaging="True">
             <Columns>
                 <%--<asp:BoundField DataField="intStartWeek" HeaderText="开始周" SortExpression="intStartWeek" />--%>     
                 <%--<asp:BoundField DataField="intEndWeek" HeaderText="结束周" SortExpression="intEndWeek" />--%>
