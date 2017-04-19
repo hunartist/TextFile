@@ -266,4 +266,20 @@ public partial class NextWebF : System.Web.UI.Page
 
     //    }
     //}
+
+    protected void btRoomAll_Click(object sender, EventArgs e)
+    {
+        foreach (ListItem li in liboRoom.Items)
+        {
+            li.Selected = true;
+        }
+    }
+
+    protected void btRoomNone_Click(object sender, EventArgs e)
+    {
+        foreach (ListItem li in liboRoom.Items)
+        {
+            li.Selected = false;
+        }
+    }
 }

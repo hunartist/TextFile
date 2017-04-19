@@ -74,6 +74,10 @@
             <asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>
             <br />  
             <asp:ListBox ID="liboRoom" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName" Rows="30" SelectionMode="Multiple"></asp:ListBox>
+            <br /> 
+            <asp:Button ID="btRoomAll" runat="server" Text="教室全选" OnClick="btRoomAll_Click" />
+            <br /> 
+            <asp:Button ID="btRoomNone" runat="server" Text="教室选择清除" OnClick="btRoomNone_Click" />
             <%--<asp:TextBox ID="TextBox1" runat="server"></asp:TextBox>--%>
             <div>            
                 <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
