@@ -177,7 +177,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.DeleteParameters["strName"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["strClass"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["strTeacher"].DefaultValue = null;
-        SqlDataSourceRoomApply.UpdateParameters["intOddEvenFlag"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["intOddEvenFlag"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["id"].DefaultValue = e.Keys["id"].ToString();
 
         SqlDataSourceRoomApply.Delete();
