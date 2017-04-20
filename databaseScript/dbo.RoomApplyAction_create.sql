@@ -1,4 +1,4 @@
-USE [test]
+
 GO
 
 /****** 对象: SqlProcedure [dbo].[RoomApplyAction] 脚本日期: 2017/3/28 22:39:32 ******/
@@ -8,7 +8,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[RoomApplyAction]
+alter PROCEDURE [dbo].[RoomApplyAction]
 	@Action varchar(10),
 	@strRoom varchar(50) = null,
 	@intDay int = null,
@@ -65,7 +65,7 @@ AS
 	end
 	else if (@Action = 'insert')
 	begin
-		insert into [RoomApply] values (@id,@strRoom,@intDay,@intStartNum,@intEndNum,@intStartWeek,@intEndWeek,@strName,@strClass,@strTeacher,'','',GETDATE(),@strYearID)
+		insert into [RoomApply] values (@id,@strRoom,@intDay,@intStartNum,@intEndNum,@intStartWeek,@intEndWeek,@strName,@strClass,@strTeacher,'','',GETDATE(),@strYearID,@intOddEvenFlag)
 		set @count = 0
 		delete from [RoomApplySub] where [F_id] = @id
 		while @count <= @intEndWeek - @intStartWeek

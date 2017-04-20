@@ -1,4 +1,4 @@
-USE [test]
+
 GO
 
 /****** 对象: SqlProcedure [dbo].[import] 脚本日期: 2017/3/29 8:55:44 ******/
