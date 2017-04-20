@@ -1,14 +1,15 @@
 
 GO
 
-/****** 对象: SqlProcedure [dbo].[RoomApplyAction] 脚本日期: 2017/3/28 22:39:32 ******/
+/****** 对象: SqlProcedure [dbo].[RoomApplyAction] 脚本日期: 2017/4/20 15:13:45 ******/
 SET ANSI_NULLS ON
 GO
 
 SET QUOTED_IDENTIFIER ON
 GO
 
-alter PROCEDURE [dbo].[RoomApplyAction]
+
+ALTER PROCEDURE [dbo].[RoomApplyAction]
 	@Action varchar(10),
 	@strRoom varchar(50) = null,
 	@intDay int = null,
@@ -68,10 +69,37 @@ AS
 		insert into [RoomApply] values (@id,@strRoom,@intDay,@intStartNum,@intEndNum,@intStartWeek,@intEndWeek,@strName,@strClass,@strTeacher,'','',GETDATE(),@strYearID,@intOddEvenFlag)
 		set @count = 0
 		delete from [RoomApplySub] where [F_id] = @id
-		while @count <= @intEndWeek - @intStartWeek
+		if (@intOddEvenFlag = 0)
 		begin
-			insert into [RoomApplySub] values (@id,@intStartWeek+@count)
-			set @count = @count + 1
+			while @count <= @intEndWeek - @intStartWeek
+			begin
+				insert into [RoomApplySub] values (@id,@intStartWeek+@count)
+				set @count = @count + 1
+			end
+		end
+		if (@intOddEvenFlag = 1)--奇数周
+		begin
+			set @count = @intStartWeek
+			while @count <= @intEndWeek
+			begin
+				if @count%2<>0
+				begin
+					insert into [RoomApplySub] values (@id,@count)	
+				end
+				set @count = @count + 1
+			end
+		end
+		if (@intOddEvenFlag = 2)--偶数周
+		begin
+			set @count = @intStartWeek
+			while @count <= @intEndWeek
+			begin
+				if @count%2=0
+				begin
+					insert into [RoomApplySub] values (@id,@count)			
+				end
+				set @count = @count + 1
+			end
 		end
 	end
 	else if (@Action = 'delete')

@@ -25,6 +25,7 @@ public partial class ApplyAdd : System.Web.UI.Page
         int startW = Convert.ToInt16(ddlStartW.Text);
         int endW = Convert.ToInt16(ddlEndW.Text);
         string idN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);
+        int OEFlag = Convert.ToInt16(ddlOddEvenW.Text);
 
         string NameN = tbName.Text;
         string ClassN = tbClass.Text;
@@ -73,7 +74,7 @@ public partial class ApplyAdd : System.Web.UI.Page
             return;
         }
 
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, startW, endW, idN);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, startW, endW, idN, OEFlag);
         if (checkmsg != "OK")
         {
             Response.Write("<script>alert('"+checkmsg+"')</script>");

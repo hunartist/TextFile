@@ -59,9 +59,9 @@ public class CommonClass
         return table;
     }
 
-    public static string CheckApply(string roomN,int dayW,int newSN,int newEN,int newSW,int newEW,string idN)
+    public static string CheckApply(string roomN,int dayW,int newSN,int newEN,int newSW,int newEW,string idN,int newOEFlag)
     {
-        string msg = "OK";
+        string msg = "OK"; 
 
         //取修改记录所对应的教室(strRoom)在特定日期（周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）有课，记入临时表table（不包含待修改记录本身）
         SqlConnection con = CommonClass.GetSqlConnection();
@@ -72,29 +72,125 @@ public class CommonClass
         DataTable table = new DataTable();
         table = ds.Tables[0];
 
-        //将新信息和临时表中的所有记录依次比较
-
-        for (int i = 0; i < table.Rows.Count; i++)
+        //开始周至结束周之间无有效数据
+        if (newOEFlag == 1)
         {
-            int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
-            int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
-            int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
-            if ((weekN >= newSW ) && (weekN <= newEW))
+            int t = 0;
+            for (int i = newSW; i <= newEW; i++)
             {
-                if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
-                {
-                    msg = "OK";
-                }
-                else
-                {
-                    msg = roomN + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
-                    break;
-                }
+                if (i%2 != 0)
+                { t = t + i; }               
             }
-            
+            if (t == 0)
+            {
+                msg = "开始周至结束周之间无有效数据";
+                return msg;
+            }
         }
-        
-        
+        if (newOEFlag == 2)
+        {
+            int t = 0;
+            for (int i = newSW; i <= newEW; i++)
+            {
+                if (i % 2 == 0)
+                { t = t + i; }
+            }
+            if (t == 0)
+            {
+                msg = "开始周至结束周之间无有效数据";
+                return msg;
+            }
+        }
+
+        //临时表中的所有记录依次和新信息比较
+        if (newOEFlag == 0)
+        {
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
+                int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
+                int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
+                if ((weekN >= newSW) && (weekN <= newEW))
+                {
+                    if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
+                    {
+                        msg = "OK";
+                    }
+                    else
+                    {
+                        msg = roomN + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
+                        break;
+                    }
+                }
+
+            }
+        }
+        //新信息中的奇数周与临时表的奇数周记录依次比较
+        if (newOEFlag == 1)
+        {
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
+                int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
+                int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
+                if (weekN % 2 != 0)
+                {
+                    for (int j = 1; j <= newEW; j = j + 2)
+                    {
+                        if ((j % 2 != 0) && (j == weekN))
+                        {
+                            if ((weekN >= newSW) && (weekN <= newEW))
+                            {
+                                if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
+                                {
+                                    msg = "OK";
+                                }
+                                else
+                                {
+                                    msg = roomN + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+        }
+        //新信息中的偶数周与临时表的偶数周记录依次比较
+        if (newOEFlag == 2)
+        {
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
+                int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
+                int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
+                if (weekN%2 == 0)
+                {
+                    for (int j = 2; j <= newEW; j=j+2)
+                    {
+                        if ((j % 2 == 0) && (j == weekN))
+                        {
+                            if ((weekN >= newSW) && (weekN <= newEW))
+                            {
+                                if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
+                                {
+                                    msg = "OK";
+                                }
+                                else
+                                {
+                                    msg = roomN + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                }
+                
+            }
+        }
+
+
 
         con.Dispose();
         table.Dispose();

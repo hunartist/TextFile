@@ -144,8 +144,9 @@ public partial class NextWebF : System.Web.UI.Page
         int newEN = Convert.ToInt16(e.NewValues["intEndNum"]);
         int newSW = Convert.ToInt16(e.NewValues["intStartWeek"]);
         int newEW = Convert.ToInt16(e.NewValues["intEndWeek"]);
+        int newOEFlag = Convert.ToInt16(e.NewValues["intOddEvenFlag"]);
         string idN = e.Keys["id"].ToString();
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, newSW, newEW, idN);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, newSW, newEW, idN, newOEFlag);
 
         if (checkmsg != "OK")
         {            
