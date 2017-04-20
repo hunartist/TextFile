@@ -126,10 +126,10 @@
                         <asp:Label ID="Label1" runat="server" Text='<%# Bind("strRoom") %>'></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
-                <asp:BoundField DataField="intDay" HeaderText="日期（星期几）" SortExpression="intDay" />              
+                <asp:BoundField DataField="intDay" HeaderText="日期<br />（星期几）" SortExpression="intDay" HtmlEncode ="false" />              
 
-                <asp:BoundField DataField="intStartNum" HeaderText="开始节次" SortExpression="intStartNum" />
-                <asp:BoundField DataField="intEndNum" HeaderText="结束节次" SortExpression="intEndNum" />
+                <asp:BoundField DataField="intStartNum" HeaderText="开始<br />节次" SortExpression="intStartNum" HtmlEncode ="false" />
+                <asp:BoundField DataField="intEndNum" HeaderText="结束<br />节次" SortExpression="intEndNum" HtmlEncode ="false" />
                 <asp:TemplateField HeaderText="开始周" SortExpression="intStartWeek">
                     <EditItemTemplate>
                         <asp:DropDownList ID="ddlStartWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek" SelectedValue='<%# Bind("intStartWeek") %>'>
@@ -158,7 +158,7 @@
                         </asp:DropDownList>
                     </EditItemTemplate>
                     <ItemTemplate>
-                        <asp:Label ID="Label3" runat="server" Text='<%# Bind("intOddEvenFlag") %>'></asp:Label>
+                        <asp:Label ID="Label3" runat="server" Text='<%# Bind("intOddEvenFlag") %>'  ToolTip="开始周到结束周之间：0为单双周，1为单周，2为双周"></asp:Label>
                     </ItemTemplate>
                 </asp:TemplateField>
                 <asp:BoundField DataField="strName" HeaderText="课程名称" SortExpression="strName" />
