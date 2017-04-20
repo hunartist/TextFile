@@ -12,7 +12,28 @@ public partial class ApplyAdd : System.Web.UI.Page
         if (!IsPostBack)    //Page.IsPostBack
         {
             if (user.redirectSet(Convert.ToString(Session["user"])))
-                Response.Redirect("tempLogin.aspx");
+            { Response.Redirect("tempLogin.aspx"); }
+
+            if (Session["addRoom"] != null)
+            { ddlRoom.Text = Session["addRoom"].ToString(); }
+            if (Session["addDay"] != null)
+            { ddlDay.Text = Session["addDay"].ToString(); }
+            if (Session["addSN"] != null)
+            { ddlStartN.Text = Session["addSN"].ToString(); }
+            if (Session["addEN"] != null)
+            { ddlEndN.Text = Session["addEN"].ToString(); }
+            if (Session["addSW"] != null)
+            { ddlStartW.Text = Session["addSW"].ToString(); }
+            if (Session["addEW"] != null)
+            { ddlEndW.Text = Session["addEW"].ToString(); }
+            if (Session["addName"] != null)
+            { tbName.Text = Session["addName"].ToString(); }
+            if (Session["addClass"] != null)
+            { tbClass.Text = Session["addClass"].ToString(); }
+            if (Session["addTeacher"] != null)
+            { tbTeacher.Text = Session["addTeacher"].ToString(); }
+            if (Session["addOE"] != null)
+            { ddlOddEvenW.Text = Session["addOE"].ToString(); }
         }        
     }
 
@@ -87,6 +108,18 @@ public partial class ApplyAdd : System.Web.UI.Page
         string strUrl_No = "ApplyEdit.aspx";
         Response.Write("<Script Language='JavaScript'>if ( window.confirm('" + strMsg + "')) {  window.location.href='" + strUrl_Yes +
                                 "' } else {window.location.href='" + strUrl_No + "' };</script>");
+
+        Session["addRoom"] = ddlRoom.Text;
+        Session["addDay"] = ddlDay.Text;
+        Session["addSN"] = ddlStartN.Text;
+        Session["addEN"] = ddlEndN.Text;
+        Session["addSW"] = ddlStartW.Text;
+        Session["addEW"] = ddlEndW.Text;
+        Session["addName"] = tbName.Text;
+        Session["addClass"] = tbClass.Text;
+        Session["addTeacher"] = tbTeacher.Text;
+        Session["addOE"] = ddlOddEvenW.Text;
+       
     }
 
     protected void ddlStartW_SelectedIndexChanged(object sender, EventArgs e)

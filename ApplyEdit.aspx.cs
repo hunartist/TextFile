@@ -33,6 +33,10 @@ public partial class NextWebF : System.Web.UI.Page
         LiteralID.Text = "";
         GridView10.DataKeyNames = new string[] { "id" };
 
+        if(Session["ddlDep"] != null)
+        {
+            DropDownListDepart.SelectedValue = Session["ddlDep"].ToString();
+        }
 
     }
 
@@ -400,5 +404,10 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
         ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
+    }
+
+    protected void DropDownListDepart_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        Session["ddlDep"] = DropDownListDepart.SelectedValue.ToString();
     }
 }
