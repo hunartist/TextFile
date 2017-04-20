@@ -8,7 +8,7 @@ GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[import]
+alter PROCEDURE [dbo].[import]
 	@strRoom_iGroup nvarchar(1000),--'301(120)','302(108)','304(120)','306(120)'
 	@intDay_i int ,
 	@intStartNum_i int,
@@ -18,6 +18,7 @@ CREATE PROCEDURE [dbo].[import]
 	@strName_i varchar(50),
 	@strClass_i varchar(20),
 	@strTeacher_i varchar(20),
+	@intOddEvenFlag_i int,
 	@strYearID_i varchar(20)
 
 	
@@ -55,6 +56,7 @@ AS
 			@strClass = @strClass_i,
 			@strTeacher = @strTeacher_i,
 			@strYearID = @strYearID_i,
+			@intOddEvenFlag = @intOddEvenFlag_i,
 			@id = @tempid
 	set @i = CAST(@i as int) + 1
 	FETCH NEXT from rid into @tempRoom

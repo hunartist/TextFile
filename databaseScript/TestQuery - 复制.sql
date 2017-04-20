@@ -2,8 +2,6 @@
 set @searchTextBox_CP = 'init'
 set @depN_CP ='多媒体'
 
-
-
 select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,
 RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID 
 from RoomApply a ,RoomDetail d,TitleStartEnd w ,RoomApplySub s

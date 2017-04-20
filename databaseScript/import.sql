@@ -7,7 +7,7 @@
 --''611(74)'',''612(60)'',''613(74)'',''614(60)'',''616(60)'',''报告厅'',''录播室''
 DECLARE	@return_value Int
 EXEC	@return_value = [dbo].[import]
-		@strRoom_iGroup = '''301(120)''',
+		@strRoom_iGroup = '''404(60)''',
 		@intDay_i = 2,
 		@intStartNum_i = 9,
 		@intEndNum_i = 10,
@@ -16,7 +16,8 @@ EXEC	@return_value = [dbo].[import]
 		@strName_i = N'2初始数据16171',
 		@strClass_i = N'2初始数据16171',
 		@strTeacher_i = N'2初始数据16171',
-		@strYearID_i = N'1617_1'
+		@strYearID_i = N'1617_2',
+		@intOddEvenFlag_i = 1
 		SELECT	@return_value as 'Return Value'
 
 DECLARE	@return_value Int
@@ -30,7 +31,8 @@ EXEC	@return_value = [dbo].[import]
 		@strName_i = N'初始数据',
 		@strClass_i = N'初始数据',
 		@strTeacher_i = N'初始数据',
-		@strYearID_i = N'1617_2'
+		@strYearID_i = N'1617_2',
+		@intOddEvenFlag_i = 0
 		SELECT	@return_value as 'Return Value'
 
 DECLARE	@return_value Int
@@ -44,7 +46,8 @@ EXEC	@return_value = [dbo].[import]
 		@strName_i = N'初始数据',
 		@strClass_i = N'初始数据',
 		@strTeacher_i = N'初始数据',
-		@strYearID_i = N'1617_2'
+		@strYearID_i = N'1617_2',
+		@intOddEvenFlag_i = 0
 		SELECT	@return_value as 'Return Value'
 
 DECLARE	@return_value Int
@@ -58,7 +61,8 @@ EXEC	@return_value = [dbo].[import]
 		@strName_i = N'初始数据',
 		@strClass_i = N'初始数据',
 		@strTeacher_i = N'初始数据',
-		@strYearID_i = N'1617_2'
+		@strYearID_i = N'1617_2',
+		@intOddEvenFlag_i = 0
 		SELECT	@return_value as 'Return Value'
 
 
@@ -73,7 +77,8 @@ EXEC	@return_value = [dbo].[import]
 		@strName_i = N'初始数据',
 		@strClass_i = N'初始数据',
 		@strTeacher_i = N'初始数据',
-		@strYearID_i = N'1617_2'
+		@strYearID_i = N'1617_2',
+		@intOddEvenFlag_i = 0
 
 
 SELECT	@return_value as 'Return Value'

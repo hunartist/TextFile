@@ -24,6 +24,7 @@
                 <asp:Parameter Name="strClass" Type="String" />
                 <asp:Parameter Name="strTeacher" Type="String" />
                 <asp:Parameter Name="strYearID" Type="String" />
+                <asp:Parameter Name="intOddEvenFlag" Type="int16" />
                 <asp:Parameter Name="id" Type="String" />
             </InsertParameters>
         </asp:SqlDataSource>
@@ -86,6 +87,13 @@
         <br />
         <asp:Label ID="lbEndW" runat="server" Text="结束周"></asp:Label>
         <asp:DropDownList ID="ddlEndW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
+        <br />
+        <asp:Label ID="lbOddEvenW" runat="server" Text="单双周"></asp:Label>
+        <asp:DropDownList ID="ddlOddEvenW" runat="server">            
+            <asp:ListItem Selected="True" Text="全" Value="0"></asp:ListItem>
+            <asp:ListItem Text="单" Value="1"></asp:ListItem>
+            <asp:ListItem Text="双" Value="2"></asp:ListItem>            
+        </asp:DropDownList>
         <br />
         <asp:Label ID="lbName" runat="server" Text="课程名称"></asp:Label>
         <asp:TextBox ID="tbName" runat="server"></asp:TextBox>

@@ -21,7 +21,7 @@
     </script>
     <form id="form1" method="post" runat="server" enableviewstate="True">
     
-        <asp:SqlDataSource ID="SqlDataSourceRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="select aa.*,t.currentFlag from (select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP ) as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true'  order by aa.id desc"
+        <asp:SqlDataSource ID="SqlDataSourceRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="select aa.*,t.currentFlag from (select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d where a.strRoom = d.strRoomName and d.strDepart = @depN_CP ) as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true'  order by aa.id desc"
             UpdateCommandType ="StoredProcedure" UpdateCommand="RoomApplyAction" 
             DeleteCommandType ="StoredProcedure" DeleteCommand="RoomApplyAction"
             >
@@ -36,6 +36,7 @@
                 <asp:Parameter Name="strName" Type="String" />
                 <asp:Parameter Name="strClass" Type="String" />
                 <asp:Parameter Name="strTeacher" Type="String" />
+                <asp:Parameter Name="intOddEvenFlag" Type="Int16" />
                 <asp:Parameter Name="id" Type="String" />
             </UpdateParameters>
             <DeleteParameters>
@@ -49,6 +50,7 @@
                 <asp:Parameter Name="strName" Type="String" />
                 <asp:Parameter Name="strClass" Type="String" />
                 <asp:Parameter Name="strTeacher" Type="String" />
+                <asp:Parameter Name="intOddEvenFlag" Type="Int16" />
                 <asp:Parameter Name="id" Type="String" />
             </DeleteParameters>
             <SelectParameters>
@@ -96,7 +98,7 @@
             <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>
         </div>
         <div class="righttop">
-        <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="50" AllowPaging="True">
+        <asp:GridView ID="GridView10" runat="server" AutoGenerateColumns="False" DataSourceID="SqlDataSourceRoomApply" AllowSorting="True" HorizontalAlign="Left" AutoGenerateEditButton="True" DataKeyNames="id" OnRowUpdated="GridView10_RowUpdated" OnSelectedIndexChanging="GridView10_SelectedIndexChanging" OnRowEditing="GridView10_RowEditing" OnRowUpdating="GridView10_RowUpdating" OnRowCancelingEdit="GridView10_RowCancelingEdit" OnRowDeleted="GridView10_RowDeleted" PageSize="50" AllowPaging="True" EnableModelValidation="True">
             <Columns>
                 <%--<asp:BoundField DataField="intStartWeek" HeaderText="开始周" SortExpression="intStartWeek" />--%>     
                 <%--<asp:BoundField DataField="intEndWeek" HeaderText="结束周" SortExpression="intEndWeek" />--%>
@@ -145,11 +147,24 @@
                     <ItemTemplate>
                         <asp:Label ID="lbEndWeek" runat="server" Text='<%# Bind("intEndWeek") %>'></asp:Label>
                     </ItemTemplate>
-                </asp:TemplateField>   
+                </asp:TemplateField> 
+                <asp:TemplateField HeaderText="单双周" SortExpression="intOddEvenFlag">
+                    <EditItemTemplate>
+                        <%--<asp:TextBox ID="TextBox1" runat="server" Text='<%# Bind("intOddEvenFlag") %>'></asp:TextBox>--%>
+                        <asp:DropDownList ID="DropDownList2" runat="server" Text='<%# Bind("intOddEvenFlag") %>'>
+                            <asp:ListItem Value="0">全</asp:ListItem>
+                            <asp:ListItem Value="1">单</asp:ListItem>
+                            <asp:ListItem Value="2">双</asp:ListItem>
+                        </asp:DropDownList>
+                    </EditItemTemplate>
+                    <ItemTemplate>
+                        <asp:Label ID="Label3" runat="server" Text='<%# Bind("intOddEvenFlag") %>'></asp:Label>
+                    </ItemTemplate>
+                </asp:TemplateField>
                 <asp:BoundField DataField="strName" HeaderText="课程名称" SortExpression="strName" />
                 <asp:BoundField DataField="strClass" HeaderText="班级" SortExpression="strClass" />
                 <asp:BoundField DataField="strTeacher" HeaderText="教师" SortExpression="strTeacher" />
-                <asp:BoundField DataField="yearID" HeaderText="学期" SortExpression="yearID" ReadOnly="True" />
+                <asp:BoundField DataField="yearID" HeaderText="学期" SortExpression="yearID" ReadOnly="True" />                
             </Columns>
             <PagerSettings FirstPageText="首页" LastPageText="末页" Mode="NumericFirstLast" NextPageText="下一页" PreviousPageText="上一页" />
         </asp:GridView>   

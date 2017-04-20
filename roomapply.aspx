@@ -63,12 +63,12 @@
              <asp:HyperLink ID="hlLogin" runat="server" NavigateUrl="~/templogin.aspx" target="_blank">登录</asp:HyperLink>
              <asp:Button ID="btExcel" runat="server" onclick="btExcel_Click" Text="导出" OnClientClick="ExportDivDataToExcel()"/>
              <asp:Label ID="lbPrint" runat="server" Text="打印请查询后按ctrl+p" ToolTip="建议使用Chrome浏览器打印，可以预览打印页面，选择是否显示页眉页脚、缩放页面范围大小等"/>
+             <div id="gotop"></div>
             </div>
         <div id="divExport">        
              <asp:placeholder id="GridViewPlaceHolder" runat="Server"/>                       
         </div>
-        <asp:HiddenField ID="HdnValue" runat="server" />
-        <div id="gotop"></div>
+        <asp:HiddenField ID="HdnValue" runat="server" />        
     </form>
 </body>
 </html>

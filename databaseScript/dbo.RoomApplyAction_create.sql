@@ -20,19 +20,47 @@ CREATE PROCEDURE [dbo].[RoomApplyAction]
 	@strClass varchar(20) = null,
 	@strTeacher varchar(20) = null,
 	@strYearID varchar(20) = null,
+	@intOddEvenFlag int = null,
 	@id varchar(30)
 	
 AS
 	declare @count int
 	if (@Action = 'update')
 	begin
-		UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [intStartWeek] = @intStartWeek , [intEndWeek] = @intEndWeek , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @id
+		UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [intStartWeek] = @intStartWeek , [intEndWeek] = @intEndWeek , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher, [intOddEvenFlag] = @intOddEvenFlag WHERE [id] = @id
 		delete from [RoomApplySub] where [F_id] = @id		
 		set @count = 0
-		while @count <= @intEndWeek - @intStartWeek
+		if (@intOddEvenFlag = 0)
 		begin
-			insert into [RoomApplySub] values (@id,@intStartWeek+@count)
-			set @count = @count + 1
+			while @count <= @intEndWeek - @intStartWeek
+			begin
+				insert into [RoomApplySub] values (@id,@intStartWeek+@count)
+				set @count = @count + 1
+			end
+		end
+		if (@intOddEvenFlag = 1)--奇数周
+		begin
+			set @count = @intStartWeek
+			while @count <= @intEndWeek
+			begin
+				if @count%2<>0
+				begin
+					insert into [RoomApplySub] values (@id,@count)	
+				end
+				set @count = @count + 1
+			end
+		end
+		if (@intOddEvenFlag = 2)--偶数周
+		begin
+			set @count = @intStartWeek
+			while @count <= @intEndWeek
+			begin
+				if @count%2=0
+				begin
+					insert into [RoomApplySub] values (@id,@count)			
+				end
+				set @count = @count + 1
+			end
 		end
 	end
 	else if (@Action = 'insert')

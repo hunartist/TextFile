@@ -53,6 +53,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.UpdateParameters["strName"].DefaultValue = Convert.ToString(e.NewValues["strName"]);
         SqlDataSourceRoomApply.UpdateParameters["strClass"].DefaultValue = Convert.ToString(e.NewValues["strClass"]);
         SqlDataSourceRoomApply.UpdateParameters["strTeacher"].DefaultValue = Convert.ToString(e.NewValues["strTeacher"]);
+        SqlDataSourceRoomApply.UpdateParameters["intOddEvenFlag"].DefaultValue = Convert.ToString(e.NewValues["intOddEvenFlag"]); 
         SqlDataSourceRoomApply.UpdateParameters["id"].DefaultValue = e.Keys["id"].ToString();
 
         SqlDataSourceRoomApply.Update();
@@ -175,6 +176,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.DeleteParameters["strName"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["strClass"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["strTeacher"].DefaultValue = null;
+        SqlDataSourceRoomApply.UpdateParameters["intOddEvenFlag"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["id"].DefaultValue = e.Keys["id"].ToString();
 
         SqlDataSourceRoomApply.Delete();
@@ -188,7 +190,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void btDepFlit_Click(object sender, EventArgs e)
     {
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and d.strDepart = @depN_CP order by a.id desc";
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and d.strDepart = @depN_CP order by a.id desc";
         ControlParameter depN_CP = new ControlParameter();
         depN_CP.Name = "depN_CP";
         depN_CP.Type = TypeCode.String;
@@ -223,7 +225,7 @@ public partial class NextWebF : System.Web.UI.Page
 
         SqlDataSourceRoomApply.SelectParameters.Clear();
         //SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in (@room_P) order by a.id desc";
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in ({0}) order by a.id desc", s);
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in ({0}) order by a.id desc", s);
         ControlParameter week_CP = new ControlParameter();
         week_CP.Name = "week_CP";
         week_CP.Type = TypeCode.Int16;
@@ -320,7 +322,7 @@ public partial class NextWebF : System.Web.UI.Page
 
         SqlDataSourceRoomApply.SelectParameters.Clear();
         //SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in (@room_P) order by a.id desc";
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) order by a.id desc", s);        
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) order by a.id desc", s);        
         ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
     }
@@ -328,7 +330,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void btSearch_Click(object sender, EventArgs e)
     {
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and ((a.strName like '%'+ @Name_CP + '%') or (a.strTeacher like '%'+ @Name_CP + '%') or (a.strClass like '%'+ @Name_CP + '%'))";
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and ((a.strName like '%'+ @Name_CP + '%') or (a.strTeacher like '%'+ @Name_CP + '%') or (a.strClass like '%'+ @Name_CP + '%'))";
         ControlParameter Name_CP = new ControlParameter();
         Name_CP.Name = "Name_CP";
         Name_CP.Type = TypeCode.String;
@@ -381,7 +383,7 @@ public partial class NextWebF : System.Web.UI.Page
         }
 
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom , sWeek);
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom , sWeek);
         ControlParameter searchTextBox_CP = new ControlParameter();
         searchTextBox_CP.Name = "searchTextBox_CP";
         searchTextBox_CP.Type = TypeCode.String;

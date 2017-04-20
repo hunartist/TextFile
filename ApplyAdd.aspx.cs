@@ -41,6 +41,7 @@ public partial class ApplyAdd : System.Web.UI.Page
         SqlDataSourceRoomApply.InsertParameters["strClass"].DefaultValue = tbClass.Text;
         SqlDataSourceRoomApply.InsertParameters["strTeacher"].DefaultValue = tbTeacher.Text;
         SqlDataSourceRoomApply.InsertParameters["strYearID"].DefaultValue = ddlYear.Text;
+        SqlDataSourceRoomApply.InsertParameters["intOddEvenFlag"].DefaultValue = ddlOddEvenW.Text;
         SqlDataSourceRoomApply.InsertParameters["id"].DefaultValue = idN;
 
         
