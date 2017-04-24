@@ -22,18 +22,16 @@ public partial class ApplyAdd : System.Web.UI.Page
             { ddlStartN.Text = Session["addSN"].ToString(); }
             if (Session["addEN"] != null)
             { ddlEndN.Text = Session["addEN"].ToString(); }
-            if (Session["addSW"] != null)
-            { ddlStartW.Text = Session["addSW"].ToString(); }
-            if (Session["addEW"] != null)
-            { ddlEndW.Text = Session["addEW"].ToString(); }
+            if (Session["addweekReg"] != null)
+            { tbWeekReg.Text = Session["addweekReg"].ToString(); }
+            if (Session["addweekData"] != null)
+            { tbWeekData.Text = Session["addweekData"].ToString(); }
             if (Session["addName"] != null)
             { tbName.Text = Session["addName"].ToString(); }
             if (Session["addClass"] != null)
             { tbClass.Text = Session["addClass"].ToString(); }
             if (Session["addTeacher"] != null)
-            { tbTeacher.Text = Session["addTeacher"].ToString(); }
-            if (Session["addOE"] != null)
-            { ddlOddEvenW.Text = Session["addOE"].ToString(); }
+            { tbTeacher.Text = Session["addTeacher"].ToString(); }            
         }        
     }
 
@@ -43,10 +41,9 @@ public partial class ApplyAdd : System.Web.UI.Page
         int dayW = Convert.ToInt16(ddlDay.Text);
         int startN = Convert.ToInt16(ddlStartN.Text);
         int endN = Convert.ToInt16(ddlEndN.Text);
-        int startW = Convert.ToInt16(ddlStartW.Text);
-        int endW = Convert.ToInt16(ddlEndW.Text);
-        string idN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);
-        int OEFlag = Convert.ToInt16(ddlOddEvenW.Text);
+        string weekReg = tbWeekReg.Text;
+        string weekData = tbWeekData.Text;
+        string idN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);    
 
         string NameN = tbName.Text;
         string ClassN = tbClass.Text;
@@ -57,27 +54,46 @@ public partial class ApplyAdd : System.Web.UI.Page
         SqlDataSourceRoomApply.InsertParameters["intDay"].DefaultValue = ddlDay.Text;
         SqlDataSourceRoomApply.InsertParameters["intStartNum"].DefaultValue = ddlStartN.Text;
         SqlDataSourceRoomApply.InsertParameters["intEndNum"].DefaultValue = ddlEndN.Text;
-        SqlDataSourceRoomApply.InsertParameters["intStartWeek"].DefaultValue = ddlStartW.Text;
-        SqlDataSourceRoomApply.InsertParameters["intEndWeek"].DefaultValue = ddlEndW.Text;
+        SqlDataSourceRoomApply.InsertParameters["strWeekReg"].DefaultValue = tbWeekReg.Text;
+        SqlDataSourceRoomApply.InsertParameters["strWeekData"].DefaultValue = tbWeekData.Text;
         SqlDataSourceRoomApply.InsertParameters["strName"].DefaultValue = tbName.Text;
         SqlDataSourceRoomApply.InsertParameters["strClass"].DefaultValue = tbClass.Text;
         SqlDataSourceRoomApply.InsertParameters["strTeacher"].DefaultValue = tbTeacher.Text;
-        SqlDataSourceRoomApply.InsertParameters["strYearID"].DefaultValue = ddlYear.Text;
-        SqlDataSourceRoomApply.InsertParameters["intOddEvenFlag"].DefaultValue = ddlOddEvenW.Text;
+        SqlDataSourceRoomApply.InsertParameters["strYearID"].DefaultValue = ddlYear.Text;        
         SqlDataSourceRoomApply.InsertParameters["id"].DefaultValue = idN;
 
-        
+        if (weekReg == null)
+        {
+            Response.Write("<script>alert('周输入不可为空')</script>");            
+            return;
+        }
+        string regData = "ini";
+        //验证reg到data的转换
+        bool rTdFalg = CommonClass.regToData(weekReg, out regData);
+        if (rTdFalg == true)
+        {
+            if (regData == "ini")
+            {
+                Response.Write("<script>alert('data=ini')</script>");                
+                return;
+            }
+            else
+            {
+                weekData = regData;
+                SqlDataSourceRoomApply.InsertParameters["strWeekData"].DefaultValue = weekData;
+            }
+        }
+        if (rTdFalg == false)
+        {
+            Response.Write("<script>alert('" + regData + "')</script>");            
+            return;
+        }
+
         if (startN > endN)
         {
             Response.Write("<script>alert('开始节次不能大于结束节次')</script>");
             return ;
         }
-        if(startW > endW)
-        {
-            Response.Write("<script>alert('开始周不能大于结束周')</script>");
-            return;
-        }
-
         
         if (NameN == "")
         {
@@ -95,10 +111,10 @@ public partial class ApplyAdd : System.Web.UI.Page
             return;
         }
 
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, startW, endW, idN, OEFlag);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN);
         if (checkmsg != "OK")
         {
-            Response.Write("<script>alert('"+checkmsg+"')</script>");
+            Response.Write("<script>alert('" + checkmsg + "')</script>");
             return;
         }
 
@@ -113,19 +129,15 @@ public partial class ApplyAdd : System.Web.UI.Page
         Session["addDay"] = ddlDay.Text;
         Session["addSN"] = ddlStartN.Text;
         Session["addEN"] = ddlEndN.Text;
-        Session["addSW"] = ddlStartW.Text;
-        Session["addEW"] = ddlEndW.Text;
+        Session["addweekReg"] = tbWeekReg.Text;
+        Session["addweekData"] = tbWeekData.Text;        
         Session["addName"] = tbName.Text;
         Session["addClass"] = tbClass.Text;
-        Session["addTeacher"] = tbTeacher.Text;
-        Session["addOE"] = ddlOddEvenW.Text;
+        Session["addTeacher"] = tbTeacher.Text;        
        
     }
 
-    protected void ddlStartW_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        ddlEndW.SelectedValue = ddlStartW.SelectedValue;
-    }
+
 
     protected void ddlStartN_SelectedIndexChanged(object sender, EventArgs e)
     {

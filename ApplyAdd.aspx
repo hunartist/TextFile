@@ -18,13 +18,12 @@
                 <asp:Parameter Name="intDay" Type="int16" />
                 <asp:Parameter Name="intStartNum" Type="int16" />
                 <asp:Parameter Name="intEndNum" Type="int16" />
-                <asp:Parameter Name="intStartWeek" Type="int16" />
-                <asp:Parameter Name="intEndWeek" Type="int16" />
+                <asp:Parameter Name="strWeekReg" Type="String" />
+                <asp:Parameter Name="strWeekData" Type="String" />
                 <asp:Parameter Name="strName" Type="String" />
                 <asp:Parameter Name="strClass" Type="String" />
                 <asp:Parameter Name="strTeacher" Type="String" />
-                <asp:Parameter Name="strYearID" Type="String" />
-                <asp:Parameter Name="intOddEvenFlag" Type="int16" />
+                <asp:Parameter Name="strYearID" Type="String" />                
                 <asp:Parameter Name="id" Type="String" />
             </InsertParameters>
         </asp:SqlDataSource>
@@ -82,19 +81,11 @@
             <asp:ListItem>10</asp:ListItem>
         </asp:DropDownList>
         <br />
-        <asp:Label ID="lbStartW" runat="server" Text="开始周"></asp:Label>
-        <asp:DropDownList ID="ddlStartW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="intWeek" DataValueField="intWeek" AutoPostBack="True" OnSelectedIndexChanged="ddlStartW_SelectedIndexChanged"></asp:DropDownList>
+        <asp:Label ID="lbStartW" runat="server" Text="周"></asp:Label>
+        <asp:TextBox ID="tbWeekReg" runat="server"></asp:TextBox>
         <br />
-        <asp:Label ID="lbEndW" runat="server" Text="结束周"></asp:Label>
-        <asp:DropDownList ID="ddlEndW" runat="server" DataSourceID ="SqlDataSourceWeek"  DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>
-        <br />
-        <asp:Label ID="lbOddEvenW" runat="server" Text="单双周"></asp:Label>
-        <asp:DropDownList ID="ddlOddEvenW" runat="server">            
-            <asp:ListItem Selected="True" Text="全" Value="0"></asp:ListItem>
-            <asp:ListItem Text="单" Value="1"></asp:ListItem>
-            <asp:ListItem Text="双" Value="2"></asp:ListItem>            
-        </asp:DropDownList>
-        <br />
+        <asp:Label ID="lbEndW" runat="server" Text="weekData" Visible ="false"></asp:Label>
+        <asp:TextBox ID="tbWeekData" runat="server" ReadOnly="true" Visible ="false"></asp:TextBox>
         <asp:Label ID="lbName" runat="server" Text="课程名称"></asp:Label>
         <asp:TextBox ID="tbName" runat="server"></asp:TextBox>
         <br />

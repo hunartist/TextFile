@@ -4,6 +4,8 @@ using System.Linq;
 using System.Web;
 using System.Data.SqlClient;
 using System.Data;
+using System.Text.RegularExpressions;
+using System.Configuration;
 
 /// <summary>
 /// CommonClass 的摘要说明
@@ -59,7 +61,7 @@ public class CommonClass
         return table;
     }
 
-    public static string CheckApply(string roomN,int dayW,int newSN,int newEN,int newSW,int newEW,string idN,int newOEFlag)
+    public static string CheckApply(string roomN,int dayW,int newSN,int newEN,string weekData,string idN)
     {
         string msg = "OK"; 
 
@@ -72,46 +74,29 @@ public class CommonClass
         DataTable table = new DataTable();
         table = ds.Tables[0];
 
-        //开始周至结束周之间无有效数据
-        if (newOEFlag == 1)
-        {
-            int t = 0;
-            for (int i = newSW; i <= newEW; i++)
-            {
-                if (i%2 != 0)
-                { t = t + i; }               
-            }
-            if (t == 0)
-            {
-                msg = "开始周至结束周之间无有效数据";
-                return msg;
-            }
-        }
-        if (newOEFlag == 2)
-        {
-            int t = 0;
-            for (int i = newSW; i <= newEW; i++)
-            {
-                if (i % 2 == 0)
-                { t = t + i; }
-            }
-            if (t == 0)
-            {
-                msg = "开始周至结束周之间无有效数据";
-                return msg;
-            }
-        }
-
         //临时表中的所有记录依次和新信息比较
-        if (newOEFlag == 0)
+        string[] newWeek = Regex.Split(weekData, ",");
+
+        for (int i = 0; i < table.Rows.Count; i++)
         {
-            for (int i = 0; i < table.Rows.Count; i++)
+            foreach (string item in newWeek)
             {
-                int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
-                int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
-                int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
-                if ((weekN >= newSW) && (weekN <= newEW))
+                try
                 {
+                    int week = Convert.ToInt16(item);
+                }
+                catch (Exception)
+                {
+                    msg = "regular int error";
+                    return msg;
+                }
+                int weekN = Convert.ToInt16(item);
+                int weekOld = Convert.ToInt16(table.Rows[i]["intWeek"]);                
+
+                if (weekN == weekOld)
+                {
+                    int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
+                    int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
                     if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
                     {
                         msg = "OK";
@@ -122,73 +107,35 @@ public class CommonClass
                         return msg;
                     }
                 }
+                    
+            }
+        }
+            
 
-            }
-        }
-        //新信息中的奇数周与临时表的奇数周记录依次比较
-        if (newOEFlag == 1)
-        {
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
-                int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
-                int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
-                if (weekN % 2 != 0)
-                {
-                    for (int j = 1; j <= newEW; j = j + 2)
-                    {
-                        if ((j % 2 != 0) && (j == weekN))
-                        {
-                            if ((weekN >= newSW) && (weekN <= newEW))
-                            {
-                                if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
-                                {
-                                    msg = "OK";
-                                }
-                                else
-                                {
-                                    msg = roomN + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
-                                    return msg;
-                                }
-                            }
-                        }
-                    }
-                }
 
-            }
-        }
-        //新信息中的偶数周与临时表的偶数周记录依次比较
-        if (newOEFlag == 2)
-        {
-            for (int i = 0; i < table.Rows.Count; i++)
-            {
-                int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
-                int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
-                int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
-                if (weekN%2 == 0)
-                {
-                    for (int j = 2; j <= newEW; j=j+2)
-                    {
-                        if ((j % 2 == 0) && (j == weekN))
-                        {
-                            if ((weekN >= newSW) && (weekN <= newEW))
-                            {
-                                if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
-                                {
-                                    msg = "OK";
-                                }
-                                else
-                                {
-                                    msg = roomN + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
-                                    return msg;
-                                }
-                            }
-                        }
-                    }
-                }
-                
-            }
-        }
+        ////临时表中的所有记录依次和新信息比较
+
+        //for (int i = 0; i < table.Rows.Count; i++)
+        //{
+        //    int weekN = Convert.ToInt16(table.Rows[i]["intWeek"]);
+        //    int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
+        //    int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
+        //    if ((weekN >= newSW) && (weekN <= newEW))
+        //    {
+        //        if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
+        //        {
+        //            msg = "OK";
+        //        }
+        //        else
+        //        {
+        //            msg = roomN + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
+        //            return msg;
+        //        }
+        //    }
+
+        //}
+
+
 
 
 
@@ -245,10 +192,23 @@ public class CommonClass
         sda.Fill(ds);
         DataTable table = new DataTable();
         table = ds.Tables[0];
-
-        
+                
         return table.Rows[0][3].ToString(); 
         
+    }
+
+    public static int getCurMaxWeek()
+    {
+        //获取currentFlag为true的学期结束周
+        SqlConnection con = CommonClass.GetSqlConnection();
+        SqlDataAdapter sda = new SqlDataAdapter();
+        sda.SelectCommand = new SqlCommand("select top 1 * from TitleStartEnd where currentFlag = 'true'", con);
+        DataSet ds = new DataSet();
+        sda.Fill(ds);
+        DataTable table = new DataTable();
+        table = ds.Tables[0];
+
+        return Convert.ToInt16(table.Rows[0][1]);
     }
 
 
@@ -286,6 +246,125 @@ public class CommonClass
             case 7: cstr = "日"; break;
         }
         return (cstr);
+    }
+
+    //“周”正则转换为存储过程可用的逗号分隔数据
+    public static bool regToData(string strReg,out string strData)
+    {
+        int maxWeek = getCurMaxWeek();
+        //两位数字+横杆（-）+两位数字 或 数字 + 逗号（总字符数1至50 + 4）（逗号不可在开头，不可在结尾，）
+        RegexStringValidator regweek = new RegexStringValidator("^[1-9]{0,1}[0-9]{1,1}[-][1-9]{0,1}[0-9]{1,1}$|^[1-9]{0,1}[0-9]{1,1}[0-9,]{0,50}[1-9]{0,1}[0-9]{0,1}$");
+        string strWeekRegToData = "";
+        try
+        {
+            regweek.Validate(strReg);
+        }
+        catch (Exception)
+        {
+            strData = "存在非法字符，输入示例：1-3或1,3,5,6,8或1";
+            return false;
+        }        
+        if (strReg.Contains("-"))
+        {
+            //weekReg字段包含“-”
+            string[] weekD = strReg.Split('-');
+            int fistWeek = Convert.ToInt16(weekD[0]);
+            int lastWeek = Convert.ToInt16(weekD[1]);            
+            //周数不可为0
+            if ((fistWeek == 0) | (lastWeek == 0))
+            {
+                strData = "周数不可为0";
+                return false;
+            }
+            //开始周不可大于结束周
+            if (fistWeek > lastWeek)
+            {
+                strData = "开始周不可大于结束周";
+                return false;
+            }
+            //结束周不可大于当前学期最大周数
+            if (lastWeek > maxWeek)
+            {
+                strData = "结束周不可大于当前学期最大周数";
+                return false;
+            }
+            //m-n转换为m,m+1,...,n-1,n
+            for (int i = fistWeek; i <= lastWeek; i++)
+            {
+                strWeekRegToData = strWeekRegToData + i + ",";
+            }
+            if (strWeekRegToData != "")
+            {
+                strWeekRegToData = strWeekRegToData.Substring(0, strWeekRegToData.Length - 1);                
+                strData = strWeekRegToData;
+                return true;
+            }
+            else
+            {
+                strData = "reg转data失败";
+                return false;
+            }             
+        }
+        else if (strReg.Contains(","))//reg含逗号，逗号不在开头结尾
+        {
+            string[] weekD = strReg.Split(',');
+            for (int i = 0;i < weekD.Count(); i++)
+            {
+                if (weekD[i] == "")
+                {
+                    strData = "存在连续逗号";
+                    return false;
+                }
+                if (Convert.ToInt16(weekD[i]) == 0)
+                {
+                    strData = "周数不可为0";
+                    return false;
+                }
+                if (Convert.ToInt16(weekD[i]) > maxWeek)
+                {
+                    strData = "周不可大于当前学期最大周数";
+                    return false;
+                }
+                if (weekD.Distinct().Count() != weekD.Length)
+                {
+                    strData = "周有重复";
+                    return false;
+                }
+                
+
+            strWeekRegToData = strWeekRegToData + weekD[i] + ",";
+            }
+            if (strWeekRegToData != "")
+            {
+                strWeekRegToData = strWeekRegToData.Substring(0, strWeekRegToData.Length - 1);
+                strData = strWeekRegToData;
+                return true;
+            }
+            else
+            {
+                strData = "reg转data失败";
+                return false;
+            }
+
+        }
+        else //reg不包含逗号，只有数字
+        {
+            if (Convert.ToInt16(strReg) == 0)
+            {
+                strData = "周数不可为0";
+                return false;
+            }
+            if (Convert.ToInt16(strReg) > maxWeek)
+            {
+                strData = "周不可大于当前学期最大周数";
+                return false;
+            }            
+        }
+
+
+
+        strData = strReg;
+        return true;
     }
 
 

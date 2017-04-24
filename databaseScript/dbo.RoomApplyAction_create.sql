@@ -15,92 +15,48 @@ ALTER PROCEDURE [dbo].[RoomApplyAction]
 	@intDay int = null,
 	@intStartNum int = null,
 	@intEndNum int = null,
-	@intStartWeek int = null,
-	@intEndWeek int = null,
+	@strWeekReg varchar(200) = null,
+	@strWeekData varchar(500) = null,
 	@strName varchar(50) = null,
 	@strClass varchar(20) = null,
 	@strTeacher varchar(20) = null,
-	@strYearID varchar(20) = null,
-	@intOddEvenFlag int = null,
+	@strYearID varchar(20) = null,	
 	@id varchar(30)
 	
 AS
-	declare @count int
+	declare @countWeek int
 	if (@Action = 'update')
 	begin
-		UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [intStartWeek] = @intStartWeek , [intEndWeek] = @intEndWeek , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher, [intOddEvenFlag] = @intOddEvenFlag WHERE [id] = @id
+		UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [strWeekReg] = @strWeekReg , [strWeekData] = @strWeekData , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @id
 		delete from [RoomApplySub] where [F_id] = @id		
-		set @count = 0
-		if (@intOddEvenFlag = 0)
+		set @countWeek = 0
+		declare wid CURSOR for SELECT weekid FROM [dbo].[ufn_SplitStringToTable](@strWeekData,N',')
+		OPEN wid
+		FETCH NEXT from wid into @countWeek
+		while @@FETCH_STATUS = 0
 		begin
-			while @count <= @intEndWeek - @intStartWeek
-			begin
-				insert into [RoomApplySub] values (@id,@intStartWeek+@count)
-				set @count = @count + 1
-			end
+			insert into [RoomApplySub] values (@id,@countWeek)
+			FETCH NEXT from wid into @countWeek
 		end
-		if (@intOddEvenFlag = 1)--奇数周
-		begin
-			set @count = @intStartWeek
-			while @count <= @intEndWeek
-			begin
-				if @count%2<>0
-				begin
-					insert into [RoomApplySub] values (@id,@count)	
-				end
-				set @count = @count + 1
-			end
-		end
-		if (@intOddEvenFlag = 2)--偶数周
-		begin
-			set @count = @intStartWeek
-			while @count <= @intEndWeek
-			begin
-				if @count%2=0
-				begin
-					insert into [RoomApplySub] values (@id,@count)			
-				end
-				set @count = @count + 1
-			end
-		end
+		close wid
+		deallocate  wid
 	end
 	else if (@Action = 'insert')
 	begin
-		insert into [RoomApply] values (@id,@strRoom,@intDay,@intStartNum,@intEndNum,@intStartWeek,@intEndWeek,@strName,@strClass,@strTeacher,'','',GETDATE(),@strYearID,@intOddEvenFlag)
-		set @count = 0
+		insert into [RoomApply] values (@id,@strRoom,@intDay,@intStartNum,@intEndNum,'','',@strName,@strClass,@strTeacher,'','',GETDATE(),@strYearID,'',@strWeekReg,@strWeekData)
+		set @countWeek = 0
 		delete from [RoomApplySub] where [F_id] = @id
-		if (@intOddEvenFlag = 0)
+		declare wid CURSOR for SELECT weekid FROM [dbo].[ufn_SplitStringToTable](@strWeekData,N',')
+		OPEN wid
+		FETCH NEXT from wid into @countWeek
+		while @@FETCH_STATUS = 0
 		begin
-			while @count <= @intEndWeek - @intStartWeek
-			begin
-				insert into [RoomApplySub] values (@id,@intStartWeek+@count)
-				set @count = @count + 1
-			end
+			insert into [RoomApplySub] values (@id,@countWeek)
+			FETCH NEXT from wid into @countWeek
 		end
-		if (@intOddEvenFlag = 1)--奇数周
-		begin
-			set @count = @intStartWeek
-			while @count <= @intEndWeek
-			begin
-				if @count%2<>0
-				begin
-					insert into [RoomApplySub] values (@id,@count)	
-				end
-				set @count = @count + 1
-			end
-		end
-		if (@intOddEvenFlag = 2)--偶数周
-		begin
-			set @count = @intStartWeek
-			while @count <= @intEndWeek
-			begin
-				if @count%2=0
-				begin
-					insert into [RoomApplySub] values (@id,@count)			
-				end
-				set @count = @count + 1
-			end
-		end
+		close wid
+		deallocate  wid
+
 	end
 	else if (@Action = 'delete')
 	begin

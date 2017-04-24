@@ -20,7 +20,12 @@ public partial class NextWebF : System.Web.UI.Page
         if (!IsPostBack)    //Page.IsPostBack
         {
             if (user.redirectSet(Convert.ToString(Session["user"])))
-                Response.Redirect("tempLogin.aspx");
+            { Response.Redirect("tempLogin.aspx"); }
+
+            if (Session["ddlDep"] != null)
+            {
+                DropDownListDepart.SelectedValue = Session["ddlDep"].ToString();
+            }
 
         }
         //LabelID.Visible = true;
@@ -32,11 +37,7 @@ public partial class NextWebF : System.Web.UI.Page
 
         LiteralID.Text = "";
         GridView10.DataKeyNames = new string[] { "id" };
-
-        if(Session["ddlDep"] != null)
-        {
-            DropDownListDepart.SelectedValue = Session["ddlDep"].ToString();
-        }
+        
 
     }
 
@@ -44,25 +45,21 @@ public partial class NextWebF : System.Web.UI.Page
 
 
     protected void GridView10_RowUpdated(object sender, GridViewUpdatedEventArgs e)
-    {
-        //SqlDataSourceRoomApply.UpdateCommand = "UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [intStartWeek] = @intStartWeek , [intEndWeek] = @intEndWeek , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @original_id";
-        
+    {        
         SqlDataSourceRoomApply.UpdateParameters["action"].DefaultValue = "update";
         SqlDataSourceRoomApply.UpdateParameters["strRoom"].DefaultValue = e.NewValues["strRoom"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["intDay"].DefaultValue = e.NewValues["intDay"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["intStartNum"].DefaultValue = e.NewValues["intStartNum"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["intEndNum"].DefaultValue = e.NewValues["intEndNum"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["intStartWeek"].DefaultValue = e.NewValues["intStartWeek"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["intEndWeek"].DefaultValue = e.NewValues["intEndWeek"].ToString();
+        SqlDataSourceRoomApply.UpdateParameters["strWeekReg"].DefaultValue = e.NewValues["strWeekReg"].ToString();
+        SqlDataSourceRoomApply.UpdateParameters["strWeekData"].DefaultValue = e.NewValues["strWeekData"].ToString();
         SqlDataSourceRoomApply.UpdateParameters["strName"].DefaultValue = Convert.ToString(e.NewValues["strName"]);
         SqlDataSourceRoomApply.UpdateParameters["strClass"].DefaultValue = Convert.ToString(e.NewValues["strClass"]);
         SqlDataSourceRoomApply.UpdateParameters["strTeacher"].DefaultValue = Convert.ToString(e.NewValues["strTeacher"]);
-        SqlDataSourceRoomApply.UpdateParameters["intOddEvenFlag"].DefaultValue = Convert.ToString(e.NewValues["intOddEvenFlag"]); 
         SqlDataSourceRoomApply.UpdateParameters["id"].DefaultValue = e.Keys["id"].ToString();
 
         SqlDataSourceRoomApply.Update();
         GridView10.DataBind();
-        //LabelMsg.Visible = false;
         btDepFlit.Visible = true;
         leftTool.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
@@ -76,8 +73,6 @@ public partial class NextWebF : System.Web.UI.Page
     protected void GridView10_RowEditing(object sender, GridViewEditEventArgs e)
     {
         LiteralID.Text = GridView10.DataKeys[e.NewEditIndex]["id"].ToString();
-        //LabelID.Text = GridView10.Rows[e.NewEditIndex].Cells[1].Text;
-        btDepFlit.Visible = false;
         leftTool.Visible = false;
         if (ViewState["selectCom_fil"] != null)
         {
@@ -88,6 +83,37 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void GridView10_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
+        if (e.NewValues["strWeekReg"] == null)
+        {
+            Response.Write("<script>alert('周输入不可为空')</script>");
+            e.Cancel = true;
+            return;
+        }
+        string regData = "ini";
+        //验证reg到data的转换
+        bool rTdFalg = CommonClass.regToData(e.NewValues["strWeekReg"].ToString(), out regData);
+        if (rTdFalg == true)
+        {
+            if (regData == "ini")
+            {
+                Response.Write("<script>alert('data=ini')</script>");
+                e.Cancel = true;
+                return;
+            }
+            else
+            {
+                e.NewValues["strWeekData"] = regData;
+            }
+        }
+        if (rTdFalg == false)
+        {
+            Response.Write("<script>alert('"+ regData + "')</script>");
+            e.Cancel = true;
+            return;
+        }
+
+
+
         RegexStringValidator regday = new RegexStringValidator("^[1-7]{1}$");
         RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|10");
 
@@ -101,6 +127,7 @@ public partial class NextWebF : System.Web.UI.Page
             //LabelMsg.Text = "日期只能填数字1至数字7";
             Response.Write("<script>alert('日期只能填数字1至数字7')</script>");
             e.Cancel = true;
+            return;
         }
         try
         {
@@ -111,16 +138,13 @@ public partial class NextWebF : System.Web.UI.Page
         {            
             Response.Write("<script>alert('节次只能填数字1至数字10')</script>");
             e.Cancel = true;
+            return;
         }
         if (Convert.ToInt16(e.NewValues["intStartNum"])> Convert.ToInt16(e.NewValues["intEndNum"]))
         {            
             Response.Write("<script>alert('开始节次不能大于结束节次')</script>");
             e.Cancel = true;
-        }
-        if (Convert.ToInt16(e.NewValues["intStartWeek"]) > Convert.ToInt16(e.NewValues["intEndWeek"]))
-        {
-            Response.Write("<script>alert('开始周不能大于结束周')</script>");
-            e.Cancel = true;
+            return;
         }
 
         string NameN = Convert.ToString(e.NewValues["strName"]);
@@ -129,36 +153,38 @@ public partial class NextWebF : System.Web.UI.Page
         if (NameN == "")
         {
             Response.Write("<script>alert('课程名未填写')</script>");
-            e.Cancel = true;            
+            e.Cancel = true;
+            return;
         }
         if (ClassN == "")
         {
             Response.Write("<script>alert('班级未填写')</script>");
-            e.Cancel = true;            
+            e.Cancel = true;
+            return;
         }
         if (TeacherN == "")
         {
             Response.Write("<script>alert('教师未填写')</script>");
-            e.Cancel = true;            
+            e.Cancel = true;
+            return;
         }
 
         string roomN = e.NewValues["strRoom"].ToString();
         int dayW = Convert.ToInt16(e.NewValues["intDay"]);
         int newSN = Convert.ToInt16(e.NewValues["intStartNum"]);
         int newEN = Convert.ToInt16(e.NewValues["intEndNum"]);
-        int newSW = Convert.ToInt16(e.NewValues["intStartWeek"]);
-        int newEW = Convert.ToInt16(e.NewValues["intEndWeek"]);
-        int newOEFlag = Convert.ToInt16(e.NewValues["intOddEvenFlag"]);
+        string weekData = e.NewValues["strWeekData"].ToString();        
         string idN = e.Keys["id"].ToString();
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, newSW, newEW, idN, newOEFlag);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, weekData, idN);
 
         if (checkmsg != "OK")
-        {            
+        {
             Response.Write("<script>alert('" + checkmsg + "')</script>");
             e.Cancel = true;
+            return;
         }
-                    
-                    
+
+
     }
 
 
@@ -176,12 +202,11 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSourceRoomApply.DeleteParameters["intDay"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["intStartNum"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["intEndNum"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["intStartWeek"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["intEndWeek"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["strWeekReg"].DefaultValue = null;
+        SqlDataSourceRoomApply.DeleteParameters["strWeekData"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["strName"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["strClass"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["strTeacher"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["intOddEvenFlag"].DefaultValue = null;
         SqlDataSourceRoomApply.DeleteParameters["id"].DefaultValue = e.Keys["id"].ToString();
 
         SqlDataSourceRoomApply.Delete();
@@ -195,7 +220,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void btDepFlit_Click(object sender, EventArgs e)
     {
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and d.strDepart = @depN_CP order by a.id desc";
+        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and d.strDepart = @depN_CP order by a.id desc";
         ControlParameter depN_CP = new ControlParameter();
         depN_CP.Name = "depN_CP";
         depN_CP.Type = TypeCode.String;
@@ -205,55 +230,7 @@ public partial class NextWebF : System.Web.UI.Page
         ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
         GridView10.DataBind();
     }
-
-    protected void btWeekFlit_Click(object sender, EventArgs e)
-    {
-        string s = string.Empty;
-        foreach (ListItem li in liboRoom.Items)
-        {
-            if (li.Selected == true)
-                s += "'" + li.Value.Trim() + "',";
-        }
-
-        if (s != string.Empty)
-        {
-            s = s.Substring(0, s.Length - 1); // chop off trailing ,   
-        }
-        else
-        {
-            foreach (ListItem li in liboRoom.Items)
-            {
-                s += "'" + li.Value.Trim() + "',";                
-            }
-            s = s.Substring(0, s.Length - 1); // chop off trailing , 
-        }
-
-        SqlDataSourceRoomApply.SelectParameters.Clear();
-        //SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in (@room_P) order by a.id desc";
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in ({0}) order by a.id desc", s);
-        ControlParameter week_CP = new ControlParameter();
-        week_CP.Name = "week_CP";
-        week_CP.Type = TypeCode.Int16;
-        week_CP.ControlID = "ddlWeek";
-        week_CP.PropertyName = "SelectedValue";
-        SqlDataSourceRoomApply.SelectParameters.Add(week_CP);
-        ControlParameter depN_CP = new ControlParameter();
-        depN_CP.Name = "depN_CP";
-        depN_CP.Type = TypeCode.String;
-        depN_CP.ControlID = "DropDownListDepart";
-        depN_CP.PropertyName = "SelectedValue";
-        SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
-        ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
-        GridView10.DataBind();
-
-        //Parameter room_P = new Parameter();
-        //room_P.Name = "room_P";
-        //room_P.Type = TypeCode.String;
-        //room_P.DefaultValue = Session["liboxSel"].ToString();
-        //SqlDataSourceRoomApply.SelectParameters.Add(room_P);
-        //ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
-        //GridView10.DataBind();
-    }
+ 
 
     protected void btAbandon_Click(object sender, EventArgs e)
     {
@@ -261,22 +238,6 @@ public partial class NextWebF : System.Web.UI.Page
         Response.Redirect("templogin.aspx");
     }
 
-    //protected void liboRoom_SelectedIndexChanged(object sender, EventArgs e)
-    //{
-    //    string s = string.Empty;
-    //    foreach (ListItem li in liboRoom.Items)
-    //    {
-    //        if (li.Selected == true)
-    //            s += "'"+li.Value.Trim() + "',";
-    //    }
-
-    //    if (s != string.Empty)
-    //    {
-    //        s = s.Substring(0, s.Length - 1); // chop off trailing ,
-    //        Session["liboxSel"] += s;
-
-    //    }
-    //}
 
     protected void btliboAll_Click(object sender, EventArgs e)
     {
@@ -327,21 +288,8 @@ public partial class NextWebF : System.Web.UI.Page
 
         SqlDataSourceRoomApply.SelectParameters.Clear();
         //SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in (@room_P) order by a.id desc";
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) order by a.id desc", s);        
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) order by a.id desc", s);        
         ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
-        GridView10.DataBind();
-    }
-
-    protected void btSearch_Click(object sender, EventArgs e)
-    {
-        SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and ((a.strName like '%'+ @Name_CP + '%') or (a.strTeacher like '%'+ @Name_CP + '%') or (a.strClass like '%'+ @Name_CP + '%'))";
-        ControlParameter Name_CP = new ControlParameter();
-        Name_CP.Name = "Name_CP";
-        Name_CP.Type = TypeCode.String;
-        Name_CP.ControlID = "tbSearch";
-        Name_CP.PropertyName = "Text";
-        SqlDataSourceRoomApply.SelectParameters.Add(Name_CP);
         GridView10.DataBind();
     }
 
@@ -388,7 +336,7 @@ public partial class NextWebF : System.Web.UI.Page
         }
 
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,a.intOddEvenFlag,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom , sWeek);
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom , sWeek);
         ControlParameter searchTextBox_CP = new ControlParameter();
         searchTextBox_CP.Name = "searchTextBox_CP";
         searchTextBox_CP.Type = TypeCode.String;
