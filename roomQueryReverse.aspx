@@ -36,6 +36,36 @@
         </asp:DropDownList>
         <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="sdsWeek" DataTextField="detail" DataValueField="intWeek">
         </asp:DropDownList>
+<%--        <asp:Label ID="Label1" runat="server" Text="至"></asp:Label>
+        <asp:DropDownList ID="ddlWeek2" runat="server" DataSourceID="sdsWeek" DataTextField="detail" DataValueField="intWeek" OnSelectedIndexChanged="ddlWeek2_SelectedIndexChanged">
+        </asp:DropDownList>--%>
+        <asp:Label ID="Label2" runat="server" Text="第"></asp:Label>
+        <asp:DropDownList ID="ddlNum1" runat="server">
+            <asp:ListItem>1</asp:ListItem>
+            <asp:ListItem>2</asp:ListItem>
+            <asp:ListItem>3</asp:ListItem>
+            <asp:ListItem>4</asp:ListItem>
+            <asp:ListItem>5</asp:ListItem>
+            <asp:ListItem>6</asp:ListItem>
+            <asp:ListItem>7</asp:ListItem>
+            <asp:ListItem>8</asp:ListItem>
+            <asp:ListItem>9</asp:ListItem>
+            <asp:ListItem>10</asp:ListItem>
+        </asp:DropDownList>
+        <asp:Label ID="Label3" runat="server" Text="节至第"></asp:Label>
+        <asp:DropDownList ID="ddlNum2" runat="server" OnSelectedIndexChanged="ddlNum2_SelectedIndexChanged">
+            <asp:ListItem>1</asp:ListItem>
+            <asp:ListItem>2</asp:ListItem>
+            <asp:ListItem>3</asp:ListItem>
+            <asp:ListItem>4</asp:ListItem>
+            <asp:ListItem>5</asp:ListItem>
+            <asp:ListItem>6</asp:ListItem>
+            <asp:ListItem>7</asp:ListItem>
+            <asp:ListItem>8</asp:ListItem>
+            <asp:ListItem>9</asp:ListItem>
+            <asp:ListItem Selected="True">10</asp:ListItem>
+        </asp:DropDownList>
+        <asp:Label ID="Label4" runat="server" Text="节"></asp:Label>
         <asp:Button ID="btSearch" runat="server" Text="查询" OnClick="btSearch_Click" />
         <asp:SqlDataSource ID="sdsRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [strRoomName] FROM [RoomDetail] WHERE ([strDepart] = @strDepart)">
             <SelectParameters>

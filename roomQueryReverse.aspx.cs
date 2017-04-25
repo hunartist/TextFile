@@ -14,20 +14,30 @@ public partial class roomQueryReverse : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //PrintTab(7, "gvTest", "多媒体");
-        int CweekNum = CommonClass.getCurrentWeek();        
+        int CweekNum = CommonClass.getCurrentWeek();
+        int maxWeek = CommonClass.getCurMaxWeek();     
 
         if (Page.IsPostBack == false)
         {
-            ddlWeek.SelectedValue = CweekNum.ToString();
+            //ddlWeek.SelectedValue = CweekNum.ToString();
+            //ddlWeek2.SelectedValue = maxWeek.ToString();
+
+            if (Session["QRdep"] != null) { ddlDep.SelectedValue = Session["QRdep"].ToString(); }
+            if (Session["QRweek"] != null) { ddlWeek.SelectedValue = Session["QRweek"].ToString();}
+            else { ddlWeek.SelectedValue = CweekNum.ToString(); }
+            if (Session["QRnum1"] != null) { ddlNum1.SelectedValue = Session["QRnum1"].ToString(); }
+            if (Session["QRnum2"] != null) { ddlNum2.SelectedValue = Session["QRnum2"].ToString(); }
+
         }
 
     }
 
-    protected DataTable PrintTab(int weekNum,  string departmentName)
+    protected DataTable PrintTab(int weekNum,int startNum1,int endNum2, string departmentName)
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select aaa.*,t.currentFlag from (select  aa.*,d.strRoomName,d.strDepart,d.strCDep from (select distinct s.intWeek, RTRIM(a.strRoom) as strRoom,a.intDay,a.intStartNum,a.intEndNum,a.yearID from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.strRoom = d.strRoomName where aa.intWeek = '" + weekNum + "' and d.strDepart= '" + departmentName + "') as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'", con);
+        //sda.SelectCommand = new SqlCommand("select aaa.*,t.currentFlag from (select  aa.*,d.strRoomName,d.strDepart,d.strCDep from (select distinct s.intWeek, RTRIM(a.strRoom) as strRoom,a.intDay,a.intStartNum,a.intEndNum,a.yearID from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.strRoom = d.strRoomName where aa.intWeek >= '" + weekNum + "' and aa.intWeek <= '" + weekNum2 + "' and d.strDepart= '" + departmentName + "' and (( aa.intStartNum  >= " + startNum1 + " and aa.intStartNum <= " + @endNum2 + " )or(aa.intEndNum  >= " + @startNum1 + " and aa.intEndNum <= " + @endNum2 + " )or((aa.intStartNum  < " + @startNum1 + " and aa.intEndNum > " + @endNum2 + " )))) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'", con);
+        sda.SelectCommand = new SqlCommand("select aaa.*,t.currentFlag from (select  aa.*,d.strRoomName,d.strDepart,d.strCDep from (select distinct s.intWeek, RTRIM(a.strRoom) as strRoom,a.intDay,a.intStartNum,a.intEndNum,a.yearID from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.strRoom = d.strRoomName where aa.intWeek = '" + weekNum + "' and d.strDepart= '" + departmentName + "' and (( aa.intStartNum  >= " + startNum1 + " and aa.intStartNum <= " + @endNum2 + " )or(aa.intEndNum  >= " + @startNum1 + " and aa.intEndNum <= " + @endNum2 + " )or((aa.intStartNum  < " + @startNum1 + " and aa.intEndNum > " + @endNum2 + " )))) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -68,7 +78,7 @@ public partial class roomQueryReverse : System.Web.UI.Page
             iniString = iniString + roomTable.Rows[i][0] + "<br />";
         }
         
-        for (int i = 0;i<10;i++)
+        for (int i = startNum1-1; i< endNum2; i++)
         {
             for (int j=1;j<8;j++)
             {
@@ -156,7 +166,7 @@ public partial class roomQueryReverse : System.Web.UI.Page
 
     private void DataBindRepeater()
     {        
-        this.Repeater1.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), ddlDep.SelectedValue);
+        this.Repeater1.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue),Convert.ToInt16(ddlNum1.SelectedValue), Convert.ToInt16(ddlNum2.SelectedValue), ddlDep.SelectedValue);
         this.Repeater1.DataBind();
 
         for (int i = 1; i <= 7; i++) // 遍历每一列
@@ -203,22 +213,32 @@ public partial class roomQueryReverse : System.Web.UI.Page
 
     protected void btSearch_Click(object sender, EventArgs e)
     {
-        //Repeater1.DataSource = PrintTab(Convert.ToInt16(ddlWeek.SelectedValue), ddlDep.SelectedValue);
-        //Repeater1.DataBind();
-
         DataBindRepeater();
-        
+
+        Session["QRdep"] = ddlDep.SelectedValue.ToString();
+        Session["QRweek"] = ddlWeek.SelectedValue.ToString();
+        Session["QRnum1"] = ddlNum1.SelectedValue.ToString();
+        Session["QRnum2"] = ddlNum2.SelectedValue.ToString();
 
 
-        //for (int i = 0; i < gvTest.Rows.Count; i++)
-        //{
-        //    for (int j = 0; j < gvTest.Rows[0].Cells.Count; j++)
-        //    {
-        //        gvTest.Rows[i].Cells[j].Width = 80;
-        //    }
-        //}
 
     }
 
 
+
+    protected void ddlNum2_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if(Convert.ToInt16(ddlNum2.SelectedValue)<(Convert.ToInt16(ddlNum1.SelectedValue)))
+        {
+            ddlNum2.SelectedValue = ddlNum1.SelectedValue;
+        }
+    }
+
+    //protected void ddlWeek2_SelectedIndexChanged(object sender, EventArgs e)
+    //{
+    //    if (Convert.ToInt16(ddlWeek2.SelectedValue) < (Convert.ToInt16(ddlWeek.SelectedValue)))
+    //    {
+    //        ddlWeek2.SelectedValue = ddlWeek.SelectedValue;
+    //    }
+    //}
 }

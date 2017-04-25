@@ -1,22 +1,38 @@
-﻿--declare @strWeekData nvarchar(500),@countWeek nvarchar(20)
---set @strWeekData = '1,2,3,5,6,9,10,15'
---set @countWeek = ''
+﻿declare  @weekNum int,@departmentName nvarchar(20),@startNum int,@endNum int
+set @weekNum = 5
+set @departmentName = '0sxy'
+set @startNum =2
+set @endNum =5
 
---declare wid CURSOR for SELECT weekid FROM [dbo].[ufn_SplitStringToTable](@strWeekData,N',')
---OPEN wid
---FETCH NEXT from wid into @countWeek
---while @@FETCH_STATUS = 0
---begin
---	print @countWeek
---	FETCH NEXT from wid into @countWeek
---end
---close wid
---deallocate  wid
 
---delete from RoomApplySub
 
-select s.intWeek,a.* from RoomApply a,RoomApplySub s where a.id = s.F_id and a.id IN ('201704241229282879','201704241228435053')
---delete from RoomApplySub where F_id = '201704241147200023'
---delete from RoomApply where id = '201704241147200023'
+select aaa.*,t.currentFlag from 
+	(
+	select  aa.*,d.strRoomName,d.strDepart,d.strCDep from 
+		(
+		select distinct s.intWeek ,RTRIM(a.strRoom) as strRoom, a.intDay,a.intStartNum,a.intEndNum,a.yearID 
+		from RoomApply a 
+		inner join RoomApplySub s on a.id = s.F_id
+		) as aa 
+	inner join RoomDetail d on aa.strRoom = d.strRoomName 
+	--where aa.intWeek = @weekNum and d.strDepart= @departmentName
+	where d.strDepart= @departmentName and aa.intWeek >= 11 and aa.intWeek <=12 and (( aa.intStartNum  >=@startNum and aa.intStartNum <=@endNum)or(aa.intEndNum  >=@startNum and aa.intEndNum <=@endNum)or((aa.intStartNum  < @startNum and aa.intEndNum > @endNum)))
+	) as aaa 
+inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1
 
- select * from (select distinct s.intWeek,s.F_id,a.intStartNum,a.intEndNum,a.yearID from RoomApply a,RoomApplySub s  where a.id = s.f_id and a.strRoom = '录播室       ' and  a.intDay = 1 and a.id != '201704241148147904' ) as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' 
+--"and (( aa.intStartNum  >= "+startNum+" and aa.intStartNum <= "+@endNum+" )or(aa.intEndNum  >= "+@startNum+" and aa.intEndNum <= "+@endNum+" )or((aa.intStartNum  < "+@startNum+" and aa.intEndNum > "+@endNum+" )))"
+
+--select aaa.*,t.currentFlag from 
+--	(
+--	select  aa.*,d.strRoomName,d.strDepart,d.strCDep from 
+--		(
+--		select distinct s.intWeek, RTRIM(a.strRoom) as strRoom,a.intDay,a.intStartNum,a.intEndNum,a.yearID 
+--		from RoomApply a inner join RoomApplySub s on a.id = s.F_id
+--		) as aa 
+--	inner join RoomDetail d on aa.strRoom = d.strRoomName 
+--	where aa.intWeek >= '11' and aa.intWeek <= '17' and d.strDepart= '多媒体' 
+--	and (( aa.intStartNum  >= 1 and aa.intStartNum <= 10 )or(aa.intEndNum  >= 1 and aa.intEndNum <= 10 )or((aa.intStartNum  < 1 and aa.intEndNum > 10 )))
+--	) as aaa 
+--inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'
+
+SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail] order by 1 desc
