@@ -20,6 +20,7 @@ public partial class roomapply : System.Web.UI.Page
         if (Page.IsPostBack == false)
         {
             DropDownListWeek.SelectedValue = weekNum.ToString();
+            if(Session["RADep"] != null) { DropDownListDepart.SelectedValue = Session["RADep"].ToString(); }
         }
 
         string title = CommonClass.getTitle();
@@ -353,6 +354,7 @@ public partial class roomapply : System.Web.UI.Page
                 return;
             }
         }
+        Session["RADep"] = DropDownListDepart.SelectedValue.ToString();
     }
 
 

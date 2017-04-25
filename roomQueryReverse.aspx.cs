@@ -14,11 +14,12 @@ public partial class roomQueryReverse : System.Web.UI.Page
     protected void Page_Load(object sender, EventArgs e)
     {
         //PrintTab(7, "gvTest", "多媒体");
-        int CweekNum = CommonClass.getCurrentWeek();
-        int maxWeek = CommonClass.getCurMaxWeek();     
+           
 
         if (Page.IsPostBack == false)
         {
+            int CweekNum = CommonClass.getCurrentWeek();
+            int maxWeek = CommonClass.getCurMaxWeek();
             //ddlWeek.SelectedValue = CweekNum.ToString();
             //ddlWeek2.SelectedValue = maxWeek.ToString();
 
