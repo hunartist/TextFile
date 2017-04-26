@@ -145,6 +145,9 @@ public partial class ApplyAdd : System.Web.UI.Page
         {
             ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
         }
-        
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 11))
+        {
+            ddlEndN.SelectedValue = ddlStartN.SelectedValue;
+        }
     }
 }

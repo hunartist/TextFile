@@ -78,13 +78,13 @@ public partial class roomapply : System.Web.UI.Page
         }
 
         //添加10行
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 11; i++)
         {
             dtSchedule.Rows.Add();
         }
 
         //添加左侧固定信息（第几节）
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 11; i++)
         {
             dtSchedule.Rows[i][0] = (i+1) ;
         }
@@ -111,9 +111,37 @@ public partial class roomapply : System.Web.UI.Page
                     //Day
                     string week = Convert.ToString(table.Rows[i]["intDay"]);
                     //StartNum
-                    string startNum = Convert.ToString(table.Rows[i]["intStartNum"]);
+                    string startNum = "";
+                    if (Convert.ToInt16(table.Rows[i]["intStartNum"]) <=4)
+                    {
+                        startNum = Convert.ToString(table.Rows[i]["intStartNum"]);
+                    }
+                    if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) >= 5)&& (Convert.ToInt16(table.Rows[i]["intStartNum"]) <= 10))
+                    {
+                        startNum = Convert.ToString(table.Rows[i]["intStartNum"])+1;
+                    }
+                    if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11)
+                    {
+                        startNum = "5";
+                    }
+
+
                     //EndNum
-                    string endNum = Convert.ToString(table.Rows[i]["intEndNum"]);
+                    //string endNum = Convert.ToString(table.Rows[i]["intEndNum"]);
+                    string endNum = "";
+                    if (Convert.ToInt16(table.Rows[i]["intEndNum"]) <= 4)
+                    {
+                        endNum = Convert.ToString(table.Rows[i]["intEndNum"]);
+                    }
+                    if ((Convert.ToInt16(table.Rows[i]["intEndNum"]) >= 5) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) <= 10))
+                    {
+                        endNum = Convert.ToString(table.Rows[i]["intEndNum"]) + 1;
+                    }
+                    if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11)
+                    {
+                        endNum = "5";
+                    }
+
 
                     for (int weekCount = 1; weekCount < 8; weekCount++)//确定本条数据将来显示在哪一列
                     {
@@ -148,9 +176,14 @@ public partial class roomapply : System.Web.UI.Page
             dtSchedule.Columns[i].ColumnName ="星期"+ WeekConvertToChinese(i);
         }
         //修改列标题
-        for (int i=0;i<10;i++)
+        for (int i=0;i<4;i++)
         {
             dtSchedule.Rows[i][0] = "第" + ConvertToChinese(i + 1) + "节";
+        }
+        dtSchedule.Rows[4][0] = "中午";
+        for (int i = 5; i < 11; i++)
+        {
+            dtSchedule.Rows[i][0] = "第" + ConvertToChinese(i) + "节";
         }
 
         //gridview不写死

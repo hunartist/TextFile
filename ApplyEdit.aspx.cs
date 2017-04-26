@@ -115,7 +115,7 @@ public partial class NextWebF : System.Web.UI.Page
 
 
         RegexStringValidator regday = new RegexStringValidator("^[1-7]{1}$");
-        RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|10");
+        RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|^1[10]{1}");
 
         try
         {
@@ -136,7 +136,7 @@ public partial class NextWebF : System.Web.UI.Page
         }
         catch
         {            
-            Response.Write("<script>alert('节次只能填数字1至数字10')</script>");
+            Response.Write("<script>alert('节次只能填数字1至数字11')</script>");
             e.Cancel = true;
             return;
         }

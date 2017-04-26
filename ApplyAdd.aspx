@@ -65,6 +65,7 @@
             <asp:ListItem>8</asp:ListItem>
             <asp:ListItem>9</asp:ListItem>
             <asp:ListItem>10</asp:ListItem>
+            <asp:ListItem Value="11">中午</asp:ListItem>
         </asp:DropDownList>
         <br />
         <asp:Label ID="lbEndN" runat="server" Text="结束节次"></asp:Label>
@@ -79,6 +80,7 @@
             <asp:ListItem>8</asp:ListItem>
             <asp:ListItem>9</asp:ListItem>
             <asp:ListItem>10</asp:ListItem>
+            <asp:ListItem Value="11">中午</asp:ListItem>
         </asp:DropDownList>
         <br />
         <asp:Label ID="lbStartW" runat="server" Text="周"></asp:Label>
