@@ -267,8 +267,9 @@ public class CommonClass
     public static bool regToData(string strReg,out string strData)
     {
         int maxWeek = getCurMaxWeek();
-        //两位数字+横杆（-）+两位数字 或 数字 + 逗号（总字符数1至50 + 4）（逗号不可在开头，不可在结尾，）
-        RegexStringValidator regweek = new RegexStringValidator("^[1-9]{0,1}[0-9]{1,1}[-][1-9]{0,1}[0-9]{1,1}$|^[1-9]{0,1}[0-9]{1,1}[0-9,]{0,50}[1-9]{0,1}[0-9]{0,1}$");
+        //两位数字+横杆（-）+两位数字 或 数字 + 逗号（总字符数1至50 + 4）（逗号不可在开头，不可在结尾，可以为纯数字）
+        RegexStringValidator regweek = new RegexStringValidator("^[1-9]{0,1}[0-9]{1,1}[-][1-9]{0,1}[0-9]{1,1}$|^[1-9]{0,1}[0-9]{1,1}[0-9,-]{0,50}[1-9]{0,1}[0-9]{0,1}$");
+        RegexStringValidator regweekMN = new RegexStringValidator("^[1-9]{0,1}[0-9]{1,1}[-][1-9]{0,1}[0-9]{1,1}$");
         string strWeekRegToData = "";
         try
         {
@@ -281,46 +282,143 @@ public class CommonClass
         }        
         if (strReg.Contains("-"))
         {
-            //weekReg字段包含“-”
-            string[] weekD = strReg.Split('-');
-            int fistWeek = Convert.ToInt16(weekD[0]);
-            int lastWeek = Convert.ToInt16(weekD[1]);            
-            //周数不可为0
-            if ((fistWeek == 0) | (lastWeek == 0))
+            if (strReg.Contains(","))//reg含有逗号，横杆，数字
             {
-                strData = "周数不可为0";
-                return false;
-            }
-            //开始周不可大于结束周
-            if (fistWeek > lastWeek)
-            {
-                strData = "开始周不可大于结束周";
-                return false;
-            }
-            //结束周不可大于当前学期最大周数
-            if (lastWeek > maxWeek)
-            {
-                strData = "结束周不可大于当前学期最大周数";
-                return false;
-            }
-            //m-n转换为m,m+1,...,n-1,n
-            for (int i = fistWeek; i <= lastWeek; i++)
-            {
-                strWeekRegToData = strWeekRegToData + i + ",";
-            }
-            if (strWeekRegToData != "")
-            {
-                strWeekRegToData = strWeekRegToData.Substring(0, strWeekRegToData.Length - 1);                
-                strData = strWeekRegToData;
-                return true;
+                string[] weekD = strReg.Split(',');//按逗号切割reg
+                List<string> weekOut = new List<string>();
+                for (int i = 0; i < weekD.Count(); i++)
+                {
+                    string weekDataI = weekD[i];
+                    if (weekDataI == "")
+                    {
+                        strData = "存在连续逗号";
+                        return false;
+                    }                    
+                    if (weekDataI.Contains("-"))
+                    {
+                        try
+                        {
+                            regweekMN.Validate(weekDataI);
+                        }
+                        catch (Exception)
+                        {
+                            strData = "按逗号切割后存在非法字符，输入示例：1-3或1,3,5,6,8或1";
+                            return false;
+                        }
+                        //切割后数据为m-n
+                        string[] weekMN = weekDataI.Split('-');
+                        int firstW = Convert.ToInt16(weekMN[0]);
+                        int lastW = Convert.ToInt16(weekMN[1]);
+                        //周数不可为0
+                        if ((firstW == 0) | (lastW == 0))
+                        {
+                            strData = "切割后周数不可为0";
+                            return false;
+                        }
+                        //开始周不可大于结束周
+                        if (firstW > lastW)
+                        {
+                            strData = "切割后开始周不可大于结束周";
+                            return false;
+                        }
+                        //结束周不可大于当前学期最大周数
+                        if (lastW > maxWeek)
+                        {
+                            strData = "切割后结束周不可大于当前学期最大周数";
+                            return false;
+                        }
+                        //m-n转换为m,m+1,...,n-1,n
+                        for (int j = firstW; j <= lastW; j++)
+                        {
+                            //strWeekRegToData = strWeekRegToData + j + ",";
+                            weekOut.Add(j + ",");
+                        }                                     
+                    }
+                    else
+                    {
+                        //切割后数据为m
+                        if (Convert.ToInt16(weekDataI) == 0)
+                        {
+                            strData = "周数不可为0";
+                            return false;
+                        }
+                        if (Convert.ToInt16(weekDataI) > maxWeek)
+                        {
+                            strData = "周不可大于当前学期最大周数";
+                            return false;
+                        }
+                        //strWeekRegToData = strWeekRegToData + weekDataI + ",";
+                        weekOut.Add(weekDataI + ",");
+                    }
+                }
+                if (weekOut.Distinct().Count() != weekOut.Count())
+                {
+                    strData = "切割后周有重复";
+                    return false;
+                }
+                //weekOut.Sort();
+                weekOut = weekOut.OrderBy(s => int.Parse(Regex.Match(s, @"\d+").Value)).ToList();
+                for (int i = 0; i < weekOut.Count; i++)
+                {
+                    strWeekRegToData = strWeekRegToData + weekOut[i];
+                }
+                if (strWeekRegToData != "")
+                {
+                    strWeekRegToData = strWeekRegToData.Substring(0, strWeekRegToData.Length - 1);
+                    strData = strWeekRegToData;
+                    return true;
+                }
+                else
+                {
+                    strData = "切割后reg转data失败,只有“-”和数字";
+                    return false;
+                }
             }
             else
             {
-                strData = "reg转data失败";
-                return false;
-            }             
+                //weekReg字段只有“-”和数字
+                string[] weekD = strReg.Split('-');
+                int firstWeek = Convert.ToInt16(weekD[0]);
+                int lastWeek = Convert.ToInt16(weekD[1]);
+                //周数不可为0
+                if ((firstWeek == 0) | (lastWeek == 0))
+                {
+                    strData = "周数不可为0";
+                    return false;
+                }
+                //开始周不可大于结束周
+                if (firstWeek > lastWeek)
+                {
+                    strData = "开始周不可大于结束周";
+                    return false;
+                }
+                //结束周不可大于当前学期最大周数
+                if (lastWeek > maxWeek)
+                {
+                    strData = "结束周不可大于当前学期最大周数";
+                    return false;
+                }
+                //m-n转换为m,m+1,...,n-1,n
+                for (int i = firstWeek; i <= lastWeek; i++)
+                {
+                    strWeekRegToData = strWeekRegToData + i + ",";
+                }
+                if (strWeekRegToData != "")
+                {
+                    strWeekRegToData = strWeekRegToData.Substring(0, strWeekRegToData.Length - 1);
+                    strData = strWeekRegToData;
+                    return true;
+                }
+                else
+                {
+                    strData = "reg转data失败,只有“-”和数字";
+                    return false;
+                }
+            }
+            
+                       
         }
-        else if (strReg.Contains(","))//reg含逗号，逗号不在开头结尾
+        else if (strReg.Contains(","))//reg含逗号和数字，逗号不在开头结尾
         {
             string[] weekD = strReg.Split(',');
             for (int i = 0;i < weekD.Count(); i++)
@@ -357,12 +455,12 @@ public class CommonClass
             }
             else
             {
-                strData = "reg转data失败";
+                strData = "reg转data失败,逗号和数字";
                 return false;
             }
 
         }
-        else //reg不包含逗号，只有数字
+        else //reg只有数字
         {
             if (Convert.ToInt16(strReg) == 0)
             {

@@ -88,7 +88,7 @@ public partial class emptyRoom : System.Web.UI.Page
         {
             int SN = Convert.ToInt16(table.Rows[i]["intStartNum"])-1;
             int EN = Convert.ToInt16(table.Rows[i]["intEndNum"]) - 1;            
-            DataRow[] roomRows = roomTable.Select("strRoomName = " + table.Rows[i]["strRoom"] + " and intWeek = "+table.Rows[i]["intWeek"]);
+            DataRow[] roomRows = roomTable.Select("strRoomName = '" + table.Rows[i]["strRoom"] + "' and intWeek = "+table.Rows[i]["intWeek"]);
             for (int j =SN;j<=EN;j++)
             {
                 roomRows[0]["num"] = roomRows[0]["num"].ToString().Replace(j.ToString(), "");
