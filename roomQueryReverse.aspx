@@ -53,7 +53,7 @@
             <asp:ListItem>10</asp:ListItem>
         </asp:DropDownList>
         <asp:Label ID="Label3" runat="server" Text="节至第"></asp:Label>
-        <asp:DropDownList ID="ddlNum2" runat="server" OnSelectedIndexChanged="ddlNum2_SelectedIndexChanged">
+        <asp:DropDownList ID="ddlNum2" runat="server">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
             <asp:ListItem>3</asp:ListItem>
@@ -105,40 +105,40 @@
                         星期日
                     </th>
                 </tr>
-            </thead>
-            <tbody>
-                <asp:Repeater ID="Repeater1" runat="server">
-                    <ItemTemplate>
-                        <tr>
-                            <td id="td0" runat="server">
-                                <%#DataBinder.Eval(Container.DataItem, "查询")%>
-                            </td>
-                            <td id="td1" runat="server">
-                                <%#DataBinder.Eval(Container.DataItem, "星期一")%>
-                            </td>
-                            <td id="td2" runat="server">
-                                <%#DataBinder.Eval(Container.DataItem, "星期二")%>
-                            </td>
-                            <td id="td3" runat="server">
-                                <%#DataBinder.Eval(Container.DataItem, "星期三")%>
-                            </td>
-                            <td id="td4" runat="server">
-                                <%#DataBinder.Eval(Container.DataItem, "星期四")%>
-                            </td>
-                            <td id="td5" runat="server">
-                                <%#DataBinder.Eval(Container.DataItem, "星期五")%>
-                            </td>
-                            <td id="td6" runat="server">
-                                <%#DataBinder.Eval(Container.DataItem, "星期六")%>
-                            </td>
-                            <td id="td7" runat="server">
-                                <%#DataBinder.Eval(Container.DataItem, "星期日")%>
-                            </td>
-                        </tr>
-                    </ItemTemplate>
-                 </asp:Repeater>
-             </tbody>
-        </table>       
+                </thead>
+                <tbody>
+                    <asp:Repeater ID="Repeater1" runat="server">
+                        <ItemTemplate>
+                            <tr>
+                                <td id="td0" runat="server">
+                                    <%#DataBinder.Eval(Container.DataItem, "查询")%>
+                                </td>
+                                <td id="td1" runat="server">
+                                    <%#DataBinder.Eval(Container.DataItem, "星期一")%>
+                                </td>
+                                <td id="td2" runat="server">
+                                    <%#DataBinder.Eval(Container.DataItem, "星期二")%>
+                                </td>
+                                <td id="td3" runat="server">
+                                    <%#DataBinder.Eval(Container.DataItem, "星期三")%>
+                                </td>
+                                <td id="td4" runat="server">
+                                    <%#DataBinder.Eval(Container.DataItem, "星期四")%>
+                                </td>
+                                <td id="td5" runat="server">
+                                    <%#DataBinder.Eval(Container.DataItem, "星期五")%>
+                                </td>
+                                <td id="td6" runat="server">
+                                    <%#DataBinder.Eval(Container.DataItem, "星期六")%>
+                                </td>
+                                <td id="td7" runat="server">
+                                    <%#DataBinder.Eval(Container.DataItem, "星期日")%>
+                                </td>
+                            </tr>
+                        </ItemTemplate>
+                     </asp:Repeater>
+                 </tbody>
+            </table>       
         </div>    
         
     </form>

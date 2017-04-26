@@ -214,6 +214,11 @@ public partial class roomQueryReverse : System.Web.UI.Page
 
     protected void btSearch_Click(object sender, EventArgs e)
     {
+        if (Convert.ToInt16(ddlNum2.SelectedValue) < (Convert.ToInt16(ddlNum1.SelectedValue)))
+        {
+            ddlNum2.SelectedValue = ddlNum1.SelectedValue;
+        }
+
         DataBindRepeater();
 
         Session["QRdep"] = ddlDep.SelectedValue.ToString();
@@ -225,21 +230,4 @@ public partial class roomQueryReverse : System.Web.UI.Page
 
     }
 
-
-
-    protected void ddlNum2_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        if(Convert.ToInt16(ddlNum2.SelectedValue)<(Convert.ToInt16(ddlNum1.SelectedValue)))
-        {
-            ddlNum2.SelectedValue = ddlNum1.SelectedValue;
-        }
-    }
-
-    //protected void ddlWeek2_SelectedIndexChanged(object sender, EventArgs e)
-    //{
-    //    if (Convert.ToInt16(ddlWeek2.SelectedValue) < (Convert.ToInt16(ddlWeek.SelectedValue)))
-    //    {
-    //        ddlWeek2.SelectedValue = ddlWeek.SelectedValue;
-    //    }
-    //}
 }

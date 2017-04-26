@@ -197,6 +197,21 @@ public class CommonClass
         
     }
 
+    public static string getCurYearID()
+    {
+        //获取currentFlag为true的学期id
+        SqlConnection con = CommonClass.GetSqlConnection();
+        SqlDataAdapter sda = new SqlDataAdapter();
+        sda.SelectCommand = new SqlCommand("select top 1 * from TitleStartEnd where currentFlag = 'true'", con);
+        DataSet ds = new DataSet();
+        sda.Fill(ds);
+        DataTable table = new DataTable();
+        table = ds.Tables[0];
+
+        return table.Rows[0][4].ToString();
+
+    }
+
     public static int getCurMaxWeek()
     {
         //获取currentFlag为true的学期结束周
