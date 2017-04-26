@@ -267,7 +267,7 @@ public class CommonClass
     public static bool regToData(string strReg,out string strData)
     {
         int maxWeek = getCurMaxWeek();
-        //两位数字+横杆（-）+两位数字 或 数字 + 逗号（总字符数1至50 + 4）（逗号不可在开头，不可在结尾，可以为纯数字）
+        //两位数字+横杆（-）+两位数字 或 数字 + 逗号/横杠（总字符数1至50 + 4）（逗号/横杠不可在开头，不可在结尾，可以为纯数字）
         RegexStringValidator regweek = new RegexStringValidator("^[1-9]{0,1}[0-9]{1,1}[-][1-9]{0,1}[0-9]{1,1}$|^[1-9]{0,1}[0-9]{1,1}[0-9,-]{0,50}[1-9]{0,1}[0-9]{0,1}$");
         RegexStringValidator regweekMN = new RegexStringValidator("^[1-9]{0,1}[0-9]{1,1}[-][1-9]{0,1}[0-9]{1,1}$");
         string strWeekRegToData = "";
@@ -277,7 +277,7 @@ public class CommonClass
         }
         catch (Exception)
         {
-            strData = "存在非法字符，输入示例：1-3或1,3,5,6,8或1";
+            strData = "存在非法字符或格式不正确，输入示例：1-3或1,3,5,6,8或1";
             return false;
         }        
         if (strReg.Contains("-"))
@@ -291,7 +291,7 @@ public class CommonClass
                     string weekDataI = weekD[i];
                     if (weekDataI == "")
                     {
-                        strData = "存在连续逗号";
+                        strData = "逗号前后必须都有数字";
                         return false;
                     }                    
                     if (weekDataI.Contains("-"))
@@ -378,8 +378,22 @@ public class CommonClass
             {
                 //weekReg字段只有“-”和数字
                 string[] weekD = strReg.Split('-');
+                
+                //横杠两端必须有数字
+                if ((weekD[0] == "") || (weekD[1] == ""))
+                {
+                    strData = "横杠两端必须有数字";
+                    return false;
+                }
+
                 int firstWeek = Convert.ToInt16(weekD[0]);
                 int lastWeek = Convert.ToInt16(weekD[1]);
+                //横杠数只能为1
+                if (weekD.Count() !=2)
+                {
+                    strData = "横杠数只能为1";
+                    return false;
+                }                
                 //周数不可为0
                 if ((firstWeek == 0) | (lastWeek == 0))
                 {
@@ -425,7 +439,7 @@ public class CommonClass
             {
                 if (weekD[i] == "")
                 {
-                    strData = "存在连续逗号";
+                    strData = "逗号前后必须都有数字";
                     return false;
                 }
                 if (Convert.ToInt16(weekD[i]) == 0)

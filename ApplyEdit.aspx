@@ -77,6 +77,15 @@
             <asp:TextBox ID="tbSearch" runat="server"></asp:TextBox>
             <%--<asp:Button ID="btSearch" runat="server" Text="搜索（名称、教师、班级）" OnClick="btSearch_Click" />--%>
             <br />
+            <asp:ListBox ID="liboDay" runat="server" SelectionMode="Multiple" Rows="7">
+                <asp:ListItem>1</asp:ListItem>
+                <asp:ListItem>2</asp:ListItem>
+                <asp:ListItem>3</asp:ListItem>
+                <asp:ListItem>4</asp:ListItem>
+                <asp:ListItem>5</asp:ListItem>
+                <asp:ListItem>6</asp:ListItem>
+                <asp:ListItem>7</asp:ListItem>
+            </asp:ListBox>            
             <%--<asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek"></asp:DropDownList>--%>
             <asp:ListBox ID="liboWeek" runat="server" DataSourceID="SqlDataSourceWeek" DataTextField="intWeek" DataValueField="intWeek" Rows="30" SelectionMode="Multiple"></asp:ListBox>
             <%--<asp:Button ID="btWeekFlit" runat="server" Text="周筛选" OnClick="btWeekFlit_Click"/>--%>

@@ -249,6 +249,10 @@ public partial class NextWebF : System.Web.UI.Page
         {
             li.Selected = true;
         }
+        foreach (ListItem li in liboDay.Items)
+        {
+            li.Selected = true;
+        }
     }
 
     protected void btliboNone_Click(object sender, EventArgs e)
@@ -261,37 +265,13 @@ public partial class NextWebF : System.Web.UI.Page
         {
             li.Selected = false;
         }
+        foreach (ListItem li in liboDay.Items)
+        {
+            li.Selected = false;
+        }
     }
 
-    protected void btRoomFlit_Click(object sender, EventArgs e)
-    {
-        string s = string.Empty;
-        foreach (ListItem li in liboRoom.Items)
-        {
-            if (li.Selected == true)
-                s += "'" + li.Value.Trim() + "',";
-        }
 
-        if (s != string.Empty)
-        {
-            s = s.Substring(0, s.Length - 1); // chop off trailing ,   
-        }
-        else
-        {
-            foreach (ListItem li in liboRoom.Items)
-            {
-                s += "'" + li.Value.Trim() + "',";
-            }
-            s = s.Substring(0, s.Length - 1); // chop off trailing , 
-        }
-
-
-        SqlDataSourceRoomApply.SelectParameters.Clear();
-        //SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.intStartWeek,a.intEndWeek,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.intStartWeek <= @week_CP and a.intEndWeek >= @week_CP and d.strDepart = @depN_CP and a.strRoom in (@room_P) order by a.id desc";
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) order by a.id desc", s);        
-        ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
-        GridView10.DataBind();
-    }
 
     protected void btTotalSearch_Click(object sender, EventArgs e)
     {
@@ -335,8 +315,28 @@ public partial class NextWebF : System.Web.UI.Page
             sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing , 
         }
 
+        string sDay = string.Empty;
+        foreach (ListItem li in liboDay.Items)
+        {
+            if (li.Selected == true)
+                sDay += li.Value.Trim() + ",";
+        }
+
+        if (sDay != string.Empty)
+        {
+            sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing ,   
+        }
+        else
+        {
+            foreach (ListItem li in liboDay.Items)
+            {
+                sDay += li.Value.Trim() + ",";
+            }
+            sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing , 
+        }
+
         SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom , sWeek);
+        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom , sWeek , sDay);
         ControlParameter searchTextBox_CP = new ControlParameter();
         searchTextBox_CP.Name = "searchTextBox_CP";
         searchTextBox_CP.Type = TypeCode.String;
