@@ -42,23 +42,38 @@ public partial class roomapply : System.Web.UI.Page
         table = ds.Tables[0];
         DataTable dtSchedule = new DataTable();
 
-        //增加gridview
-        GridView gvTitle = new GridView();
-        gvTitle.ID = gvName + "Title";
-        gvTitle.HorizontalAlign = HorizontalAlign.Center;
-        gvTitle.BorderColor = System.Drawing.Color.Transparent;//无色
-        gvTitle.GridLines = GridLines.Horizontal;
-        gvTitle.BorderWidth = 0;
-        gvTitle.ShowHeader = false;
+        //增加标题
+        Label lbTitle = new Label();
+        lbTitle.ID = gvName + "Title";
+        lbTitle.CssClass = "gvTitle";
+        lbTitle.BorderColor = System.Drawing.Color.Transparent;//无色
+        //lbTitle.GridLines = GridLines.Horizontal;
+        lbTitle.BorderWidth = 0;
+        //lbTitle.ShowHeader = false;
 
         DataTable dtTitle = new DataTable();
         dtTitle.Columns.Add(RoomName);
-        dtTitle.Rows.Add(RoomName + " 第" + weekNum + "周 " + table.Rows[0]["strDepart"].ToString() + " "+ table.Rows[0]["datePeriod"].ToString());
-        gvTitle.DataSource = dtTitle;
-        gvTitle.DataBind();
-        GridViewPlaceHolder.Controls.Add(gvTitle);
+        dtTitle.Rows.Add(RoomName + " 第" + weekNum + "周 " + table.Rows[0]["strDepart"].ToString() + " " + table.Rows[0]["datePeriod"].ToString());
+        lbTitle.Text = dtTitle.Rows[0][0].ToString();        
+        GridViewPlaceHolder.Controls.Add(lbTitle);
         dtTitle.Dispose();
-        gvTitle.Dispose();
+        lbTitle.Dispose();
+        //GridView gvTitle = new GridView();
+        //gvTitle.ID = gvName + "Title";
+        //gvTitle.HorizontalAlign = HorizontalAlign.Center;
+        //gvTitle.BorderColor = System.Drawing.Color.Transparent;//无色
+        //gvTitle.GridLines = GridLines.Horizontal;
+        //gvTitle.BorderWidth = 0;
+        //gvTitle.ShowHeader = false;
+
+        //DataTable dtTitle = new DataTable();
+        //dtTitle.Columns.Add(RoomName);
+        //dtTitle.Rows.Add(RoomName + " 第" + weekNum + "周 " + table.Rows[0]["strDepart"].ToString() + " "+ table.Rows[0]["datePeriod"].ToString());
+        //gvTitle.DataSource = dtTitle;
+        //gvTitle.DataBind();
+        //GridViewPlaceHolder.Controls.Add(gvTitle);
+        //dtTitle.Dispose();
+        //gvTitle.Dispose();
 
         GridView gvTemp = new GridView();
         gvTemp.ID = gvName;
@@ -183,7 +198,7 @@ public partial class roomapply : System.Web.UI.Page
         dtSchedule.Rows[4][0] = "中午";
         for (int i = 5; i < 11; i++)
         {
-            dtSchedule.Rows[i][0] = "第" + ConvertToChinese2(i) + "节";
+            dtSchedule.Rows[i][0] = "第" + ConvertToChinese2(i + 1) + "节";
         }
 
         //gridview不写死
