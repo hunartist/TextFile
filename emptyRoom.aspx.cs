@@ -71,7 +71,7 @@ public partial class emptyRoom : System.Web.UI.Page
         string yearid = CommonClass.getCurYearID();
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sdaRoom = new SqlDataAdapter();
-        sdaRoom.SelectCommand = new SqlCommand("select distinct RTRIM(d.strRoomName) as strRoomName,w.intWeek,'0123456789' as num from RoomDetail d right join WeekStartEnd w on 1=1 and w.yearID = '" + yearid + "' where d.strDepart = '" + depT + "' and w.intWeek >= "+week1T+" and w.intWeek <= "+week2T, con);
+        sdaRoom.SelectCommand = new SqlCommand("select distinct RTRIM(d.strRoomName) as strRoomName,w.intWeek,'0123456789z' as num from RoomDetail d right join WeekStartEnd w on 1=1 and w.yearID = '" + yearid + "' where d.strDepart = '" + depT + "' and w.intWeek >= "+week1T+" and w.intWeek <= "+week2T, con);
         DataSet dsRoom = new DataSet();
         sdaRoom.Fill(dsRoom);
         DataTable roomTable = new DataTable();
@@ -82,29 +82,56 @@ public partial class emptyRoom : System.Web.UI.Page
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
-        table = ds.Tables[0];
+        table = ds.Tables[0];        
 
         for (int i = 0;i < table.Rows.Count;i++)
         {
-            int SN = Convert.ToInt16(table.Rows[i]["intStartNum"])-1;
-            int EN = Convert.ToInt16(table.Rows[i]["intEndNum"]) - 1;            
-            DataRow[] roomRows = roomTable.Select("strRoomName = '" + table.Rows[i]["strRoom"] + "' and intWeek = "+table.Rows[i]["intWeek"]);
-            for (int j =SN;j<=EN;j++)
+            DataRow[] roomRows = roomTable.Select("strRoomName = '" + table.Rows[i]["strRoom"] + "' and intWeek = " + table.Rows[i]["intWeek"]);
+
+            if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11))
             {
-                roomRows[0]["num"] = roomRows[0]["num"].ToString().Replace(j.ToString(), "");
+                roomRows[0]["num"] = roomRows[0]["num"].ToString().Replace("z", "");
             }
+            else
+            {
+                int SN = Convert.ToInt16(table.Rows[i]["intStartNum"]) - 1;
+                int EN = Convert.ToInt16(table.Rows[i]["intEndNum"]) - 1;                
+                for (int j = SN; j <= EN; j++)
+                {
+                    roomRows[0]["num"] = roomRows[0]["num"].ToString().Replace(j.ToString(), "");
+                }
+            }
+                    
             
         }
 
         DataTable roomRowsFlited = new DataTable();
-        for (int i = num1T-1;i<=num2T-1;i++)
+        string num1 = "";
+        string num2 = "";
+        if (num1T == 11) { num1 = "z"; }
+        else { num1 = num1T.ToString(); }
+        if (num2T == 11) { num2 = "z"; }
+        else { num2 = num2T.ToString(); }
+        if ((num1 == "z") && (num2 == "z"))
         {
-            DataRow[] roomRowsNumFlit = roomTable.Select("num not like '%" + i + "%'");
-            foreach (DataRow row in roomRowsNumFlit)
+            DataRow[] roomRowsNumFlitZ = roomTable.Select("num not like '%z%'");
+            foreach (DataRow row in roomRowsNumFlitZ)
             {
                 row.Delete();
             }
-        } 
+        }
+        else
+        {
+            for (int i = num1T - 1; i <= num2T - 1; i++)
+            {
+                DataRow[] roomRowsNumFlit = roomTable.Select("num not like '%" + i + "%'");
+                foreach (DataRow row in roomRowsNumFlit)
+                {
+                    row.Delete();
+                }
+            }
+        }
+        
 
         return roomTable;
     }
@@ -142,4 +169,20 @@ public partial class emptyRoom : System.Web.UI.Page
         }
     }
 
+
+    protected void ddlNum1_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if ((Convert.ToInt16(ddlNum1.SelectedValue) == 11))
+        {
+            ddlNum2.SelectedValue = ddlNum1.SelectedValue;
+        }
+    }
+
+    protected void ddlNum2_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        if ((Convert.ToInt16(ddlNum2.SelectedValue) == 11))
+        {
+            ddlNum1.SelectedValue = ddlNum2.SelectedValue;
+        }
+    }
 }

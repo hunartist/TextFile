@@ -39,7 +39,7 @@
             <asp:ListItem>7</asp:ListItem>
         </asp:DropDownList>
         <asp:Label ID="Label2" runat="server" Text="第"></asp:Label>
-        <asp:DropDownList ID="ddlNum1" runat="server">
+        <asp:DropDownList ID="ddlNum1" runat="server" OnSelectedIndexChanged="ddlNum1_SelectedIndexChanged">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
             <asp:ListItem>3</asp:ListItem>
@@ -50,9 +50,10 @@
             <asp:ListItem>8</asp:ListItem>
             <asp:ListItem>9</asp:ListItem>
             <asp:ListItem>10</asp:ListItem>
+            <asp:ListItem Value="11">中午</asp:ListItem>
         </asp:DropDownList>
         <asp:Label ID="Label3" runat="server" Text="节至第"></asp:Label>
-        <asp:DropDownList ID="ddlNum2" runat="server">
+        <asp:DropDownList ID="ddlNum2" runat="server" OnSelectedIndexChanged="ddlNum2_SelectedIndexChanged">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
             <asp:ListItem>3</asp:ListItem>
@@ -63,6 +64,7 @@
             <asp:ListItem>8</asp:ListItem>
             <asp:ListItem>9</asp:ListItem>
             <asp:ListItem Selected="True">10</asp:ListItem>
+            <asp:ListItem Value="11">中午</asp:ListItem>
         </asp:DropDownList>
         <asp:Label ID="Label4" runat="server" Text="节"></asp:Label>
         <asp:Button ID="btSearch" runat="server" Text="Search" OnClick="btSearch_Click" />

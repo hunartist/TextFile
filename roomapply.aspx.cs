@@ -118,7 +118,7 @@ public partial class roomapply : System.Web.UI.Page
                     }
                     if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) >= 5)&& (Convert.ToInt16(table.Rows[i]["intStartNum"]) <= 10))
                     {
-                        startNum = Convert.ToString(table.Rows[i]["intStartNum"])+1;
+                        startNum = (Convert.ToInt16(table.Rows[i]["intStartNum"])+1).ToString();
                     }
                     if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11)
                     {
@@ -135,7 +135,7 @@ public partial class roomapply : System.Web.UI.Page
                     }
                     if ((Convert.ToInt16(table.Rows[i]["intEndNum"]) >= 5) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) <= 10))
                     {
-                        endNum = Convert.ToString(table.Rows[i]["intEndNum"]) + 1;
+                        endNum = (Convert.ToInt16(table.Rows[i]["intEndNum"]) + 1).ToString();
                     }
                     if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11)
                     {
@@ -178,12 +178,12 @@ public partial class roomapply : System.Web.UI.Page
         //修改列标题
         for (int i=0;i<4;i++)
         {
-            dtSchedule.Rows[i][0] = "第" + ConvertToChinese(i + 1) + "节";
+            dtSchedule.Rows[i][0] = "第" + ConvertToChinese2(i + 1) + "节";
         }
         dtSchedule.Rows[4][0] = "中午";
         for (int i = 5; i < 11; i++)
         {
-            dtSchedule.Rows[i][0] = "第" + ConvertToChinese(i) + "节";
+            dtSchedule.Rows[i][0] = "第" + ConvertToChinese2(i) + "节";
         }
 
         //gridview不写死
@@ -274,7 +274,7 @@ public partial class roomapply : System.Web.UI.Page
     //    }
     //}
 
-        string ConvertToChinese(int x)
+        string ConvertToChinese2(int x)
         {
             string cstr = "";   
             switch (x)   
@@ -284,12 +284,13 @@ public partial class roomapply : System.Web.UI.Page
                 case 2: cstr = "二"; break;   
                 case 3: cstr = "三"; break;   
                 case 4: cstr = "四"; break;   
-                case 5: cstr = "五"; break;   
-                case 6: cstr = "六"; break;   
-                case 7: cstr = "七"; break;   
-                case 8: cstr = "八"; break;   
-                case 9: cstr = "九"; break;
-                case 10: cstr = "十"; break;
+                //case 5: cstr = "五"; break;   
+                case 6: cstr = "五"; break;   
+                case 7: cstr = "六"; break;   
+                case 8: cstr = "七"; break;   
+                case 9: cstr = "八"; break;
+                case 10: cstr = "九"; break;
+                case 11: cstr = "十"; break;
         }   
             return (cstr);   
         }
