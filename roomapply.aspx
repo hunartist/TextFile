@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" media="screen" />
 <link rel="stylesheet" type="text/css" href="css/PrintCss.css" media="print" />
-    <script src="Scripts/jquery-3.1.1.js" type="text/javascript"></script>    
+    <script src="Scripts/jquery-1.9.1.js" type="text/javascript"></script>    
     <script type="text/javascript" >
         function ExportDivDataToExcel()
         {
