@@ -378,6 +378,16 @@ public class CommonClass
             else
             {
                 //weekReg字段只有“-”和数字
+                try
+                {
+                    regweekMN.Validate(strReg);
+                }
+                catch (Exception)
+                {
+                    strData = "存在非法字符，只有“-”和数字输入示例：1-3";
+                    return false;
+                }
+
                 string[] weekD = strReg.Split('-');
                 
                 //横杠两端必须有数字
