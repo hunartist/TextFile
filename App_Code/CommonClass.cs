@@ -18,7 +18,8 @@ public class CommonClass
     /// <returns></returns> 
     public static SqlConnection GetSqlConnection()
     {
-        string strCnn = "Data Source=.;Initial Catalog=test;User ID=sa;Password=config;";
+        //string strCnn = "Data Source=.;Initial Catalog=test;User ID=sa;Password=config;";
+        string strCnn = System.Web.Configuration.WebConfigurationManager.ConnectionStrings["webTestConnectionString"].ToString();
         try
         {
             SqlConnection sqlCnn = new SqlConnection(strCnn);
