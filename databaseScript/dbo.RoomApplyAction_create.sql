@@ -27,7 +27,7 @@ AS
 	declare @countWeek int
 	if (@Action = 'update')
 	begin
-		UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [strWeekReg] = @strWeekReg , [strWeekData] = @strWeekData , [strName] = @strName , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @id
+		UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [strWeekReg] = @strWeekReg , [strWeekData] = @strWeekData , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @id
 		delete from [RoomApplySub] where [F_id] = @id		
 		set @countWeek = 0
 		declare wid CURSOR for SELECT weekid FROM [dbo].[ufn_SplitStringToTable](@strWeekData,N',')

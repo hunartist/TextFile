@@ -15,6 +15,34 @@ using System.Xml.Linq;
 //下载于51aspx.com
 public partial class NextWebF : System.Web.UI.Page
 {
+    int indexedit;
+    string gvUniqueID = String.Empty;
+    int gvNewPageIndex = 0;
+    int gvEditIndex = -1;
+    string gvSortExpr = String.Empty;
+    private string gvSortDir
+    {
+
+        get { return ViewState["SortDirection"] as string ?? "ASC"; }
+
+        set { ViewState["SortDirection"] = value; }
+
+    }
+    //This procedure returns the Sort Direction
+    private string GetSortDirection()
+    {
+        switch (gvSortDir)
+        {
+            case "ASC":
+                gvSortDir = "DESC";
+                break;
+
+            case "DESC":
+                gvSortDir = "ASC";
+                break;
+        }
+        return gvSortDir;
+    }
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)    //Page.IsPostBack
@@ -24,213 +52,211 @@ public partial class NextWebF : System.Web.UI.Page
 
             if (Session["ddlDep"] != null)
             {
-                DropDownListDepart.SelectedValue = Session["ddlDep"].ToString();
+                //DropDownListDepart.SelectedValue = Session["ddlDep"].ToString();
             }
+            
 
         }
-        //LabelID.Visible = true;
-        //LabelMsg.Visible = false;
         if(ViewState["selectCom_fil"] != null)
         {
-            SqlDataSourceRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
+            //SqlDataSourceRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
         }
-
-        LiteralID.Text = "";
-        GridView10.DataKeyNames = new string[] { "id" };
         
 
     }
 
 
 
+    #region gridviewEvent
 
-    protected void GridView10_RowUpdated(object sender, GridViewUpdatedEventArgs e)
-    {        
-        SqlDataSourceRoomApply.UpdateParameters["action"].DefaultValue = "update";
-        SqlDataSourceRoomApply.UpdateParameters["strRoom"].DefaultValue = e.NewValues["strRoom"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["intDay"].DefaultValue = e.NewValues["intDay"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["intStartNum"].DefaultValue = e.NewValues["intStartNum"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["intEndNum"].DefaultValue = e.NewValues["intEndNum"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["strWeekReg"].DefaultValue = e.NewValues["strWeekReg"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["strWeekData"].DefaultValue = e.NewValues["strWeekData"].ToString();
-        SqlDataSourceRoomApply.UpdateParameters["strName"].DefaultValue = Convert.ToString(e.NewValues["strName"]);
-        SqlDataSourceRoomApply.UpdateParameters["strClass"].DefaultValue = Convert.ToString(e.NewValues["strClass"]);
-        SqlDataSourceRoomApply.UpdateParameters["strTeacher"].DefaultValue = Convert.ToString(e.NewValues["strTeacher"]);
-        SqlDataSourceRoomApply.UpdateParameters["id"].DefaultValue = e.Keys["id"].ToString();
+    protected void GVApplyList_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        SqlDataSource sqsRoomApply;
+        if (e.Row.RowType == DataControlRowType.DataRow)
+        {
+            sqsRoomApply = e.Row.FindControl("sqsRoomApply") as SqlDataSource;
+            if (sqsRoomApply != null)
+            {
+                sqsRoomApply.SelectParameters["applyid"].DefaultValue = (e.Row.DataItem as DataRowView)["applyid"].ToString();
+            }
+            //Find Child GridView control
+            GridViewRow row = e.Row;
+            string strSort = string.Empty;
+            GridView gv = new GridView();
+            gv = (GridView)row.FindControl("GVRoomApply");
 
-        SqlDataSourceRoomApply.Update();
-        GridView10.DataBind();
-        btDepFlit.Visible = true;
+            //Check if any additional conditions (Paging, Sorting, Editing, etc) to be applied on child GridView
+            if (gv.UniqueID == gvUniqueID)
+            {
+                gv.PageIndex = gvNewPageIndex;
+                gv.EditIndex = gvEditIndex;
+                //Check if Sorting used
+                if (gvSortExpr != string.Empty)
+                {
+                    GetSortDirection();
+                    strSort = " ORDER BY " + string.Format("{0} {1}", gvSortExpr, gvSortDir);
+                    sqsRoomApply.SelectCommand = sqsRoomApply.SelectCommand + strSort;
+                }
+                //Expand the Child grid
+                ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
+            }
+        }
+
+        //ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
+        
+    }
+
+    protected void GVApplyList_RowDeleted(object sender, GridViewDeletedEventArgs e)
+    {
+        sqsApplyList.DeleteParameters["Action"].DefaultValue = "delete"; 
+        sqsApplyList.DeleteParameters["strName"].DefaultValue = null;
+        sqsApplyList.DeleteParameters["strYearID"].DefaultValue = null;
+        sqsApplyList.DeleteParameters["strCDep"].DefaultValue = null;
+        sqsApplyList.DeleteParameters["strRemark"].DefaultValue = null;
+        sqsApplyList.DeleteParameters["applyid"].DefaultValue = e.Keys["applyid"].ToString();
+
+        sqsApplyList.Delete();
+        GVApplyList.DataBind();
         leftTool.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
 
-    protected void GridView10_SelectedIndexChanging(object sender, GridViewSelectEventArgs e)
+    protected void GVRoomApply_RowDeleted(object sender, GridViewDeletedEventArgs e)
     {
-        //LabelID.Text = GridView10.Rows[e.NewSelectedIndex].Cells[1].Text;
+        //sqsRoomApply.DeleteParameters["action"].DefaultValue = "delete";
+        //sqsRoomApply.DeleteParameters["strRoom"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["intDay"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["intStartNum"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["intEndNum"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["strWeekReg"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["strWeekData"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["strName"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["strClass"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["strTeacher"].DefaultValue = null;
+        //sqsRoomApply.DeleteParameters["id"].DefaultValue = e.Keys["id"].ToString();
+
+        //sqsRoomApply.Delete();
+        //GVRoomApply.DataBind();
+        //leftTool.Visible = true;
+        //Response.Write("<script>alert('操作成功')</script>");
     }
 
-    protected void GridView10_RowEditing(object sender, GridViewEditEventArgs e)
+    protected void GVApplyList_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        LiteralID.Text = GridView10.DataKeys[e.NewEditIndex]["id"].ToString();
+        string CurYear = CommonClass.getCurYearID();
+        string UsrDep = Session["dep"].ToString();
+
+        sqsApplyList.UpdateParameters["Action"].DefaultValue = "update";
+        sqsApplyList.UpdateParameters["strName"].DefaultValue = ((TextBox)GVApplyList.Rows[e.RowIndex].FindControl("tbStrNameE")).Text;
+        sqsApplyList.UpdateParameters["strYearID"].DefaultValue = CurYear;
+        sqsApplyList.UpdateParameters["strCDep"].DefaultValue = UsrDep;
+        sqsApplyList.UpdateParameters["strRemark"].DefaultValue = ((TextBox)GVApplyList.Rows[e.RowIndex].FindControl("tbStrRemarkE")).Text;
+        sqsApplyList.UpdateParameters["applyid"].DefaultValue = e.Keys["applyid"].ToString();
+
+        sqsApplyList.Update();
+        GVApplyList.DataBind();
+        leftTool.Visible = true;
+        Response.Write("<script>alert('操作成功')</script>");
+    }
+
+    protected void GVRoomApply_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    {
+        SqlDataSource sqsRoomApply = (SqlDataSource)GVApplyList.Rows[e.RowIndex].FindControl("sqsRoomApply");
+        GridView GVRoomApply = (GridView)GVApplyList.Rows[e.RowIndex].FindControl("GVRoomApply");
+
+        GridView gvTemp = (GridView)sender;
+        gvUniqueID = gvTemp.UniqueID;
+
+
+        sqsRoomApply.UpdateParameters["action"].DefaultValue = "update";
+        sqsRoomApply.UpdateParameters["strRoom"].DefaultValue = ((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlRoomGVRA")).SelectedValue;
+        sqsRoomApply.UpdateParameters["intDay"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntDayE")).Text;
+        sqsRoomApply.UpdateParameters["intStartNum"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntStartNumE")).Text;
+        sqsRoomApply.UpdateParameters["intEndNum"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntEndNumE")).Text;
+        sqsRoomApply.UpdateParameters["strWeekReg"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrWeekRegE")).Text;
+        sqsRoomApply.UpdateParameters["strWeekData"].DefaultValue = ((Label)gvTemp.Rows[e.RowIndex].FindControl("lbStrWeekData")).Text;
+        sqsRoomApply.UpdateParameters["strClass"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrClassE")).Text;
+        sqsRoomApply.UpdateParameters["strTeacher"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrTeacherE")).Text;
+        sqsRoomApply.UpdateParameters["id"].DefaultValue = e.Keys["id"].ToString();
+
+        sqsRoomApply.Update();
+        GVRoomApply.DataBind();        
+        leftTool.Visible = true;
+        Response.Write("<script>alert('操作成功')</script>");
+    }
+
+    protected void GVApplyList_RowUpdated(object sender, GridViewUpdatedEventArgs e)
+    {
+        //string CurYear = CommonClass.getCurYearID();
+        //string UsrDep = Session["dep"].ToString();
+
+        //sqsApplyList.UpdateParameters["Action"].DefaultValue = "update";
+        //sqsApplyList.UpdateParameters["strName"].DefaultValue = Convert.ToString(e.NewValues["strName"]);
+        //sqsApplyList.UpdateParameters["strYearID"].DefaultValue = CurYear;
+        //sqsApplyList.UpdateParameters["strCDep"].DefaultValue = UsrDep;
+        //sqsApplyList.UpdateParameters["strRemark"].DefaultValue = Convert.ToString(e.NewValues["strRemark"]);
+        //sqsApplyList.UpdateParameters["applyid"].DefaultValue = e.Keys["applyid"].ToString();
+
+        //sqsApplyList.Update();
+        //GVApplyList.DataBind();
+        //leftTool.Visible = true;
+        //Response.Write("<script>alert('操作成功')</script>");
+    }
+
+    protected void GVRoomApply_RowUpdated(object sender, GridViewUpdatedEventArgs e)
+    {
+        
+    }
+
+    protected void GVApplyList_RowEditing(object sender, GridViewEditEventArgs e)
+    {
         leftTool.Visible = false;
-        if (ViewState["selectCom_fil"] != null)
-        {
-            SqlDataSourceRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
-            GridView10.DataBind();
-        }
     }
 
-    protected void GridView10_RowUpdating(object sender, GridViewUpdateEventArgs e)
+    protected void GVRoomApply_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        if (e.NewValues["strWeekReg"] == null)
-        {
-            Response.Write("<script>alert('周输入不可为空')</script>");
-            e.Cancel = true;
-            return;
-        }
-        string regData = "ini";
-        //验证reg到data的转换
-        bool rTdFalg = CommonClass.regToData(e.NewValues["strWeekReg"].ToString(), out regData);
-        if (rTdFalg == true)
-        {
-            if (regData == "ini")
-            {
-                Response.Write("<script>alert('data=ini')</script>");
-                e.Cancel = true;
-                return;
-            }
-            else
-            {
-                e.NewValues["strWeekData"] = regData;
-            }
-        }
-        if (rTdFalg == false)
-        {
-            Response.Write("<script>alert('"+ regData + "')</script>");
-            e.Cancel = true;
-            return;
-        }
+        leftTool.Visible = false;
+        GridView gvTemp = (GridView)sender;
+        gvUniqueID = gvTemp.UniqueID;
+        gvEditIndex = e.NewEditIndex;
+        GVApplyList.DataBind();
+    }
 
-
-
-        RegexStringValidator regday = new RegexStringValidator("^[1-7]{1}$");
-        RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|^1[10]{1}");
-
-        try
-        {
-            regday.Validate(e.NewValues["intDay"]);
-        }
-        catch
-        {
-            //LabelMsg.Visible = true;
-            //LabelMsg.Text = "日期只能填数字1至数字7";
-            Response.Write("<script>alert('日期只能填数字1至数字7')</script>");
-            e.Cancel = true;
-            return;
-        }
-        try
-        {
-            regnum.Validate(e.NewValues["intStartNum"]);
-            regnum.Validate(e.NewValues["intEndNum"]);
-        }
-        catch
-        {            
-            Response.Write("<script>alert('节次只能填数字1至数字11')</script>");
-            e.Cancel = true;
-            return;
-        }
-        if (Convert.ToInt16(e.NewValues["intStartNum"])> Convert.ToInt16(e.NewValues["intEndNum"]))
-        {            
-            Response.Write("<script>alert('开始节次不能大于结束节次')</script>");
-            e.Cancel = true;
-            return;
-        }
-
-        string NameN = Convert.ToString(e.NewValues["strName"]);
-        string ClassN = Convert.ToString(e.NewValues["strClass"]);
-        string TeacherN = Convert.ToString(e.NewValues["strTeacher"]);
-        if (NameN == "")
-        {
-            Response.Write("<script>alert('课程名未填写')</script>");
-            e.Cancel = true;
-            return;
-        }
-        if (ClassN == "")
-        {
-            Response.Write("<script>alert('班级未填写')</script>");
-            e.Cancel = true;
-            return;
-        }
-        if (TeacherN == "")
-        {
-            Response.Write("<script>alert('教师未填写')</script>");
-            e.Cancel = true;
-            return;
-        }
-
-        string roomN = e.NewValues["strRoom"].ToString();
-        int dayW = Convert.ToInt16(e.NewValues["intDay"]);
-        int newSN = Convert.ToInt16(e.NewValues["intStartNum"]);
-        int newEN = Convert.ToInt16(e.NewValues["intEndNum"]);
-        string weekData = e.NewValues["strWeekData"].ToString();        
-        string idN = e.Keys["id"].ToString();
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, newSN, newEN, weekData, idN);
-
-        if (checkmsg != "OK")
-        {
-            Response.Write("<script>alert('" + checkmsg + "')</script>");
-            e.Cancel = true;
-            return;
-        }
-
+    protected void GVApplyList_RowDeleting(object sender, GridViewDeleteEventArgs e)
+    {
 
     }
 
-
-    protected void GridView10_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    protected void GVRoomApply_RowDeleting(object sender, GridViewDeleteEventArgs e)
     {
-        btDepFlit.Visible = true;
+
+    }
+
+    protected void GVApplyList_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
+        leftTool.Visible = true;        
+    }
+
+    protected void GVRoomApply_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
+    {
         leftTool.Visible = true;
-        LiteralID.Text = "";
+        GridView gvTemp = (GridView)sender;
+        gvUniqueID = gvTemp.UniqueID;
+        gvEditIndex = -1;
+        GVApplyList.DataBind();
     }
 
-    protected void GridView10_RowDeleted(object sender, GridViewDeletedEventArgs e)
+    protected void GVRoomApply_Sorting(object sender, GridViewSortEventArgs e)
     {
-        SqlDataSourceRoomApply.DeleteParameters["action"].DefaultValue = "delete";
-        SqlDataSourceRoomApply.DeleteParameters["strRoom"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["intDay"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["intStartNum"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["intEndNum"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["strWeekReg"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["strWeekData"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["strName"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["strClass"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["strTeacher"].DefaultValue = null;
-        SqlDataSourceRoomApply.DeleteParameters["id"].DefaultValue = e.Keys["id"].ToString();
-
-        SqlDataSourceRoomApply.Delete();
-        GridView10.DataBind();
-        //LabelMsg.Visible = false;
-        btDepFlit.Visible = true;
-        leftTool.Visible = true;
-        Response.Write("<script>alert('操作成功')</script>");
+        GridView gvTemp = (GridView)sender;
+        gvUniqueID = gvTemp.UniqueID;
+        gvSortExpr = e.SortExpression;
+        GVApplyList.DataBind();
     }
 
-    protected void btDepFlit_Click(object sender, EventArgs e)
-    {
-        SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = "select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and d.strDepart = @depN_CP order by a.id desc";
-        ControlParameter depN_CP = new ControlParameter();
-        depN_CP.Name = "depN_CP";
-        depN_CP.Type = TypeCode.String;
-        depN_CP.ControlID = "DropDownListDepart";
-        depN_CP.PropertyName = "SelectedValue";
-        SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
-        ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
-        GridView10.DataBind();
-    }
- 
+    #endregion
+
+    #region leftEvent
 
     protected void btAbandon_Click(object sender, EventArgs e)
     {
@@ -261,7 +287,7 @@ public partial class NextWebF : System.Web.UI.Page
         {
             li.Selected = false;
         }
-        foreach(ListItem li in liboWeek.Items)
+        foreach (ListItem li in liboWeek.Items)
         {
             li.Selected = false;
         }
@@ -275,87 +301,89 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void btTotalSearch_Click(object sender, EventArgs e)
     {
-        string sRoom = string.Empty;
-        foreach (ListItem li in liboRoom.Items)
-        {
-            if (li.Selected == true)
-                sRoom += "'" + li.Value.Trim() + "',";
-        }
+        //string sRoom = string.Empty;
+        //foreach (ListItem li in liboRoom.Items)
+        //{
+        //    if (li.Selected == true)
+        //        sRoom += "'" + li.Value.Trim() + "',";
+        //}
 
-        if (sRoom != string.Empty)
-        {
-            sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing ,   
-        }
-        else
-        {
-            foreach (ListItem li in liboRoom.Items)
-            {
-                sRoom += "'" + li.Value.Trim() + "',";
-            }
-            sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing , 
-        }
+        //if (sRoom != string.Empty)
+        //{
+        //    sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing ,   
+        //}
+        //else
+        //{
+        //    foreach (ListItem li in liboRoom.Items)
+        //    {
+        //        sRoom += "'" + li.Value.Trim() + "',";
+        //    }
+        //    sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing , 
+        //}
 
-        string sWeek = string.Empty;
-        foreach (ListItem li in liboWeek.Items)
-        {
-            if (li.Selected == true)
-                sWeek += li.Value.Trim() + ",";
-        }
+        //string sWeek = string.Empty;
+        //foreach (ListItem li in liboWeek.Items)
+        //{
+        //    if (li.Selected == true)
+        //        sWeek += li.Value.Trim() + ",";
+        //}
 
-        if (sWeek != string.Empty)
-        {
-            sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing ,   
-        }
-        else
-        {
-            foreach (ListItem li in liboWeek.Items)
-            {
-                sWeek += li.Value.Trim() + ",";
-            }
-            sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing , 
-        }
+        //if (sWeek != string.Empty)
+        //{
+        //    sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing ,   
+        //}
+        //else
+        //{
+        //    foreach (ListItem li in liboWeek.Items)
+        //    {
+        //        sWeek += li.Value.Trim() + ",";
+        //    }
+        //    sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing , 
+        //}
 
-        string sDay = string.Empty;
-        foreach (ListItem li in liboDay.Items)
-        {
-            if (li.Selected == true)
-                sDay += li.Value.Trim() + ",";
-        }
+        //string sDay = string.Empty;
+        //foreach (ListItem li in liboDay.Items)
+        //{
+        //    if (li.Selected == true)
+        //        sDay += li.Value.Trim() + ",";
+        //}
 
-        if (sDay != string.Empty)
-        {
-            sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing ,   
-        }
-        else
-        {
-            foreach (ListItem li in liboDay.Items)
-            {
-                sDay += li.Value.Trim() + ",";
-            }
-            sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing , 
-        }
+        //if (sDay != string.Empty)
+        //{
+        //    sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing ,   
+        //}
+        //else
+        //{
+        //    foreach (ListItem li in liboDay.Items)
+        //    {
+        //        sDay += li.Value.Trim() + ",";
+        //    }
+        //    sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing , 
+        //}
 
-        SqlDataSourceRoomApply.SelectParameters.Clear();
-        SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom , sWeek , sDay);
-        ControlParameter searchTextBox_CP = new ControlParameter();
-        searchTextBox_CP.Name = "searchTextBox_CP";
-        searchTextBox_CP.Type = TypeCode.String;
-        searchTextBox_CP.ControlID = "tbSearch";
-        searchTextBox_CP.PropertyName = "Text";
-        searchTextBox_CP.DefaultValue = "init";
-        SqlDataSourceRoomApply.SelectParameters.Add(searchTextBox_CP);
-        ControlParameter depN_CP = new ControlParameter();
-        depN_CP.Name = "depN_CP";
-        depN_CP.Type = TypeCode.String;
-        depN_CP.ControlID = "DropDownListDepart";
-        depN_CP.PropertyName = "SelectedValue";
-        SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
-        ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
-        GridView10.DataBind();
+        //SqlDataSourceRoomApply.SelectParameters.Clear();
+        //SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom, sWeek, sDay);
+        //ControlParameter searchTextBox_CP = new ControlParameter();
+        //searchTextBox_CP.Name = "searchTextBox_CP";
+        //searchTextBox_CP.Type = TypeCode.String;
+        //searchTextBox_CP.ControlID = "tbSearch";
+        //searchTextBox_CP.PropertyName = "Text";
+        //searchTextBox_CP.DefaultValue = "init";
+        //SqlDataSourceRoomApply.SelectParameters.Add(searchTextBox_CP);
+        //ControlParameter depN_CP = new ControlParameter();
+        //depN_CP.Name = "depN_CP";
+        //depN_CP.Type = TypeCode.String;
+        //depN_CP.ControlID = "DropDownListDepart";
+        //depN_CP.PropertyName = "SelectedValue";
+        //SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
+        //ViewState["selectCom_fil"] = SqlDataSourceRoomApply.SelectCommand;
+        //GridView10.DataBind();
     }
 
-    protected void DropDownListDepart_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        Session["ddlDep"] = DropDownListDepart.SelectedValue.ToString();
-    }
+    #endregion
+
+
+
+
+
 }
