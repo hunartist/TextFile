@@ -94,16 +94,32 @@ public partial class NextWebF : System.Web.UI.Page
                     GetSortDirection();
                     strSort = " ORDER BY " + string.Format("{0} {1}", gvSortExpr, gvSortDir);
                     sqsRoomApply.SelectCommand = sqsRoomApply.SelectCommand + strSort;
+                    ViewState["selectCom_fil"] = sqsRoomApply.SelectCommand;
                 }
                 //Expand the Child grid
                 ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
             }
+            if (ViewState["selectCom_fil"] != null)
+            {
+                sqsRoomApply.SelectCommand = ViewState["selectCom_fil"].ToString();
+            }
+
+
             gv.DataSource = sqsRoomApply;
             gv.DataBind();
         }
 
         //ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
         
+    }
+
+    protected void GVRoomApply_RowDataBound(object sender, GridViewRowEventArgs e)
+    {
+        ////Check if this is our Blank Row being databound, if so make the row invisible
+        //if (e.Row.RowType == DataControlRowType.DataRow)
+        //{
+        //    if (((DataRowView)e.Row.DataItem)["id"].ToString() == String.Empty) e.Row.Visible = false;
+        //}
     }
 
     protected void GVApplyList_RowDeleted(object sender, GridViewDeletedEventArgs e)
@@ -384,6 +400,8 @@ public partial class NextWebF : System.Web.UI.Page
     }
 
     #endregion
+
+
 
 
 

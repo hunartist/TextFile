@@ -67,14 +67,14 @@ table {
 }
 table th {
 	border-width: 1px;
-	padding: 8px;
+	padding: 1px;
 	border-style: solid;
 	border-color: #666666;
 	background-color: #dedede;
 }
 table td {
 	border-width: 1px;
-	padding: 8px;
+	padding: 1px;
 	border-style: solid;
 	border-color: #666666;
 	background-color: #ffffff;
