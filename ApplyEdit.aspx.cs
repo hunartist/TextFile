@@ -74,11 +74,9 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSource sqsRoomApply;
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
-            sqsRoomApply = e.Row.FindControl("sqsRoomApply") as SqlDataSource;
-            if (sqsRoomApply != null)
-            {
-                sqsRoomApply.SelectParameters["applyid"].DefaultValue = (e.Row.DataItem as DataRowView)["applyid"].ToString();
-            }
+            sqsRoomApply = e.Row.FindControl("sqsRoomApply") as SqlDataSource;            
+            sqsRoomApply.SelectParameters["applyid"].DefaultValue = (e.Row.DataItem as DataRowView)["applyid"].ToString();
+            
             //Find Child GridView control
             GridViewRow row = e.Row;
             string strSort = string.Empty;
@@ -100,6 +98,8 @@ public partial class NextWebF : System.Web.UI.Page
                 //Expand the Child grid
                 ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
             }
+            gv.DataSource = sqsRoomApply;
+            gv.DataBind();
         }
 
         //ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
@@ -161,11 +161,14 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void GVRoomApply_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
-        SqlDataSource sqsRoomApply = (SqlDataSource)GVApplyList.Rows[e.RowIndex].FindControl("sqsRoomApply");
-        GridView GVRoomApply = (GridView)GVApplyList.Rows[e.RowIndex].FindControl("GVRoomApply");
-
         GridView gvTemp = (GridView)sender;
+        
         gvUniqueID = gvTemp.UniqueID;
+
+        //int ALRowIndex = e.Keys["applyid"]
+
+        SqlDataSource sqsRoomApply = (SqlDataSource)gvTemp.Parent.FindControl("sqsRoomApply");
+        //SqlDataSource sqsRoomApply = (SqlDataSource)gvTemp.DataSource;
 
 
         sqsRoomApply.UpdateParameters["action"].DefaultValue = "update";
@@ -177,10 +180,10 @@ public partial class NextWebF : System.Web.UI.Page
         sqsRoomApply.UpdateParameters["strWeekData"].DefaultValue = ((Label)gvTemp.Rows[e.RowIndex].FindControl("lbStrWeekData")).Text;
         sqsRoomApply.UpdateParameters["strClass"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrClassE")).Text;
         sqsRoomApply.UpdateParameters["strTeacher"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrTeacherE")).Text;
-        sqsRoomApply.UpdateParameters["id"].DefaultValue = e.Keys["id"].ToString();
+        sqsRoomApply.UpdateParameters["id"].DefaultValue = ((Label)gvTemp.Rows[e.RowIndex].FindControl("lbid")).Text;
 
         sqsRoomApply.Update();
-        GVRoomApply.DataBind();        
+        GVApplyList.DataBind();        
         leftTool.Visible = true;
         Response.Write("<script>alert('操作成功')</script>");
     }

@@ -18,9 +18,10 @@ ALTER PROCEDURE [dbo].[RoomApplyAction]
 	@strWeekReg varchar(200) = null,
 	@strWeekData varchar(500) = null,
 	@strName varchar(50) = null,
-	@strClass varchar(20) = null,
-	@strTeacher varchar(20) = null,
+	@strClass varchar(50) = null,
+	@strTeacher varchar(50) = null,
 	@strYearID varchar(20) = null,	
+	@applyid varchar(20) = null,
 	@id varchar(30)
 	
 AS
@@ -43,7 +44,7 @@ AS
 	end
 	else if (@Action = 'insert')
 	begin
-		insert into [RoomApply] values (@id,@strRoom,@intDay,@intStartNum,@intEndNum,'','',@strName,@strClass,@strTeacher,'','',GETDATE(),@strYearID,'',@strWeekReg,@strWeekData)
+		insert into [RoomApply] values (@id,@applyid,@strRoom,@intDay,@intStartNum,@intEndNum,'','','',@strClass,@strTeacher,'','',GETDATE(),'','',@strWeekReg,@strWeekData)
 		set @countWeek = 0
 		delete from [RoomApplySub] where [F_id] = @id
 		declare wid CURSOR for SELECT weekid FROM [dbo].[ufn_SplitStringToTable](@strWeekData,N',')
