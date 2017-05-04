@@ -130,7 +130,7 @@
                             <asp:Label ID="lbApplyid" runat="server" Text='<%# Eval("applyid") %>'></asp:Label>
                         </ItemTemplate>
                         <FooterTemplate>
-                            <asp:TextBox ID="tbApplyidA" Text='' runat="server"></asp:TextBox>
+                            <asp:Label ID="lbApplyid" runat="server" Text='<%# Eval("applyid") %>'></asp:Label>
                         </FooterTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="课程名称" SortExpression="strName">
@@ -152,7 +152,7 @@
                             <asp:Label ID="lbYearID" runat="server" Text='<%# Eval("yearID") %>'></asp:Label>
                         </ItemTemplate>
                         <FooterTemplate>
-                            <asp:TextBox ID="tbYearIDA" Text='' runat="server"></asp:TextBox>
+                            <asp:Label ID="lbYearID" runat="server" Text='<%# Eval("yearID") %>'></asp:Label>
                         </FooterTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="部门" SortExpression="strCDep">
@@ -163,7 +163,7 @@
                             <asp:Label ID="lbStrCDep" runat="server" Text='<%# Eval("strCDep") %>'></asp:Label>
                         </ItemTemplate>
                         <FooterTemplate>
-                            <asp:TextBox ID="tbStrCDepA" Text='' runat="server"></asp:TextBox>
+                            <asp:Label ID="lbStrCDep" runat="server" Text='<%# Eval("strCDep") %>'></asp:Label>
                         </FooterTemplate>
                     </asp:TemplateField>
                     <asp:TemplateField HeaderText="备注" SortExpression="strRemark">
@@ -240,7 +240,7 @@
                                                         CommandName="Delete" Text="删除" OnClientClick="return confirm('是否删除该记录？');"></asp:LinkButton>
                                             </ItemTemplate>
                                         </asp:TemplateField>
-                                        <asp:TemplateField HeaderText="subid" SortExpression="id">
+                                        <asp:TemplateField HeaderText="subid" SortExpression="id" Visible="false">
                                            <EditItemTemplate>
                                                 <asp:Label ID="lbid" runat="server" Text='<%# Eval("id") %>'></asp:Label>                     
                                             </EditItemTemplate>

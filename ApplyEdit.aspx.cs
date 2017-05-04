@@ -209,7 +209,32 @@ public partial class NextWebF : System.Web.UI.Page
                     Response.Write("<script>alert('开始节次不能大于结束节次')</script>");
                     return;
                 }
-                
+
+                RegexStringValidator regday = new RegexStringValidator("^[1-7]{1}$");
+                RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|^1[10]{1}");
+                try
+                {
+                    regday.Validate(dayW.ToString());
+                }
+                catch
+                {
+                    //LabelMsg.Visible = true;
+                    //LabelMsg.Text = "日期只能填数字1至数字7";
+                    Response.Write("<script>alert('日期只能填数字1至数字7')</script>");                   
+                    
+                    return;
+                }
+                try
+                {
+                    regnum.Validate(startN.ToString());
+                    regnum.Validate(endN.ToString());
+                }
+                catch
+                {
+                    Response.Write("<script>alert('节次只能填数字1至数字11')</script>");  
+                    return;
+                }
+
                 if (ClassN == "")
                 {
                     Response.Write("<script>alert('班级名未填写')</script>");
@@ -302,7 +327,8 @@ public partial class NextWebF : System.Web.UI.Page
         string TeacherN = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrTeacherE")).Text;
         string weekReg = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrWeekRegE")).Text;
         string weekData = string.Empty;        
-        string idN = ((Label)gvTemp.Rows[e.RowIndex].FindControl("lbid")).Text;
+        //string idN = ((Label)gvTemp.Rows[e.RowIndex].FindControl("lbid")).Text;
+        string idN = gvTemp.DataKeys[e.RowIndex]["id"].ToString();
 
         //验证
         if (weekReg == string.Empty)
