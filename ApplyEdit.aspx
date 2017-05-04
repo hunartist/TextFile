@@ -38,7 +38,11 @@
     <script language="C#" runat="server">
     </script>
     <form id="form1" method="post" runat="server" enableviewstate="True">
-        <asp:SqlDataSource ID="sqsApplyList" runat="server" ConnectionString='<%$ ConnectionStrings:webTestConnectionString %>' SelectCommand="SELECT [applyid],RTRIM([strName]) as strName,[yearID],[strCDep],[strRemark] FROM [ApplyList] WHERE [strCdep] = @strCdep " UpdateCommandType ="StoredProcedure" UpdateCommand="ApplyListAction" DeleteCommandType ="StoredProcedure" DeleteCommand="ApplyListAction">
+        <asp:SqlDataSource ID="sqsApplyList" runat="server" ConnectionString='<%$ ConnectionStrings:webTestConnectionString %>' 
+            SelectCommand="SELECT [applyid],RTRIM([strName]) as strName,[yearID],[strCDep],[strRemark] FROM [ApplyList] WHERE [strCdep] = @strCdep " 
+            UpdateCommandType ="StoredProcedure" UpdateCommand="ApplyListAction" 
+            DeleteCommandType ="StoredProcedure" DeleteCommand="ApplyListAction"
+            InsertCommandType ="StoredProcedure" InsertCommand="ApplyListAction">
             <SelectParameters>
                 <asp:SessionParameter Name="strCDep" SessionField="dep" Type="String" />
             </SelectParameters>
@@ -51,13 +55,17 @@
                 <asp:Parameter Name="applyid" Type="String" />
             </UpdateParameters>
             <DeleteParameters>
+                <asp:Parameter Name="Action" Type="String" />
+                <asp:Parameter Name="applyid" Type="String" />
+            </DeleteParameters>
+            <InsertParameters>
                 <asp:Parameter Name="Action" Type="String" />                
                 <asp:Parameter Name="strName" Type="String" />
                 <asp:Parameter Name="strYearID" Type="String" />
                 <asp:Parameter Name="strCDep" Type="String" />  
                 <asp:Parameter Name="strRemark" Type="String" />                
                 <asp:Parameter Name="applyid" Type="String" />
-            </DeleteParameters>
+            </InsertParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceDepartment" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strDepart] FROM [RoomDetail] WHERE ([strCDep] = @strCDep) order by [strDepart] desc" >
             <SelectParameters>
@@ -104,7 +112,8 @@
                 EnableModelValidation="True" AllowPaging="True" AllowSorting="True" OnRowDataBound="GVApplyList_RowDataBound" 
                 AutoGenerateEditButton="True" OnRowDeleted="GVApplyList_RowDeleted" OnRowUpdated="GVApplyList_RowUpdated" 
                 OnRowDeleting="GVApplyList_RowDeleting" OnRowEditing="GVApplyList_RowEditing" ShowFooter="True" 
-                OnRowUpdating="GVApplyList_RowUpdating" OnRowCancelingEdit="GVApplyList_RowCancelingEdit">
+                OnRowUpdating="GVApplyList_RowUpdating" OnRowCancelingEdit="GVApplyList_RowCancelingEdit"
+                OnRowCommand="GVApplyList_RowCommand">
                 <Columns>
                     <asp:TemplateField>
                         <ItemTemplate>
@@ -183,7 +192,8 @@
                                 <div id="div<%# Eval("applyid") %>" style="display:none;position:relative;left:15px;OVERFLOW: auto;WIDTH:97%" >
                                 <asp:SqlDataSource ID="sqsRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id], [applyid], [strRoom], [intDay], [intStartNum], [intEndNum], RTRIM([strClass]) as strClass, RTRIM([strTeacher]) as strTeacher, [strWeekReg], [strWeekData] FROM [RoomApply] WHERE ([applyid] = @applyid)"
                                     UpdateCommandType ="StoredProcedure" UpdateCommand="RoomApplyAction" 
-                                    DeleteCommandType ="StoredProcedure" DeleteCommand="RoomApplyAction">
+                                    DeleteCommandType ="StoredProcedure" DeleteCommand="RoomApplyAction"
+                                    InsertCommandType ="StoredProcedure" InsertCommand="RoomApplyAction">
                                     <SelectParameters>
                                         <asp:Parameter Name="applyid" Type="String" />
                                     </SelectParameters>
@@ -200,6 +210,10 @@
                                         <asp:Parameter Name="id" Type="String" />
                                     </UpdateParameters>
                                     <DeleteParameters>
+                                        <asp:Parameter Name="Action" Type="String" />                                                    
+                                        <asp:Parameter Name="id" Type="String" />
+                                    </DeleteParameters>
+                                    <InsertParameters>
                                         <asp:Parameter Name="Action" Type="String" />
                                         <asp:Parameter Name="strRoom" Type="String" />
                                         <asp:Parameter Name="intDay" Type="int16" />
@@ -208,16 +222,17 @@
                                         <asp:Parameter Name="strWeekReg" Type="String" />
                                         <asp:Parameter Name="strWeekData" Type="String" />                                    
                                         <asp:Parameter Name="strClass" Type="String" />
-                                        <asp:Parameter Name="strTeacher" Type="String" />                
+                                        <asp:Parameter Name="strTeacher" Type="String" />
+                                        <asp:Parameter Name="applyid" Type="String" />                
                                         <asp:Parameter Name="id" Type="String" />
-                                    </DeleteParameters>
+                                    </InsertParameters>
                                 </asp:SqlDataSource>                            
-                                <asp:GridView ID="GVRoomApply" runat="server" DataKeyNames="applyid" AutoGenerateColumns="False" AllowSorting="True"
-                                     AutoGenerateDeleteButton="False" AutoGenerateEditButton="True" OnRowDeleted="GVRoomApply_RowDeleted"
-                                     OnRowUpdated="GVRoomApply_RowUpdated" OnRowDeleting="GVRoomApply_RowDeleting"
+                                <asp:GridView ID="GVRoomApply" runat="server" DataKeyNames="applyid,id" AutoGenerateColumns="False" AllowSorting="True"
+                                     AutoGenerateDeleteButton="False" AutoGenerateEditButton="True" Showfooter="true"
+                                     OnRowDeleted="GVRoomApply_RowDeleted" OnRowUpdated="GVRoomApply_RowUpdated" OnRowDeleting="GVRoomApply_RowDeleting"
                                      OnRowEditing="GVRoomApply_RowEditing" OnRowUpdating="GVRoomApply_RowUpdating"
                                      OnRowCancelingEdit="GVRoomApply_RowCancelingEdit" OnSorting="GVRoomApply_Sorting" 
-                                     OnRowDataBound="GVRoomApply_RowDataBound">
+                                     OnRowDataBound="GVRoomApply_RowDataBound" OnRowCommand="GVRoomApply_RowCommand">
                                     <Columns>                                    
                                         <asp:TemplateField ShowHeader="False">
                                             <ItemTemplate>
@@ -244,62 +259,62 @@
                                                 <asp:Label ID="lbStrRoom" runat="server" Text='<%# Eval("strRoom") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbStrRoomA" Text='' runat="server"></asp:TextBox>
+                                                <asp:DropDownList ID="ddlRoomGVRAadd" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName" SelectedValue='<%# Bind("strRoom") %>'> </asp:DropDownList>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="日期（星期几）" SortExpression="intDay" >
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbIntDayE" Text='<%# Eval("intDay") %>' runat="server"></asp:TextBox>                     
+                                                <asp:TextBox ID="tbIntDayE" Text='<%# Eval("intDay") %>' runat="server"  Width="15"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbIntDay" runat="server" Text='<%# Eval("intDay") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbIntDayA" Text='' runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="tbIntDayA" Text='' runat="server" Width="15"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="开始节次" SortExpression="intStartNum">
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbIntStartNumE" Text='<%# Eval("intStartNum") %>' runat="server"></asp:TextBox>                     
+                                                <asp:TextBox ID="tbIntStartNumE" Text='<%# Eval("intStartNum") %>' runat="server"  Width="15"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbIntStartNum" runat="server" Text='<%# Eval("intStartNum") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbIntStartNum" Text='' runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="tbIntStartNumA" Text='' runat="server" Width="15"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="结束节次" SortExpression="intEndNum">
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbIntEndNumE" Text='<%# Eval("intEndNum") %>' runat="server"></asp:TextBox>                     
+                                                <asp:TextBox ID="tbIntEndNumE" Text='<%# Eval("intEndNum") %>' runat="server"  Width="15"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbIntEndNum" runat="server" Text='<%# Eval("intEndNum") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbIntEndNum" Text='' runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="tbIntEndNumA" Text='' runat="server" Width="15"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="班级" SortExpression="strClass">
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbStrClassE" Text='<%# Eval("strClass") %>' runat="server"></asp:TextBox>                     
+                                                <asp:TextBox ID="tbStrClassE" Text='<%# Eval("strClass") %>' runat="server"  Width="40"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbStrClass" runat="server" Text='<%# Eval("strClass") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbStrClass" Text='' runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="tbStrClassA" Text='' runat="server" Width="40"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="教师" SortExpression="strTeacher">
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbStrTeacherE" Text='<%# Eval("strTeacher") %>' runat="server"></asp:TextBox>                     
+                                                <asp:TextBox ID="tbStrTeacherE" Text='<%# Eval("strTeacher") %>' runat="server"  Width="40"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbStrTeacher" runat="server" Text='<%# Eval("strTeacher") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbStrTeacher" Text='' runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="tbStrTeacherA" Text='' runat="server"  Width="40"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="strWeekReg" SortExpression="strWeekReg">
@@ -310,7 +325,7 @@
                                                 <asp:Label ID="lbStrWeekReg" runat="server" Text='<%# Eval("strWeekReg") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbStrWeekReg" Text='' runat="server"></asp:TextBox>
+                                                <asp:TextBox ID="tbStrWeekRegA" Text='' runat="server"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="strWeekData" SortExpression="strWeekData">
@@ -321,7 +336,7 @@
                                                 <asp:Label ID="lbStrWeekData" runat="server" Text='<%# Eval("strWeekData") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbStrWeekDataA" Text='' runat="server" ReadOnly="true"></asp:TextBox>
+                                                <asp:LinkButton ID="linkAddRA" CommandName="AddRA" runat="server">增加子记录</asp:LinkButton>
                                             </FooterTemplate>
                                         </asp:TemplateField>                                        
                                     </Columns>
@@ -331,7 +346,7 @@
                         </tr>                                                        
                         </ItemTemplate>
                         <FooterTemplate>
-                            <asp:LinkButton ID="linkAddRA" CommandName="AddRA" runat="server">增加主记录（申请单）</asp:LinkButton>
+                            <asp:LinkButton ID="linkAddAL" CommandName="AddAL" runat="server">增加主记录（申请单）</asp:LinkButton>
                         </FooterTemplate>                        
                     </asp:TemplateField>
                 </Columns>
