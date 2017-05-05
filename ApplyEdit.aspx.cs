@@ -54,15 +54,15 @@ public partial class NextWebF : System.Web.UI.Page
             if (Session["ddlDep"] != null)
             {
                 //DropDownListDepart.SelectedValue = Session["ddlDep"].ToString();
-            }
-            
+            }            
 
         }
-        if(ViewState["roomapplySelStr"] != null)
+        if (ViewState["ApplyListSelStr"] != null)
         {
-            //SqlDataSourceRoomApply.SelectCommand = ViewState["roomapplySelStr"].ToString();
+            sqsApplyList.SelectCommand = ViewState["ApplyListSelStr"].ToString();
         }
-        
+
+
 
     }
 
@@ -75,7 +75,7 @@ public partial class NextWebF : System.Web.UI.Page
         SqlDataSource sqsRoomApply;
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
-            sqsRoomApply = e.Row.FindControl("sqsRoomApply") as SqlDataSource;            
+            sqsRoomApply = e.Row.FindControl("sqsRoomApply") as SqlDataSource;     
             sqsRoomApply.SelectParameters["applyid"].DefaultValue = (e.Row.DataItem as DataRowView)["applyid"].ToString();
             
             //Find Child GridView control
@@ -113,7 +113,7 @@ public partial class NextWebF : System.Web.UI.Page
             {
                 sqsRoomApply.SelectCommand = ViewState["roomapplySelStr"].ToString();
             }
-
+            
 
             gv.DataSource = sqsRoomApply;
             gv.DataBind();
@@ -565,23 +565,39 @@ public partial class NextWebF : System.Web.UI.Page
             sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing , 
         }
 
+        //sqsApplyList.SelectParameters.Clear();
+        //sqsApplyList.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom, sWeek, sDay);
+        //ControlParameter searchTextBox_CP = new ControlParameter();
+        //searchTextBox_CP.Name = "searchTextBox_CP";
+        //searchTextBox_CP.Type = TypeCode.String;
+        //searchTextBox_CP.ControlID = "tbSearch";
+        //searchTextBox_CP.PropertyName = "Text";
+        //searchTextBox_CP.DefaultValue = "init";
+        //sqsApplyList.SelectParameters.Add(searchTextBox_CP);
+        //ControlParameter depN_CP = new ControlParameter();
+        //depN_CP.Name = "depN_CP";
+        //depN_CP.Type = TypeCode.String;
+        //depN_CP.ControlID = "DropDownListDepart";
+        //depN_CP.PropertyName = "SelectedValue";
+        //sqsApplyList.SelectParameters.Add(depN_CP);
+        //ViewState["roomapplySelStr"] = sqsApplyList.SelectCommand;
+        //GVApplyList.DataBind();
+
+        //string strCdep = Session["dep"].ToString();
+
         sqsApplyList.SelectParameters.Clear();
-        sqsApplyList.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom, sWeek, sDay);
-        ControlParameter searchTextBox_CP = new ControlParameter();
-        searchTextBox_CP.Name = "searchTextBox_CP";
-        searchTextBox_CP.Type = TypeCode.String;
-        searchTextBox_CP.ControlID = "tbSearch";
-        searchTextBox_CP.PropertyName = "Text";
-        searchTextBox_CP.DefaultValue = "init";
-        sqsApplyList.SelectParameters.Add(searchTextBox_CP);
-        ControlParameter depN_CP = new ControlParameter();
-        depN_CP.Name = "depN_CP";
-        depN_CP.Type = TypeCode.String;
-        depN_CP.ControlID = "DropDownListDepart";
-        depN_CP.PropertyName = "SelectedValue";
-        sqsApplyList.SelectParameters.Add(depN_CP);
-        ViewState["roomapplySelStr"] = sqsApplyList.SelectCommand;
-        GVApplyList.DataBind();
+        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.strCDep,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.strCdep = @SPstrCdep and l.applyid = a.applyid and a.id = s.F_id and a.strRoom = d.strRoomName and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0})", sRoom);
+        SessionParameter SPstrCdep = new SessionParameter();
+        SPstrCdep.Name = "SPstrCdep";
+        SPstrCdep.Type = TypeCode.String;
+        SPstrCdep.SessionField = "dep";
+        SPstrCdep.DefaultValue = Session["dep"].ToString();
+        sqsApplyList.SelectParameters.Add(SPstrCdep);
+
+        ViewState["ApplyListSelStr"] = sqsApplyList.SelectCommand;
+        sqsApplyList.DataBind();      
+        
+
     }
 
     #endregion
