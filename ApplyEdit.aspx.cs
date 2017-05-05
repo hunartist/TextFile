@@ -20,6 +20,7 @@ public partial class NextWebF : System.Web.UI.Page
     int gvNewPageIndex = 0;
     int gvEditIndex = -1;
     string gvSortExpr = String.Empty;
+    int showFooter = 1;//1 show,0 hide
     private string gvSortDir
     {
 
@@ -96,6 +97,15 @@ public partial class NextWebF : System.Web.UI.Page
                     sqsRoomApply.SelectCommand = sqsRoomApply.SelectCommand + strSort;
                     ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
                 }
+                //show footer
+                if(showFooter == 0)
+                {
+                    gv.ShowFooter = false;                    
+                }
+                if(showFooter == 1)
+                {
+                    gv.ShowFooter = true;
+                }
                 //Expand the Child grid
                 ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
             }
@@ -132,7 +142,13 @@ public partial class NextWebF : System.Web.UI.Page
                 string YearID = CommonClass.getCurYearID();
                 string CDep = Session["dep"].ToString();
                 string RemarkN = ((TextBox)GVApplyList.FooterRow.FindControl("tbStrRemarkA")).Text;
-                string applyidN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);                
+                string applyidN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);
+
+                if (NameN == string.Empty)
+                {
+                    Response.Write("<script>alert('课程名称不可为空')</script>");
+                    return;
+                }
 
                 sqsApplyList.InsertParameters["Action"].DefaultValue = "insert";
                 sqsApplyList.InsertParameters["strName"].DefaultValue = NameN;
@@ -180,6 +196,7 @@ public partial class NextWebF : System.Web.UI.Page
                 if (norC != "OK")
                 {
                     Response.Write("<script>alert('" + norC + "')</script>");
+                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
                     return;
                 }
 
@@ -191,6 +208,7 @@ public partial class NextWebF : System.Web.UI.Page
                     if (regData == "ini")
                     {
                         Response.Write("<script>alert('data=ini')</script>");
+                        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
                         return;
                     }
                     else
@@ -202,6 +220,7 @@ public partial class NextWebF : System.Web.UI.Page
                 if (rTdFalg == false)
                 {
                     Response.Write("<script>alert('" + regData + "')</script>");
+                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
                     return;
                 }
                                 
@@ -210,6 +229,7 @@ public partial class NextWebF : System.Web.UI.Page
                 if (checkmsg != "OK")
                 {
                     Response.Write("<script>alert('" + checkmsg + "')</script>");
+                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
                     return;
                 }
 
@@ -252,9 +272,16 @@ public partial class NextWebF : System.Web.UI.Page
     {
         string CurYear = CommonClass.getCurYearID();
         string UsrDep = Session["dep"].ToString();
+        string NameN = ((TextBox)GVApplyList.Rows[e.RowIndex].FindControl("tbStrNameE")).Text;
+        if (NameN == string.Empty)
+        {
+            Response.Write("<script>alert('课程名称不可为空')</script>");
+            e.Cancel = true;
+            return;
+        }
 
         sqsApplyList.UpdateParameters["Action"].DefaultValue = "update";
-        sqsApplyList.UpdateParameters["strName"].DefaultValue = ((TextBox)GVApplyList.Rows[e.RowIndex].FindControl("tbStrNameE")).Text;
+        sqsApplyList.UpdateParameters["strName"].DefaultValue = NameN;
         sqsApplyList.UpdateParameters["strYearID"].DefaultValue = CurYear;
         sqsApplyList.UpdateParameters["strCDep"].DefaultValue = UsrDep;
         sqsApplyList.UpdateParameters["strRemark"].DefaultValue = ((TextBox)GVApplyList.Rows[e.RowIndex].FindControl("tbStrRemarkE")).Text;
@@ -263,6 +290,7 @@ public partial class NextWebF : System.Web.UI.Page
         sqsApplyList.Update();
         GVApplyList.DataBind();
         leftTool.Visible = true;
+        GVApplyList.ShowFooter = true;
         Response.Write("<script>alert('操作成功')</script>");
     }
 
@@ -347,8 +375,9 @@ public partial class NextWebF : System.Web.UI.Page
         sqsRoomApply.UpdateParameters["id"].DefaultValue = idN;
 
         sqsRoomApply.Update();
-        GVApplyList.DataBind();        
         leftTool.Visible = true;
+        showFooter = 1;
+        GVApplyList.DataBind();
         Response.Write("<script>alert('操作成功')</script>");
     }
 
@@ -365,12 +394,14 @@ public partial class NextWebF : System.Web.UI.Page
     protected void GVApplyList_RowEditing(object sender, GridViewEditEventArgs e)
     {
         leftTool.Visible = false;
+        GVApplyList.ShowFooter = false;
     }
 
     protected void GVRoomApply_RowEditing(object sender, GridViewEditEventArgs e)
     {
-        leftTool.Visible = false;
         GridView gvTemp = (GridView)sender;
+        leftTool.Visible = false;
+        showFooter = 0;
         gvUniqueID = gvTemp.UniqueID;
         gvEditIndex = e.NewEditIndex;
         GVApplyList.DataBind();
@@ -404,13 +435,15 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void GVApplyList_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        leftTool.Visible = true;        
+        leftTool.Visible = true;
+        GVApplyList.ShowFooter = true;
     }
 
     protected void GVRoomApply_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
     {
-        leftTool.Visible = true;
         GridView gvTemp = (GridView)sender;
+        leftTool.Visible = true;
+        showFooter = 1;
         gvUniqueID = gvTemp.UniqueID;
         gvEditIndex = -1;
         GVApplyList.DataBind();
