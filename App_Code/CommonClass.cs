@@ -69,7 +69,8 @@ public class CommonClass
         //取修改记录所对应的教室(strRoom)在特定日期（周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）有课，记入临时表table（不包含待修改记录本身）
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand(" select aa.intWeek,aa.intStartNum,aa.intEndNum from (select distinct s.intWeek,a.intStartNum,a.intEndNum,a.yearID from RoomApply a,RoomApplySub s  where a.id = s.f_id and a.strRoom = '" + roomN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "' ) as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' ", con);
+        string constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID from RoomApply a, RoomApplySub s, ApplyList l where a.id = s.f_id and a.applyid = l.applyid and a.strRoom = '" + roomN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);
+        sda.SelectCommand = new SqlCommand(constr, con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -503,6 +504,68 @@ public class CommonClass
 
         strData = strReg;
         return true;
+    }
+
+    public static string normalCheck(string weekRegC,int startNC,int endNC,int dayWC,string ClassNC,string TeacherNC)
+    {
+        string msg = "OK";
+        if (weekRegC == string.Empty)
+        {
+            msg = "周输入不可为空";
+            return msg;
+        }        
+
+        RegexStringValidator regday = new RegexStringValidator("^[1-7]{1}$");
+        RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|^1[10]{1}");
+        try
+        {
+            regday.Validate(dayWC.ToString());
+        }
+        catch
+        {            
+            msg = "日期只能填数字1至数字7";
+            return msg;
+        }
+        try
+        {
+            regnum.Validate(startNC.ToString());
+            regnum.Validate(endNC.ToString());
+        }
+        catch
+        {
+            msg = "节次只能填数字1至数字11";
+            return msg;
+        }
+
+        if ((startNC != 11)&&(endNC !=11))
+        {
+            if (startNC > endNC)
+            {
+                msg = "开始节次不能大于结束节次";
+                return msg;
+            }
+        }
+        if ((startNC == 11)|| (endNC == 11))
+        {
+            if(startNC != endNC)
+            {
+                msg = "节次如果是中午,则开始和结束都必须是中午";
+                return msg;
+            }
+        }
+        
+
+        if (ClassNC == string.Empty)
+        {
+            msg = "班级名未填写";
+            return msg;
+        }
+        if (TeacherNC == string.Empty)
+        {
+            msg = "教师名未填写";
+            return msg;
+        }
+        return msg;
     }
 
 

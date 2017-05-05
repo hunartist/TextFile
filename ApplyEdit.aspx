@@ -264,35 +264,100 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="日期（星期几）" SortExpression="intDay" >
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbIntDayE" Text='<%# Eval("intDay") %>' runat="server"  Width="15"></asp:TextBox>                     
+                                                <%--<asp:TextBox ID="tbIntDayE" Text='<%# Eval("intDay") %>' runat="server"  Width="15"></asp:TextBox>--%>
+                                                <asp:DropDownList ID="ddlDayE" runat="server" SelectedValue='<%# Bind("intDay") %>'>
+                                                    <asp:ListItem>1</asp:ListItem>
+                                                    <asp:ListItem>2</asp:ListItem>
+                                                    <asp:ListItem>3</asp:ListItem>
+                                                    <asp:ListItem>4</asp:ListItem>
+                                                    <asp:ListItem>5</asp:ListItem>
+                                                    <asp:ListItem>6</asp:ListItem>
+                                                    <asp:ListItem>7</asp:ListItem>
+                                                </asp:DropDownList>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbIntDay" runat="server" Text='<%# Eval("intDay") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbIntDayA" Text='' runat="server" Width="15"></asp:TextBox>
+                                                <asp:DropDownList ID="ddlDayA" runat="server">
+                                                    <asp:ListItem>1</asp:ListItem>
+                                                    <asp:ListItem>2</asp:ListItem>
+                                                    <asp:ListItem>3</asp:ListItem>
+                                                    <asp:ListItem>4</asp:ListItem>
+                                                    <asp:ListItem>5</asp:ListItem>
+                                                    <asp:ListItem>6</asp:ListItem>
+                                                    <asp:ListItem>7</asp:ListItem>
+                                                </asp:DropDownList>                     
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="开始节次" SortExpression="intStartNum">
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbIntStartNumE" Text='<%# Eval("intStartNum") %>' runat="server"  Width="15"></asp:TextBox>                     
+                                                <asp:DropDownList ID="ddlStartNE" runat="server" AutoPostBack="False" SelectedValue='<%# Bind("intStartNum") %>'>
+                                                    <asp:ListItem>1</asp:ListItem>
+                                                    <asp:ListItem>2</asp:ListItem>
+                                                    <asp:ListItem>3</asp:ListItem>
+                                                    <asp:ListItem>4</asp:ListItem>
+                                                    <asp:ListItem>5</asp:ListItem>
+                                                    <asp:ListItem>6</asp:ListItem>
+                                                    <asp:ListItem>7</asp:ListItem>
+                                                    <asp:ListItem>8</asp:ListItem>
+                                                    <asp:ListItem>9</asp:ListItem>
+                                                    <asp:ListItem>10</asp:ListItem>
+                                                    <asp:ListItem Value="11">中午</asp:ListItem>
+                                                </asp:DropDownList>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbIntStartNum" runat="server" Text='<%# Eval("intStartNum") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbIntStartNumA" Text='' runat="server" Width="15"></asp:TextBox>
+                                                <asp:DropDownList ID="ddlStartNA" runat="server" AutoPostBack="False">
+                                                    <asp:ListItem>1</asp:ListItem>
+                                                    <asp:ListItem>2</asp:ListItem>
+                                                    <asp:ListItem>3</asp:ListItem>
+                                                    <asp:ListItem>4</asp:ListItem>
+                                                    <asp:ListItem>5</asp:ListItem>
+                                                    <asp:ListItem>6</asp:ListItem>
+                                                    <asp:ListItem>7</asp:ListItem>
+                                                    <asp:ListItem>8</asp:ListItem>
+                                                    <asp:ListItem>9</asp:ListItem>
+                                                    <asp:ListItem>10</asp:ListItem>
+                                                    <asp:ListItem Value="11">中午</asp:ListItem>
+                                                </asp:DropDownList>     
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="结束节次" SortExpression="intEndNum">
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbIntEndNumE" Text='<%# Eval("intEndNum") %>' runat="server"  Width="15"></asp:TextBox>                     
+                                                <asp:DropDownList ID="ddlEndNE" runat="server" AutoPostBack="False" SelectedValue='<%# Bind("intEndNum") %>'>
+                                                    <asp:ListItem>1</asp:ListItem>
+                                                    <asp:ListItem>2</asp:ListItem>
+                                                    <asp:ListItem>3</asp:ListItem>
+                                                    <asp:ListItem>4</asp:ListItem>
+                                                    <asp:ListItem>5</asp:ListItem>
+                                                    <asp:ListItem>6</asp:ListItem>
+                                                    <asp:ListItem>7</asp:ListItem>
+                                                    <asp:ListItem>8</asp:ListItem>
+                                                    <asp:ListItem>9</asp:ListItem>
+                                                    <asp:ListItem>10</asp:ListItem>
+                                                    <asp:ListItem Value="11">中午</asp:ListItem>
+                                                </asp:DropDownList>                          
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbIntEndNum" runat="server" Text='<%# Eval("intEndNum") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbIntEndNumA" Text='' runat="server" Width="15"></asp:TextBox>
+                                                <asp:DropDownList ID="ddlEndNA" runat="server" AutoPostBack="False">
+                                                    <asp:ListItem>1</asp:ListItem>
+                                                    <asp:ListItem>2</asp:ListItem>
+                                                    <asp:ListItem>3</asp:ListItem>
+                                                    <asp:ListItem>4</asp:ListItem>
+                                                    <asp:ListItem>5</asp:ListItem>
+                                                    <asp:ListItem>6</asp:ListItem>
+                                                    <asp:ListItem>7</asp:ListItem>
+                                                    <asp:ListItem>8</asp:ListItem>
+                                                    <asp:ListItem>9</asp:ListItem>
+                                                    <asp:ListItem>10</asp:ListItem>
+                                                    <asp:ListItem Value="11">中午</asp:ListItem>
+                                                </asp:DropDownList>    
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="班级" SortExpression="strClass">

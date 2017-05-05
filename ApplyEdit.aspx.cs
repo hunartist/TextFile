@@ -165,15 +165,23 @@ public partial class NextWebF : System.Web.UI.Page
 
                 //Get the values stored in the text boxes 
                 string roomN = ((DropDownList)gvTemp.FooterRow.FindControl("ddlRoomGVRAadd")).SelectedValue;
-                int dayW = Convert.ToInt16(((TextBox)gvTemp.FooterRow.FindControl("tbIntDayA")).Text);
-                int startN = Convert.ToInt16(((TextBox)gvTemp.FooterRow.FindControl("tbIntStartNumA")).Text);
-                int endN = Convert.ToInt16(((TextBox)gvTemp.FooterRow.FindControl("tbIntEndNumA")).Text);
+                int dayW = Convert.ToInt16(((DropDownList)gvTemp.FooterRow.FindControl("ddlDayA")).SelectedValue);
+                int startN = Convert.ToInt16(((DropDownList)gvTemp.FooterRow.FindControl("ddlStartNA")).SelectedValue);
+                int endN = Convert.ToInt16(((DropDownList)gvTemp.FooterRow.FindControl("ddlEndNA")).SelectedValue);
                 string ClassN = ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text;
                 string TeacherN = ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text;
                 string weekReg = ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text;
                 string weekData = string.Empty;
                 string applyid = gvTemp.DataKeys[0].Value.ToString().TrimEnd();
                 string idN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);
+
+                //通常验证
+                string norC = CommonClass.normalCheck(weekReg, startN, endN, dayW, ClassN, TeacherN);
+                if (norC != "OK")
+                {
+                    Response.Write("<script>alert('" + norC + "')</script>");
+                    return;
+                }
 
                 //验证reg到data的转换
                 string regData = "ini";
@@ -187,8 +195,7 @@ public partial class NextWebF : System.Web.UI.Page
                     }
                     else
                     {
-                        weekData = regData;
-                        sqsRoomApply.InsertParameters["strWeekData"].DefaultValue = weekData;
+                        weekData = regData;                        
                     }
                 }
 
@@ -197,62 +204,14 @@ public partial class NextWebF : System.Web.UI.Page
                     Response.Write("<script>alert('" + regData + "')</script>");
                     return;
                 }
-
-                if (weekReg == null)
-                {
-                    Response.Write("<script>alert('周输入不可为空')</script>");
-                    return;
-                }              
-
-                if (startN > endN)
-                {
-                    Response.Write("<script>alert('开始节次不能大于结束节次')</script>");
-                    return;
-                }
-
-                RegexStringValidator regday = new RegexStringValidator("^[1-7]{1}$");
-                RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|^1[10]{1}");
-                try
-                {
-                    regday.Validate(dayW.ToString());
-                }
-                catch
-                {
-                    //LabelMsg.Visible = true;
-                    //LabelMsg.Text = "日期只能填数字1至数字7";
-                    Response.Write("<script>alert('日期只能填数字1至数字7')</script>");                   
-                    
-                    return;
-                }
-                try
-                {
-                    regnum.Validate(startN.ToString());
-                    regnum.Validate(endN.ToString());
-                }
-                catch
-                {
-                    Response.Write("<script>alert('节次只能填数字1至数字11')</script>");  
-                    return;
-                }
-
-                if (ClassN == "")
-                {
-                    Response.Write("<script>alert('班级名未填写')</script>");
-                    return;
-                }
-                if (TeacherN == "")
-                {
-                    Response.Write("<script>alert('教师名未填写')</script>");
-                    return;
-                }
-
+                                
+                //验证重复数据
                 string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN);
                 if (checkmsg != "OK")
                 {
                     Response.Write("<script>alert('" + checkmsg + "')</script>");
                     return;
                 }
-
 
                 //Prepare the Insert Command of the DataSource control
                 sqsRoomApply.InsertParameters["Action"].DefaultValue = "insert";
@@ -261,7 +220,7 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsRoomApply.InsertParameters["intStartNum"].DefaultValue = startN.ToString();
                 sqsRoomApply.InsertParameters["intEndNum"].DefaultValue = endN.ToString();
                 sqsRoomApply.InsertParameters["strWeekReg"].DefaultValue = weekReg;
-                //sqsRoomApply.InsertParameters["strWeekData"].DefaultValue = weekData;                
+                sqsRoomApply.InsertParameters["strWeekData"].DefaultValue = weekData;
                 sqsRoomApply.InsertParameters["strClass"].DefaultValue = ClassN;
                 sqsRoomApply.InsertParameters["strTeacher"].DefaultValue = TeacherN;
                 sqsRoomApply.InsertParameters["applyid"].DefaultValue = applyid;
@@ -320,9 +279,9 @@ public partial class NextWebF : System.Web.UI.Page
         //string applyid = gvTemp.DataKeys[0].Value.ToString();
 
         string roomN = ((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlRoomGVRA")).SelectedValue;
-        int dayW = Convert.ToInt16(((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntDayE")).Text);
-        int startN = Convert.ToInt16(((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntStartNumE")).Text);
-        int endN = Convert.ToInt16(((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntEndNumE")).Text);
+        int dayW = Convert.ToInt16(((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlDayE")).SelectedValue);
+        int startN = Convert.ToInt16(((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlStartNE")).SelectedValue);
+        int endN = Convert.ToInt16(((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlEndNE")).SelectedValue);
         string ClassN = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrClassE")).Text;
         string TeacherN = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrTeacherE")).Text;
         string weekReg = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrWeekRegE")).Text;
@@ -330,12 +289,13 @@ public partial class NextWebF : System.Web.UI.Page
         //string idN = ((Label)gvTemp.Rows[e.RowIndex].FindControl("lbid")).Text;
         string idN = gvTemp.DataKeys[e.RowIndex]["id"].ToString();
 
-        //验证
-        if (weekReg == string.Empty)
+        //通常验证
+        string norC = CommonClass.normalCheck(weekReg, startN, endN, dayW, ClassN, TeacherN);
+        if (norC != "OK")
         {
-            Response.Write("<script>alert('周输入不可为空')</script>");
-            e.Cancel = true;
-            GVApplyList.DataBind();
+            Response.Write("<script>alert('" + norC + "')</script>");
+            e.Cancel = true;            
+            ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");            
             return;
         }
 
@@ -348,7 +308,7 @@ public partial class NextWebF : System.Web.UI.Page
             {
                 Response.Write("<script>alert('data=ini')</script>");
                 e.Cancel = true;
-                GVApplyList.DataBind();
+                ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
                 return;
             }
             else
@@ -360,82 +320,31 @@ public partial class NextWebF : System.Web.UI.Page
         {
             Response.Write("<script>alert('" + regData + "')</script>");
             e.Cancel = true;
-            GVApplyList.DataBind();
+            ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
             return;
-        }
+        }        
 
-        RegexStringValidator regday = new RegexStringValidator("^[1-7]{1}$");
-        RegexStringValidator regnum = new RegexStringValidator("^[1-9]{1}$|^1[10]{1}");
-        try
-        {
-            regday.Validate(dayW.ToString());
-        }
-        catch
-        {
-            //LabelMsg.Visible = true;
-            //LabelMsg.Text = "日期只能填数字1至数字7";
-            Response.Write("<script>alert('日期只能填数字1至数字7')</script>");
-            e.Cancel = true;
-            GVApplyList.DataBind();
-            return;
-        }
-        try
-        {
-            regnum.Validate(startN.ToString());
-            regnum.Validate(endN.ToString());
-        }
-        catch
-        {
-            Response.Write("<script>alert('节次只能填数字1至数字11')</script>");
-            e.Cancel = true;
-            GVApplyList.DataBind();
-            return;
-        }
-
-        if (startN > endN)
-        {
-            Response.Write("<script>alert('开始节次不能大于结束节次')</script>");
-            e.Cancel = true;
-            GVApplyList.DataBind();
-            return;
-        }
-
-        if (ClassN == string.Empty)
-        {
-            Response.Write("<script>alert('班级未填写')</script>");
-            e.Cancel = true;
-            GVApplyList.DataBind();
-            return;
-        }
-
-        if (TeacherN == string.Empty)
-        {
-            Response.Write("<script>alert('教师未填写')</script>");
-            e.Cancel = true;
-            GVApplyList.DataBind();
-            return;
-        }
-
+        //验证重复数据
         string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN);
         if (checkmsg != "OK")
         {
             Response.Write("<script>alert('" + checkmsg + "')</script>");
             e.Cancel = true;
-            GVApplyList.DataBind();
+            ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
             return;
         }
 
         //更新数据
         sqsRoomApply.UpdateParameters["action"].DefaultValue = "update";
-        sqsRoomApply.UpdateParameters["strRoom"].DefaultValue = ((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlRoomGVRA")).SelectedValue;
-        sqsRoomApply.UpdateParameters["intDay"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntDayE")).Text;
-        sqsRoomApply.UpdateParameters["intStartNum"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntStartNumE")).Text;
-        sqsRoomApply.UpdateParameters["intEndNum"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbIntEndNumE")).Text;
-        sqsRoomApply.UpdateParameters["strWeekReg"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrWeekRegE")).Text;
+        sqsRoomApply.UpdateParameters["strRoom"].DefaultValue = roomN;
+        sqsRoomApply.UpdateParameters["intDay"].DefaultValue = dayW.ToString();
+        sqsRoomApply.UpdateParameters["intStartNum"].DefaultValue = startN.ToString();
+        sqsRoomApply.UpdateParameters["intEndNum"].DefaultValue = endN.ToString();
+        sqsRoomApply.UpdateParameters["strWeekReg"].DefaultValue = weekReg;
         sqsRoomApply.UpdateParameters["strWeekData"].DefaultValue = weekData;
-        sqsRoomApply.UpdateParameters["strClass"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrClassE")).Text;
-        sqsRoomApply.UpdateParameters["strTeacher"].DefaultValue = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrTeacherE")).Text;
-        sqsRoomApply.UpdateParameters["id"].DefaultValue = ((Label)gvTemp.Rows[e.RowIndex].FindControl("lbid")).Text;
+        sqsRoomApply.UpdateParameters["strClass"].DefaultValue = ClassN;
+        sqsRoomApply.UpdateParameters["strTeacher"].DefaultValue = TeacherN;
+        sqsRoomApply.UpdateParameters["id"].DefaultValue = idN;
 
         sqsRoomApply.Update();
         GVApplyList.DataBind();        
@@ -515,6 +424,7 @@ public partial class NextWebF : System.Web.UI.Page
         GVApplyList.DataBind();
     }
 
+
     #endregion
 
     #region leftEvent
@@ -562,86 +472,85 @@ public partial class NextWebF : System.Web.UI.Page
 
     protected void btTotalSearch_Click(object sender, EventArgs e)
     {
-        //string sRoom = string.Empty;
-        //foreach (ListItem li in liboRoom.Items)
-        //{
-        //    if (li.Selected == true)
-        //        sRoom += "'" + li.Value.Trim() + "',";
-        //}
+        string sRoom = string.Empty;
+        foreach (ListItem li in liboRoom.Items)
+        {
+            if (li.Selected == true)
+                sRoom += "'" + li.Value.Trim() + "',";
+        }
 
-        //if (sRoom != string.Empty)
-        //{
-        //    sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing ,   
-        //}
-        //else
-        //{
-        //    foreach (ListItem li in liboRoom.Items)
-        //    {
-        //        sRoom += "'" + li.Value.Trim() + "',";
-        //    }
-        //    sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing , 
-        //}
+        if (sRoom != string.Empty)
+        {
+            sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing ,   
+        }
+        else
+        {
+            foreach (ListItem li in liboRoom.Items)
+            {
+                sRoom += "'" + li.Value.Trim() + "',";
+            }
+            sRoom = sRoom.Substring(0, sRoom.Length - 1); // chop off trailing , 
+        }
 
-        //string sWeek = string.Empty;
-        //foreach (ListItem li in liboWeek.Items)
-        //{
-        //    if (li.Selected == true)
-        //        sWeek += li.Value.Trim() + ",";
-        //}
+        string sWeek = string.Empty;
+        foreach (ListItem li in liboWeek.Items)
+        {
+            if (li.Selected == true)
+                sWeek += li.Value.Trim() + ",";
+        }
 
-        //if (sWeek != string.Empty)
-        //{
-        //    sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing ,   
-        //}
-        //else
-        //{
-        //    foreach (ListItem li in liboWeek.Items)
-        //    {
-        //        sWeek += li.Value.Trim() + ",";
-        //    }
-        //    sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing , 
-        //}
+        if (sWeek != string.Empty)
+        {
+            sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing ,   
+        }
+        else
+        {
+            foreach (ListItem li in liboWeek.Items)
+            {
+                sWeek += li.Value.Trim() + ",";
+            }
+            sWeek = sWeek.Substring(0, sWeek.Length - 1); // chop off trailing , 
+        }
 
-        //string sDay = string.Empty;
-        //foreach (ListItem li in liboDay.Items)
-        //{
-        //    if (li.Selected == true)
-        //        sDay += li.Value.Trim() + ",";
-        //}
+        string sDay = string.Empty;
+        foreach (ListItem li in liboDay.Items)
+        {
+            if (li.Selected == true)
+                sDay += li.Value.Trim() + ",";
+        }
 
-        //if (sDay != string.Empty)
-        //{
-        //    sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing ,   
-        //}
-        //else
-        //{
-        //    foreach (ListItem li in liboDay.Items)
-        //    {
-        //        sDay += li.Value.Trim() + ",";
-        //    }
-        //    sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing , 
-        //}
+        if (sDay != string.Empty)
+        {
+            sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing ,   
+        }
+        else
+        {
+            foreach (ListItem li in liboDay.Items)
+            {
+                sDay += li.Value.Trim() + ",";
+            }
+            sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing , 
+        }
 
-        //SqlDataSourceRoomApply.SelectParameters.Clear();
-        //SqlDataSourceRoomApply.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom, sWeek, sDay);
-        //ControlParameter searchTextBox_CP = new ControlParameter();
-        //searchTextBox_CP.Name = "searchTextBox_CP";
-        //searchTextBox_CP.Type = TypeCode.String;
-        //searchTextBox_CP.ControlID = "tbSearch";
-        //searchTextBox_CP.PropertyName = "Text";
-        //searchTextBox_CP.DefaultValue = "init";
-        //SqlDataSourceRoomApply.SelectParameters.Add(searchTextBox_CP);
-        //ControlParameter depN_CP = new ControlParameter();
-        //depN_CP.Name = "depN_CP";
-        //depN_CP.Type = TypeCode.String;
-        //depN_CP.ControlID = "DropDownListDepart";
-        //depN_CP.PropertyName = "SelectedValue";
-        //SqlDataSourceRoomApply.SelectParameters.Add(depN_CP);
-        //ViewState["roomapplySelStr"] = SqlDataSourceRoomApply.SelectCommand;
-        //GridView10.DataBind();
+        sqsApplyList.SelectParameters.Clear();
+        sqsApplyList.SelectCommand = String.Format("select distinct a.id,a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.strWeekReg,a.strWeekData,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.yearID from RoomApply a ,RoomDetail d,TitleStartEnd w,RoomApplySub s where a.strRoom = d.strRoomName  and a.yearID = w.yearID and w.currentFlag = 'true' and a.id = s.F_id and d.strDepart = @depN_CP and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((a.strName like '%'+ @searchTextBox_CP + '%') or (a.strTeacher like '%'+ @searchTextBox_CP + '%') or (a.strClass like '%'+ @searchTextBox_CP + '%') or (@searchTextBox_CP = 'init')) order by a.id desc", sRoom, sWeek, sDay);
+        ControlParameter searchTextBox_CP = new ControlParameter();
+        searchTextBox_CP.Name = "searchTextBox_CP";
+        searchTextBox_CP.Type = TypeCode.String;
+        searchTextBox_CP.ControlID = "tbSearch";
+        searchTextBox_CP.PropertyName = "Text";
+        searchTextBox_CP.DefaultValue = "init";
+        sqsApplyList.SelectParameters.Add(searchTextBox_CP);
+        ControlParameter depN_CP = new ControlParameter();
+        depN_CP.Name = "depN_CP";
+        depN_CP.Type = TypeCode.String;
+        depN_CP.ControlID = "DropDownListDepart";
+        depN_CP.PropertyName = "SelectedValue";
+        sqsApplyList.SelectParameters.Add(depN_CP);
+        ViewState["roomapplySelStr"] = sqsApplyList.SelectCommand;
+        GVApplyList.DataBind();
     }
 
-    #endregion    
-
-
+    #endregion
+    
 }
