@@ -292,7 +292,7 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="开始节次" SortExpression="intStartNum">
                                             <EditItemTemplate>
-                                                <asp:DropDownList ID="ddlStartNE" runat="server" AutoPostBack="False" SelectedValue='<%# Bind("intStartNum") %>'>
+                                                <asp:DropDownList ID="ddlStartNE" runat="server" AutoPostBack="True" SelectedValue='<%# Bind("intStartNum") %>' OnSelectedIndexChanged="ddlStartNE_SelectedIndexChanged">
                                                     <asp:ListItem>1</asp:ListItem>
                                                     <asp:ListItem>2</asp:ListItem>
                                                     <asp:ListItem>3</asp:ListItem>
@@ -310,7 +310,7 @@
                                                 <asp:Label ID="lbIntStartNum" runat="server" Text='<%# Eval("intStartNum") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:DropDownList ID="ddlStartNA" runat="server" AutoPostBack="False">
+                                                <asp:DropDownList ID="ddlStartNA" runat="server" AutoPostBack="true" OnSelectedIndexChanged="ddlStartNA_SelectedIndexChanged">
                                                     <asp:ListItem>1</asp:ListItem>
                                                     <asp:ListItem>2</asp:ListItem>
                                                     <asp:ListItem>3</asp:ListItem>

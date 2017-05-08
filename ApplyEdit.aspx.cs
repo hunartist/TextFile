@@ -586,5 +586,44 @@ public partial class NextWebF : System.Web.UI.Page
     }
 
     #endregion
-    
+
+
+    protected void ddlStartNE_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        
+        DropDownList ddlStartN = (DropDownList)sender;
+        DropDownList ddlEndN = (DropDownList)ddlStartN.Parent.Parent.FindControl("ddlEndNE");
+
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 1) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 3)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 5)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 7)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 9)))
+        {
+            ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
+        }
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 11))
+        {
+            ddlEndN.SelectedValue = ddlStartN.SelectedValue;
+        }
+        //子记录保持打开
+        GridView gvTemp = (GridView)ddlStartN.Parent.Parent.Parent.Parent;
+        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+
+    }
+
+    protected void ddlStartNA_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownList ddlStartN = (DropDownList)sender;
+        DropDownList ddlEndN = (DropDownList)ddlStartN.Parent.Parent.FindControl("ddlEndNA");
+
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 1) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 3)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 5)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 7)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 9)))
+        {
+            ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
+        }
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 11))
+        {
+            ddlEndN.SelectedValue = ddlStartN.SelectedValue;
+        }
+        //子记录保持打开
+        GridView gvTemp = (GridView)ddlStartN.Parent.Parent.Parent.Parent;
+        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+
+    }
 }
