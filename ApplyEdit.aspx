@@ -240,6 +240,12 @@
                                                         CommandName="Delete" Text="删除" OnClientClick="return confirm('是否删除该记录？');"></asp:LinkButton>
                                             </ItemTemplate>
                                         </asp:TemplateField>
+                                        <asp:TemplateField ShowHeader="False">
+                                            <ItemTemplate>
+                                                <asp:LinkButton ID="lbCopySub" runat="server" CausesValidation="False"
+                                                        CommandName="CopySub" Text="复制"></asp:LinkButton>
+                                            </ItemTemplate>
+                                        </asp:TemplateField>
                                         <asp:TemplateField HeaderText="subid" SortExpression="id" Visible="false">
                                            <EditItemTemplate>
                                                 <asp:Label ID="lbid" runat="server" Text='<%# Eval("id") %>'></asp:Label>                     
@@ -253,7 +259,7 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="教室" SortExpression="strRoom">
                                             <EditItemTemplate>
-                                                <asp:DropDownList ID="ddlRoomGVRA" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName" SelectedValue='<%# Bind("strRoom") %>'> </asp:DropDownList>                      
+                                                <asp:DropDownList ID="ddlRoomGVRAedit" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="strRoomName" SelectedValue='<%# Bind("strRoom") %>'> </asp:DropDownList>                      
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbStrRoom" runat="server" Text='<%# Eval("strRoom") %>'></asp:Label>

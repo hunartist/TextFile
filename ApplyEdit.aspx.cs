@@ -256,6 +256,34 @@ public partial class NextWebF : System.Web.UI.Page
                 ClientScript.RegisterStartupScript(GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('" + ex.Message.ToString().Replace("'", "") + "');</script>");
             }
         }
+
+        if (e.CommandName == "CopySub")
+        {
+            LinkButton curLB = (LinkButton)e.CommandSource;
+            GridViewRow curRow = (GridViewRow)curLB.Parent.Parent;
+            int curRowIndex = curRow.RowIndex;
+            GridView gvTemp = (GridView)curLB.Parent.Parent.Parent.Parent;
+
+            string roomN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrRoom")).Text;
+            string dayW = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntDay")).Text.TrimEnd();
+            string startN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntStartNum")).Text.TrimEnd();
+            string endN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntEndNum")).Text.TrimEnd();
+            string ClassN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrClass")).Text.TrimEnd();
+            string TeacherN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrTeacher")).Text.TrimEnd();
+            string weekReg = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrWeekReg")).Text.TrimEnd();
+            //string weekData = string.Empty;            
+            //string idN = gvTemp.DataKeys[curRowIndex]["id"].ToString();
+
+            ((DropDownList)gvTemp.FooterRow.FindControl("ddlRoomGVRAadd")).SelectedValue = roomN;
+            ((DropDownList)gvTemp.FooterRow.FindControl("ddlDayA")).SelectedValue = dayW;
+            ((DropDownList)gvTemp.FooterRow.FindControl("ddlStartNA")).SelectedValue = startN;
+            ((DropDownList)gvTemp.FooterRow.FindControl("ddlEndNA")).SelectedValue = endN;
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = ClassN;
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = TeacherN;
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text = weekReg;
+
+            ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+        }
     }
 
     protected void GVApplyList_RowDeleted(object sender, GridViewDeletedEventArgs e)
@@ -306,7 +334,7 @@ public partial class NextWebF : System.Web.UI.Page
         //SqlDataSource sqsRoomApply = (SqlDataSource)gvTemp.DataSource;
         //string applyid = gvTemp.DataKeys[0].Value.ToString();
 
-        string roomN = ((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlRoomGVRA")).SelectedValue;
+        string roomN = ((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlRoomGVRAedit")).SelectedValue;
         int dayW = Convert.ToInt16(((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlDayE")).SelectedValue);
         int startN = Convert.ToInt16(((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlStartNE")).SelectedValue);
         int endN = Convert.ToInt16(((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlEndNE")).SelectedValue);
