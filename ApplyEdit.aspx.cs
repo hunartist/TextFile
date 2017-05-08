@@ -44,6 +44,30 @@ public partial class NextWebF : System.Web.UI.Page
         }
         return gvSortDir;
     }
+
+    public static void renderEmptyGridView(GridView EmptyGridView, string FieldNames)
+    {
+        //将GridView变成只有Header和Footer列，以及被隐藏的空白资料列    
+        DataTable dTable = new DataTable();
+        char[] delimiterChars = { ',' };
+        string[] colName = FieldNames.Split(delimiterChars);
+        foreach (string myCol in colName)
+        {
+            DataColumn dColumn = new DataColumn(myCol.Trim());
+            dTable.Columns.Add(dColumn);
+        }
+        DataRow dRow = dTable.NewRow();
+        foreach (string myCol in colName)
+        {
+            dRow[myCol.Trim()] = DBNull.Value;
+        }
+        dTable.Rows.Add(dRow);
+        EmptyGridView.DataSourceID = null;
+        EmptyGridView.DataSource = dTable;
+        EmptyGridView.DataBind();
+        EmptyGridView.Rows[0].Visible = false;
+    }
+
     protected void Page_Load(object sender, EventArgs e)
     {
         if (!IsPostBack)    //Page.IsPostBack
@@ -105,7 +129,8 @@ public partial class NextWebF : System.Web.UI.Page
                 if(showFooter == 1)
                 {
                     gv.ShowFooter = true;
-                }
+                }                
+
                 //Expand the Child grid
                 ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
             }
@@ -160,7 +185,8 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsApplyList.Insert();
                 GVApplyList.DataBind();
                 leftTool.Visible = true;
-                Response.Write("<script>alert('操作成功')</script>");
+                //Response.Write("<script>alert('操作成功')</script>");                
+                Response.Redirect("ApplyEdit.aspx");
             }
             catch (Exception ex)
             {
@@ -188,7 +214,7 @@ public partial class NextWebF : System.Web.UI.Page
                 string TeacherN = ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text;
                 string weekReg = ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text;
                 string weekData = string.Empty;
-                string applyid = gvTemp.DataKeys[0].Value.ToString().TrimEnd();
+                string applyid = ((Label)gvTemp.Parent.Parent.FindControl("lbapplyid")).Text;
                 string idN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);
 
                 //通常验证
@@ -249,11 +275,13 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsRoomApply.Insert();
                 GVApplyList.DataBind();
                 leftTool.Visible = true;
+                ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
                 Response.Write("<script>alert('操作成功')</script>");
             }
             catch (Exception ex)
             {
                 ClientScript.RegisterStartupScript(GetType(), "Message", "<SCRIPT LANGUAGE='javascript'>alert('" + ex.Message.ToString().Replace("'", "") + "');</script>");
+                return;
             }
         }
 
@@ -485,6 +513,62 @@ public partial class NextWebF : System.Web.UI.Page
         GVApplyList.DataBind();
     }
 
+    protected void ddlStartNE_SelectedIndexChanged(object sender, EventArgs e)
+    {
+
+        DropDownList ddlStartN = (DropDownList)sender;
+        DropDownList ddlEndN = (DropDownList)ddlStartN.Parent.Parent.FindControl("ddlEndNE");
+
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 1) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 3)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 5)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 7)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 9)))
+        {
+            ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
+        }
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 11))
+        {
+            ddlEndN.SelectedValue = ddlStartN.SelectedValue;
+        }
+        //子记录保持打开
+        GridView gvTemp = (GridView)ddlStartN.Parent.Parent.Parent.Parent;
+        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+
+    }
+
+    protected void ddlStartNA_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        DropDownList ddlStartN = (DropDownList)sender;
+        DropDownList ddlEndN = (DropDownList)ddlStartN.Parent.Parent.FindControl("ddlEndNA");
+
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 1) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 3)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 5)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 7)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 9)))
+        {
+            ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
+        }
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 11))
+        {
+            ddlEndN.SelectedValue = ddlStartN.SelectedValue;
+        }
+        //子记录保持打开
+        string strApplyid = ((Label)ddlStartN.Parent.Parent.Parent.Parent.Parent.Parent.FindControl("lbApplyid")).Text;
+        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + strApplyid + "','one');</script>");
+
+    }
+
+    protected void GVRoomApply_PreRender(object sender, EventArgs e)
+    {
+        GridView gvTemp = (GridView)sender;
+        //check empty row
+        if (gvTemp.Rows.Count == 0)
+        {
+            renderEmptyGridView(gvTemp, "applyid, id, strRoom, intDay, intStartNum, intEndNum, strClass, strTeacher, strWeekReg, strWeekData");
+        }
+    }
+
+    protected void GVApplyList_PreRender(object sender, EventArgs e)
+    {
+        if (GVApplyList.Rows.Count == 0)
+        {
+            renderEmptyGridView(GVApplyList, "applyid, strName, yearID, strCDep, strRemark");
+        }
+    }
 
     #endregion
 
@@ -527,6 +611,7 @@ public partial class NextWebF : System.Web.UI.Page
         {
             li.Selected = false;
         }
+        tbSearch.Text = string.Empty;
     }
 
 
@@ -591,11 +676,17 @@ public partial class NextWebF : System.Web.UI.Page
                 sDay += li.Value.Trim() + ",";
             }
             sDay = sDay.Substring(0, sDay.Length - 1); // chop off trailing , 
-        }       
+        }
+
+        string sTextbox = tbSearch.Text;
+        if (sTextbox == string.Empty)
+        {
+            sTextbox = "init";
+        }
         //主记录筛选
         string CDep = Session["dep"].ToString();
         sqsApplyList.SelectParameters.Clear();
-        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.strCDep,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.strCdep = '{1}' and l.applyid = a.applyid and a.id = s.F_id and a.strRoom = d.strRoomName and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0})", sRoom, CDep);
+        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.strCDep,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.strCdep = '{0}' and l.applyid = a.applyid and a.id = s.F_id and a.strRoom = d.strRoomName and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({1}) and s.intWeek in ({2}) and a.intDay in ({3}) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init'))",CDep,sRoom,sWeek,sDay,sTextbox);
         ViewState["ApplyListSelStr"] = sqsApplyList.SelectCommand;
         sqsApplyList.DataBind();
         //子记录筛选
@@ -604,7 +695,7 @@ public partial class NextWebF : System.Web.UI.Page
             SqlDataSource sqsRoomApply;
             sqsRoomApply = GVApplyList.Rows[i].FindControl("sqsRoomApply") as SqlDataSource;
             //sqsRoomApply.SelectParameters["applyid"].DefaultValue = (GVApplyList.Rows[i].DataItem as DataRowView)["applyid"].ToString();
-            sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid, a.strRoom, a.intDay, a.intStartNum, a.intEndNum, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.strRoom = d.strRoomName and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0})", sRoom);
+            sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid, a.strRoom, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.strRoom = d.strRoomName and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init'))", sRoom, sWeek, sDay, sTextbox);
             ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
             sqsRoomApply.DataBind();
 
@@ -615,43 +706,8 @@ public partial class NextWebF : System.Web.UI.Page
 
     #endregion
 
+    
 
-    protected void ddlStartNE_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        
-        DropDownList ddlStartN = (DropDownList)sender;
-        DropDownList ddlEndN = (DropDownList)ddlStartN.Parent.Parent.FindControl("ddlEndNE");
 
-        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 1) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 3)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 5)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 7)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 9)))
-        {
-            ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
-        }
-        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 11))
-        {
-            ddlEndN.SelectedValue = ddlStartN.SelectedValue;
-        }
-        //子记录保持打开
-        GridView gvTemp = (GridView)ddlStartN.Parent.Parent.Parent.Parent;
-        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
-
-    }
-
-    protected void ddlStartNA_SelectedIndexChanged(object sender, EventArgs e)
-    {
-        DropDownList ddlStartN = (DropDownList)sender;
-        DropDownList ddlEndN = (DropDownList)ddlStartN.Parent.Parent.FindControl("ddlEndNA");
-
-        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 1) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 3)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 5)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 7)) || ((Convert.ToInt16(ddlStartN.SelectedValue) == 9)))
-        {
-            ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
-        }
-        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 11))
-        {
-            ddlEndN.SelectedValue = ddlStartN.SelectedValue;
-        }
-        //子记录保持打开
-        GridView gvTemp = (GridView)ddlStartN.Parent.Parent.Parent.Parent;
-        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
-
-    }
+    
 }
