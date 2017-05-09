@@ -113,7 +113,7 @@
                 AutoGenerateEditButton="True" OnRowDeleted="GVApplyList_RowDeleted" OnRowUpdated="GVApplyList_RowUpdated" 
                 OnRowDeleting="GVApplyList_RowDeleting" OnRowEditing="GVApplyList_RowEditing" ShowFooter="True" 
                 OnRowUpdating="GVApplyList_RowUpdating" OnRowCancelingEdit="GVApplyList_RowCancelingEdit"
-                OnRowCommand="GVApplyList_RowCommand" OnPreRender="GVApplyList_PreRender" PageSize="30">
+                OnRowCommand="GVApplyList_RowCommand" OnPreRender="GVApplyList_PreRender" PageSize="30" Width="95%">
                 <Columns>
                     <asp:TemplateField>
                         <ItemTemplate>
@@ -244,7 +244,7 @@
                                         <asp:TemplateField ShowHeader="False">
                                             <ItemTemplate>
                                                 <asp:LinkButton ID="lbCopySub" runat="server" CausesValidation="False"
-                                                        CommandName="CopySub" Text="复制"></asp:LinkButton>
+                                                        CommandName="CopySub" Text="复制" ></asp:LinkButton>
                                             </ItemTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="subid" SortExpression="id" Visible="false">
@@ -383,7 +383,7 @@
                                                 <asp:TextBox ID="tbStrTeacherE" Text='<%# Eval("strTeacher") %>' runat="server"  Width="40"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
-                                                <asp:Label ID="lbStrTeacher" runat="server" Text='<%# Eval("strTeacher") %>'></asp:Label>
+                                                <asp:Label ID="lbStrTeacher" runat="server" Text='<%# Eval("strTeacher") %>' Width="50"></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
                                                 <asp:TextBox ID="tbStrTeacherA" Text='' runat="server"  Width="40"></asp:TextBox>
