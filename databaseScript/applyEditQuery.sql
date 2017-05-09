@@ -10,5 +10,4 @@ a.strWeekReg, a.strWeekData FROM RoomApply a, RoomApplySub s, RoomDetail d, Titl
 WHERE applyid = 't1' and a.id = s.F_id and a.strRoom = d.strRoomName and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ('501')
 
 
-
-
+select * from RoomApply order by id desc

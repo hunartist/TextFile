@@ -75,15 +75,16 @@ public partial class NextWebF : System.Web.UI.Page
             if (user.redirectSet(Convert.ToString(Session["user"])))
             { Response.Redirect("tempLogin.aspx"); }
 
-            if (Session["ddlDep"] != null)
+            if (Session["dep"] == null)
             {
-                //DropDownListDepart.SelectedValue = Session["ddlDep"].ToString();
+                Response.Redirect("tempLogin.aspx");
             }            
 
         }
-        if (ViewState["ApplyListSelStr"] != null)
+        if ((ViewState["ApplyListSelStr"] != null) && (sqsApplyList.SelectCommand != ViewState["ApplyListSelStr"].ToString()))
         {
             sqsApplyList.SelectCommand = ViewState["ApplyListSelStr"].ToString();
+            //GVApplyList.DataBind();
         }
 
 
@@ -95,10 +96,10 @@ public partial class NextWebF : System.Web.UI.Page
     #region gridviewEvent
 
     protected void GVApplyList_RowDataBound(object sender, GridViewRowEventArgs e)
-    {
-        SqlDataSource sqsRoomApply;
+    {        
         if (e.Row.RowType == DataControlRowType.DataRow)
         {
+            SqlDataSource sqsRoomApply;
             sqsRoomApply = e.Row.FindControl("sqsRoomApply") as SqlDataSource;     
             sqsRoomApply.SelectParameters["applyid"].DefaultValue = (e.Row.DataItem as DataRowView)["applyid"].ToString();
             
@@ -138,9 +139,9 @@ public partial class NextWebF : System.Web.UI.Page
             {
                 sqsRoomApply.SelectCommand = ViewState["roomapplySelStr"].ToString();
             }
-            
 
-            gv.DataSource = sqsRoomApply;
+
+            //gv.DataSource = sqsRoomApply;
             gv.DataBind();
         }
 
@@ -185,7 +186,7 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsApplyList.Insert();
                 GVApplyList.DataBind();
                 leftTool.Visible = true;
-                //Response.Write("<script>alert('操作成功')</script>");                
+                //Response.Write("<script>alert('操作成功')</script>");
                 Response.Redirect("ApplyEdit.aspx");
             }
             catch (Exception ex)
@@ -222,7 +223,7 @@ public partial class NextWebF : System.Web.UI.Page
                 if (norC != "OK")
                 {
                     Response.Write("<script>alert('" + norC + "')</script>");
-                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + applyid + "','one');</script>");
                     return;
                 }
 
@@ -234,7 +235,7 @@ public partial class NextWebF : System.Web.UI.Page
                     if (regData == "ini")
                     {
                         Response.Write("<script>alert('data=ini')</script>");
-                        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+                        ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + applyid + "','one');</script>");
                         return;
                     }
                     else
@@ -246,7 +247,7 @@ public partial class NextWebF : System.Web.UI.Page
                 if (rTdFalg == false)
                 {
                     Response.Write("<script>alert('" + regData + "')</script>");
-                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + applyid + "','one');</script>");
                     return;
                 }
                                 
@@ -255,7 +256,7 @@ public partial class NextWebF : System.Web.UI.Page
                 if (checkmsg != "OK")
                 {
                     Response.Write("<script>alert('" + checkmsg + "')</script>");
-                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+                    ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + applyid + "','one');</script>");
                     return;
                 }
 
@@ -275,7 +276,7 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsRoomApply.Insert();
                 GVApplyList.DataBind();
                 leftTool.Visible = true;
-                ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+                ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + applyid + "','one');</script>");
                 Response.Write("<script>alert('操作成功')</script>");
             }
             catch (Exception ex)
@@ -311,6 +312,7 @@ public partial class NextWebF : System.Web.UI.Page
             ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text = weekReg;
 
             ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+
         }
     }
 
@@ -580,7 +582,6 @@ public partial class NextWebF : System.Web.UI.Page
         Response.Redirect("templogin.aspx");
     }
 
-
     protected void btliboAll_Click(object sender, EventArgs e)
     {
         foreach (ListItem li in liboRoom.Items)
@@ -612,9 +613,22 @@ public partial class NextWebF : System.Web.UI.Page
             li.Selected = false;
         }
         tbSearch.Text = string.Empty;
+        //reset select
+        string CDep = Session["dep"].ToString();
+        sqsApplyList.SelectParameters.Clear();
+        sqsApplyList.SelectCommand = String.Format("SELECT [applyid],RTRIM([strName]) as strName,[yearID],[strCDep],[strRemark] FROM [ApplyList] WHERE [strCdep] = '{0}'  order by applyid desc", CDep);
+        ViewState["ApplyListSelStr"] = sqsApplyList.SelectCommand;
+        sqsApplyList.DataBind();
+        
+        for (int i = 0; i < GVApplyList.Rows.Count; i++)
+        {
+            SqlDataSource sqsRoomApply;
+            sqsRoomApply = GVApplyList.Rows[i].FindControl("sqsRoomApply") as SqlDataSource;            
+            sqsRoomApply.SelectCommand = string.Format("SELECT [id], [applyid], [strRoom], [intDay], [intStartNum], [intEndNum], RTRIM([strClass]) as strClass, RTRIM([strTeacher]) as strTeacher, [strWeekReg], [strWeekData] FROM [RoomApply] WHERE [applyid] = @applyid");
+            ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
+            sqsRoomApply.DataBind();
+        }
     }
-
-
 
     protected void btTotalSearch_Click(object sender, EventArgs e)
     {
@@ -686,9 +700,15 @@ public partial class NextWebF : System.Web.UI.Page
         //主记录筛选
         string CDep = Session["dep"].ToString();
         sqsApplyList.SelectParameters.Clear();
-        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.strCDep,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.strCdep = '{0}' and l.applyid = a.applyid and a.id = s.F_id and a.strRoom = d.strRoomName and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({1}) and s.intWeek in ({2}) and a.intDay in ({3}) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init'))",CDep,sRoom,sWeek,sDay,sTextbox);
+        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.strCDep,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.strCdep = '{0}' and l.applyid = a.applyid and a.id = s.F_id and a.strRoom = d.strRoomName and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({1}) and s.intWeek in ({2}) and a.intDay in ({3}) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init')) order by l.applyid desc", CDep,sRoom,sWeek,sDay,sTextbox);
         ViewState["ApplyListSelStr"] = sqsApplyList.SelectCommand;
         sqsApplyList.DataBind();
+        if (GVApplyList.DataSourceID == string.Empty)
+        {
+            GVApplyList.DataSource = sqsApplyList;
+        }
+
+
         //子记录筛选
         for (int i = 0; i < GVApplyList.Rows.Count; i++)
         {
@@ -698,10 +718,8 @@ public partial class NextWebF : System.Web.UI.Page
             sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid, a.strRoom, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.strRoom = d.strRoomName and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init'))", sRoom, sWeek, sDay, sTextbox);
             ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
             sqsRoomApply.DataBind();
-
-
         }
-
+        GVApplyList.DataBind();
     }
 
     #endregion

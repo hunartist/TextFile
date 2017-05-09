@@ -39,7 +39,7 @@
     </script>
     <form id="form1" method="post" runat="server" enableviewstate="True">
         <asp:SqlDataSource ID="sqsApplyList" runat="server" ConnectionString='<%$ ConnectionStrings:webTestConnectionString %>' 
-            SelectCommand="SELECT [applyid],RTRIM([strName]) as strName,[yearID],[strCDep],[strRemark] FROM [ApplyList] WHERE [strCdep] = @strCdep " 
+            SelectCommand="SELECT [applyid],RTRIM([strName]) as strName,[yearID],[strCDep],[strRemark] FROM [ApplyList] WHERE [strCdep] = @strCdep  order by applyid desc " 
             UpdateCommandType ="StoredProcedure" UpdateCommand="ApplyListAction" 
             DeleteCommandType ="StoredProcedure" DeleteCommand="ApplyListAction"
             InsertCommandType ="StoredProcedure" InsertCommand="ApplyListAction">
@@ -113,7 +113,7 @@
                 AutoGenerateEditButton="True" OnRowDeleted="GVApplyList_RowDeleted" OnRowUpdated="GVApplyList_RowUpdated" 
                 OnRowDeleting="GVApplyList_RowDeleting" OnRowEditing="GVApplyList_RowEditing" ShowFooter="True" 
                 OnRowUpdating="GVApplyList_RowUpdating" OnRowCancelingEdit="GVApplyList_RowCancelingEdit"
-                OnRowCommand="GVApplyList_RowCommand" OnPreRender="GVApplyList_PreRender">
+                OnRowCommand="GVApplyList_RowCommand" OnPreRender="GVApplyList_PreRender" PageSize="30">
                 <Columns>
                     <asp:TemplateField>
                         <ItemTemplate>
@@ -232,7 +232,8 @@
                                      OnRowDeleted="GVRoomApply_RowDeleted" OnRowUpdated="GVRoomApply_RowUpdated" OnRowDeleting="GVRoomApply_RowDeleting"
                                      OnRowEditing="GVRoomApply_RowEditing" OnRowUpdating="GVRoomApply_RowUpdating"
                                      OnRowCancelingEdit="GVRoomApply_RowCancelingEdit" OnSorting="GVRoomApply_Sorting" 
-                                     OnRowDataBound="GVRoomApply_RowDataBound" OnRowCommand="GVRoomApply_RowCommand" OnPreRender="GVRoomApply_PreRender">
+                                     OnRowDataBound="GVRoomApply_RowDataBound" OnRowCommand="GVRoomApply_RowCommand" OnPreRender="GVRoomApply_PreRender"
+                                     DataSourceID="sqsRoomApply">
                                     <Columns>                                    
                                         <asp:TemplateField ShowHeader="False">
                                             <ItemTemplate>
@@ -368,13 +369,13 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="班级" SortExpression="strClass">
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbStrClassE" Text='<%# Eval("strClass") %>' runat="server"  Width="40"></asp:TextBox>                     
+                                                <asp:TextBox ID="tbStrClassE" Text='<%# Eval("strClass") %>' runat="server"  Width="90"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbStrClass" runat="server" Text='<%# Eval("strClass") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbStrClassA" Text='' runat="server" Width="80"></asp:TextBox>
+                                                <asp:TextBox ID="tbStrClassA" Text='' runat="server" Width="90"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="教师" SortExpression="strTeacher">
@@ -411,6 +412,7 @@
                                             </FooterTemplate>
                                         </asp:TemplateField>                                        
                                     </Columns>
+                                    <PagerSettings FirstPageText="首页" LastPageText="末页" Mode="NumericFirstLast" NextPageText="下一页" PreviousPageText="上一页" />
                                     </asp:GridView> 
                                     </div>
                              </td>
@@ -421,6 +423,7 @@
                         </FooterTemplate>                        
                     </asp:TemplateField>
                 </Columns>
+                <PagerSettings FirstPageText="首页" LastPageText="末页" Mode="NumericFirstLast" NextPageText="下一页" PreviousPageText="上一页" />
             </asp:GridView>
         </div>
     </form>
