@@ -190,7 +190,7 @@
                             <tr>
                             <td colspan="100%">
                                 <div id="div<%# Eval("applyid") %>" style="display:none;position:relative;left:15px;OVERFLOW: auto;WIDTH:97%" >
-                                <asp:SqlDataSource ID="sqsRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id], [applyid], [strRoom], [intDay], [intStartNum], [intEndNum], RTRIM([strClass]) as strClass, RTRIM([strTeacher]) as strTeacher, [strWeekReg], [strWeekData] FROM [RoomApply] WHERE ([applyid] = @applyid)"
+                                <asp:SqlDataSource ID="sqsRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [id], [applyid], [strRoom], [intDay], [intStartNum], [intEndNum], RTRIM([strClass]) as strClass, RTRIM([strTeacher]) as strTeacher, [strWeekReg], [strWeekData] FROM [RoomApply] WHERE ([applyid] = @applyid) order by strRoom"
                                     UpdateCommandType ="StoredProcedure" UpdateCommand="RoomApplyAction" 
                                     DeleteCommandType ="StoredProcedure" DeleteCommand="RoomApplyAction"
                                     InsertCommandType ="StoredProcedure" InsertCommand="RoomApplyAction">
@@ -233,7 +233,7 @@
                                      OnRowEditing="GVRoomApply_RowEditing" OnRowUpdating="GVRoomApply_RowUpdating"
                                      OnRowCancelingEdit="GVRoomApply_RowCancelingEdit" OnSorting="GVRoomApply_Sorting" 
                                      OnRowDataBound="GVRoomApply_RowDataBound" OnRowCommand="GVRoomApply_RowCommand" OnPreRender="GVRoomApply_PreRender"
-                                     DataSourceID="sqsRoomApply">
+                                     DataSourceID="sqsRoomApply" AllowPaging="True" PageSize="15">
                                     <Columns>                                    
                                         <asp:TemplateField ShowHeader="False">
                                             <ItemTemplate>

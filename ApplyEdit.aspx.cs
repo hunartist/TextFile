@@ -76,12 +76,12 @@ public partial class NextWebF : System.Web.UI.Page
         {
             if (user.redirectSet(Convert.ToString(Session["user"])))
             { Response.Redirect("tempLogin.aspx"); }
+                        
 
-            if (Session["dep"] == null)
-            {
-                Response.Redirect("tempLogin.aspx");
-            }            
-
+        }
+        if (Session["dep"] == null)
+        {
+            Response.Redirect("tempLogin.aspx");
         }
         if ((ViewState["ApplyListSelStr"] != null) && (sqsApplyList.SelectCommand != ViewState["ApplyListSelStr"].ToString()))
         {
@@ -121,6 +121,7 @@ public partial class NextWebF : System.Web.UI.Page
                 {
                     GetSortDirection();
                     strSort = " ORDER BY " + string.Format("{0} {1}", gvSortExpr, gvSortDir);
+                    sqsRoomApply.SelectCommand = (sqsRoomApply.SelectCommand).Replace(" order by strRoom", "");
                     sqsRoomApply.SelectCommand = sqsRoomApply.SelectCommand + strSort;
                     ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
                 }
@@ -300,24 +301,6 @@ public partial class NextWebF : System.Web.UI.Page
             Session["ClassN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrClass")).Text.TrimEnd();
             Session["TeacherN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrTeacher")).Text.TrimEnd();
             Session["weekReg"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrWeekReg")).Text.TrimEnd();
-
-            //string roomN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrRoom")).Text;
-            //string dayW = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntDay")).Text.TrimEnd();
-            //string startN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntStartNum")).Text.TrimEnd();
-            //string endN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntEndNum")).Text.TrimEnd();
-            //string ClassN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrClass")).Text.TrimEnd();
-            //string TeacherN = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrTeacher")).Text.TrimEnd();
-            //string weekReg = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrWeekReg")).Text.TrimEnd();
-
-            //((DropDownList)gvTemp.FooterRow.FindControl("ddlRoomGVRAadd")).SelectedValue = roomN;
-            //((DropDownList)gvTemp.FooterRow.FindControl("ddlDayA")).SelectedValue = dayW;
-            //((DropDownList)gvTemp.FooterRow.FindControl("ddlStartNA")).SelectedValue = startN;
-            //((DropDownList)gvTemp.FooterRow.FindControl("ddlEndNA")).SelectedValue = endN;
-            //((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = ClassN;
-            //((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = TeacherN;
-            //((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text = weekReg;
-
-            ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
 
         }
     }
@@ -644,7 +627,7 @@ public partial class NextWebF : System.Web.UI.Page
         {
             SqlDataSource sqsRoomApply;
             sqsRoomApply = GVApplyList.Rows[i].FindControl("sqsRoomApply") as SqlDataSource;            
-            sqsRoomApply.SelectCommand = string.Format("SELECT [id], [applyid], [strRoom], [intDay], [intStartNum], [intEndNum], RTRIM([strClass]) as strClass, RTRIM([strTeacher]) as strTeacher, [strWeekReg], [strWeekData] FROM [RoomApply] WHERE [applyid] = @applyid");
+            sqsRoomApply.SelectCommand = string.Format("SELECT [id], [applyid], [strRoom], [intDay], [intStartNum], [intEndNum], RTRIM([strClass]) as strClass, RTRIM([strTeacher]) as strTeacher, [strWeekReg], [strWeekData] FROM [RoomApply] WHERE [applyid] = @applyid order by strRoom");
             ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
             sqsRoomApply.DataBind();
         }
@@ -735,7 +718,7 @@ public partial class NextWebF : System.Web.UI.Page
             SqlDataSource sqsRoomApply;
             sqsRoomApply = GVApplyList.Rows[i].FindControl("sqsRoomApply") as SqlDataSource;
             //sqsRoomApply.SelectParameters["applyid"].DefaultValue = (GVApplyList.Rows[i].DataItem as DataRowView)["applyid"].ToString();
-            sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid, a.strRoom, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.strRoom = d.strRoomName and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init'))", sRoom, sWeek, sDay, sTextbox);
+            sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid, a.strRoom, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.strRoom = d.strRoomName and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init')) order by strRoom", sRoom, sWeek, sDay, sTextbox);
             ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
             sqsRoomApply.DataBind();
         }

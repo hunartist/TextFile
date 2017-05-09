@@ -105,7 +105,7 @@ public class CommonClass
                     }
                     else
                     {
-                        msg = roomN + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
+                        msg = roomN.ToString().TrimEnd() + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
                         return msg;
                     }
                 }
