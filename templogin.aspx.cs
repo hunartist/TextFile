@@ -29,7 +29,7 @@ public partial class _Default : System.Web.UI.Page
         if (table.Rows.Count == 1)
         {
             Session["user"] = table.Rows[0]["name"].ToString();
-            Session["dep"] = table.Rows[0]["Cdep"].ToString();
+            Session["cdep"] = table.Rows[0]["cdepid"].ToString();
             Response.Redirect("ApplyEdit.aspx");
         }
         else

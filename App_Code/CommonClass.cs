@@ -69,7 +69,7 @@ public class CommonClass
         //取修改记录所对应的教室(strRoom)在特定日期（周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）有课，记入临时表table（不包含待修改记录本身）
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        string constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID from RoomApply a, RoomApplySub s, ApplyList l where a.id = s.f_id and a.applyid = l.applyid and a.strRoom = '" + roomN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);
+        string constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID from RoomApply a, RoomApplySub s, ApplyList l where a.id = s.f_id and a.applyid = l.applyid and a.roomid = '" + roomN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);
         sda.SelectCommand = new SqlCommand(constr, con);
         DataSet ds = new DataSet();
         sda.Fill(ds);

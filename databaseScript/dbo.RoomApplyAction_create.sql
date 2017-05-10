@@ -11,7 +11,7 @@ GO
 
 ALTER PROCEDURE [dbo].[RoomApplyAction]
 	@Action varchar(10),
-	@strRoom varchar(50) = null,
+	@roomid varchar(50) = null,
 	@intDay int = null,
 	@intStartNum int = null,
 	@intEndNum int = null,
@@ -22,13 +22,14 @@ ALTER PROCEDURE [dbo].[RoomApplyAction]
 	@strTeacher varchar(50) = null,
 	@strYearID varchar(20) = null,	
 	@applyid varchar(20) = null,
+	@strRemark varchar(500) = null,
 	@id varchar(30)
 	
 AS
 	declare @countWeek int
 	if (@Action = 'update')
 	begin
-		UPDATE [RoomApply] SET [strRoom] = @strRoom , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [strWeekReg] = @strWeekReg , [strWeekData] = @strWeekData , [strClass] = @strClass , [strTeacher] = @strTeacher WHERE [id] = @id
+		UPDATE [RoomApply] SET [roomid] = @roomid , [intDay] = @intDay , [intStartNum] = @intStartNum , [intEndNum] = @intEndNum , [strWeekReg] = @strWeekReg , [strWeekData] = @strWeekData , [strClass] = @strClass , [strTeacher] = @strTeacher , [strRemark] = @strRemark WHERE [id] = @id
 		delete from [RoomApplySub] where [F_id] = @id		
 		set @countWeek = 0
 		declare wid CURSOR for SELECT weekid FROM [dbo].[ufn_SplitStringToTable](@strWeekData,N',')
@@ -44,7 +45,7 @@ AS
 	end
 	else if (@Action = 'insert')
 	begin
-		insert into [RoomApply] values (@id,@applyid,@strRoom,@intDay,@intStartNum,@intEndNum,'','','',@strClass,@strTeacher,'','',GETDATE(),'','',@strWeekReg,@strWeekData)
+		insert into [RoomApply] values (@id,@applyid,@roomid,@intDay,@intStartNum,@intEndNum,@strClass,@strTeacher,GETDATE(),@strWeekReg,@strWeekData,@strRemark)
 		set @countWeek = 0
 		delete from [RoomApplySub] where [F_id] = @id
 		declare wid CURSOR for SELECT weekid FROM [dbo].[ufn_SplitStringToTable](@strWeekData,N',')

@@ -79,7 +79,7 @@ public partial class NextWebF : System.Web.UI.Page
                         
 
         }
-        if (Session["dep"] == null)
+        if (Session["cdep"] == null)
         {
             Response.Redirect("tempLogin.aspx");
         }
@@ -88,7 +88,10 @@ public partial class NextWebF : System.Web.UI.Page
             sqsApplyList.SelectCommand = ViewState["ApplyListSelStr"].ToString();
             //GVApplyList.DataBind();
         }
-
+        if (Convert.ToInt16(Session["CopySubFlag"]) == 1)
+        {
+            Session["CopySubFlag"] = 0;
+        }
 
 
     }
@@ -121,7 +124,7 @@ public partial class NextWebF : System.Web.UI.Page
                 {
                     GetSortDirection();
                     strSort = " ORDER BY " + string.Format("{0} {1}", gvSortExpr, gvSortDir);
-                    sqsRoomApply.SelectCommand = (sqsRoomApply.SelectCommand).Replace(" order by strRoom", "");
+                    sqsRoomApply.SelectCommand = (sqsRoomApply.SelectCommand).Replace(" order by d.strRoomName", "");
                     sqsRoomApply.SelectCommand = sqsRoomApply.SelectCommand + strSort;
                     ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
                 }
@@ -164,7 +167,7 @@ public partial class NextWebF : System.Web.UI.Page
             {   
                 string NameN = ((TextBox)GVApplyList.FooterRow.FindControl("tbStrNameA")).Text;
                 string YearID = CommonClass.getCurYearID();
-                string CDep = Session["dep"].ToString();
+                string CDep = Session["cdep"].ToString();
                 string RemarkN = ((TextBox)GVApplyList.FooterRow.FindControl("tbStrRemarkA")).Text;
                 string applyidN = string.Format("{0:yyyyMMddHHmmssffff}", DateTime.Now);
 
@@ -177,7 +180,7 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsApplyList.InsertParameters["Action"].DefaultValue = "insert";
                 sqsApplyList.InsertParameters["strName"].DefaultValue = NameN;
                 sqsApplyList.InsertParameters["strYearID"].DefaultValue = YearID;
-                sqsApplyList.InsertParameters["strCdep"].DefaultValue = CDep;
+                sqsApplyList.InsertParameters["cdepid"].DefaultValue = CDep;
                 sqsApplyList.InsertParameters["strRemark"].DefaultValue = RemarkN;
                 sqsApplyList.InsertParameters["applyid"].DefaultValue = applyidN;
 
@@ -211,6 +214,7 @@ public partial class NextWebF : System.Web.UI.Page
                 int endN = Convert.ToInt16(((DropDownList)gvTemp.FooterRow.FindControl("ddlEndNA")).SelectedValue);
                 string ClassN = ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text;
                 string TeacherN = ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text;
+                string RemarkN = ((TextBox)gvTemp.FooterRow.FindControl("tbStrRemarkA")).Text;
                 string weekReg = ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text;
                 string weekData = string.Empty;
                 string applyid = ((Label)gvTemp.Parent.Parent.FindControl("lbapplyid")).Text;
@@ -260,7 +264,7 @@ public partial class NextWebF : System.Web.UI.Page
 
                 //Prepare the Insert Command of the DataSource control
                 sqsRoomApply.InsertParameters["Action"].DefaultValue = "insert";
-                sqsRoomApply.InsertParameters["strRoom"].DefaultValue = roomN;
+                sqsRoomApply.InsertParameters["roomid"].DefaultValue = roomN;
                 sqsRoomApply.InsertParameters["intDay"].DefaultValue = dayW.ToString();
                 sqsRoomApply.InsertParameters["intStartNum"].DefaultValue = startN.ToString();
                 sqsRoomApply.InsertParameters["intEndNum"].DefaultValue = endN.ToString();
@@ -268,6 +272,7 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsRoomApply.InsertParameters["strWeekData"].DefaultValue = weekData;
                 sqsRoomApply.InsertParameters["strClass"].DefaultValue = ClassN;
                 sqsRoomApply.InsertParameters["strTeacher"].DefaultValue = TeacherN;
+                sqsRoomApply.InsertParameters["strRemark"].DefaultValue = RemarkN;
                 sqsRoomApply.InsertParameters["applyid"].DefaultValue = applyid;
                 sqsRoomApply.InsertParameters["id"].DefaultValue = idN;
 
@@ -301,6 +306,7 @@ public partial class NextWebF : System.Web.UI.Page
             Session["ClassN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrClass")).Text.TrimEnd();
             Session["TeacherN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrTeacher")).Text.TrimEnd();
             Session["weekReg"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrWeekReg")).Text.TrimEnd();
+            Session["remarkN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrRemark")).Text.TrimEnd();
 
         }
     }
@@ -318,7 +324,7 @@ public partial class NextWebF : System.Web.UI.Page
     protected void GVApplyList_RowUpdating(object sender, GridViewUpdateEventArgs e)
     {
         string CurYear = CommonClass.getCurYearID();
-        string UsrDep = Session["dep"].ToString();
+        string UsrDep = Session["cdep"].ToString();
         string NameN = ((TextBox)GVApplyList.Rows[e.RowIndex].FindControl("tbStrNameE")).Text;
         if (NameN == string.Empty)
         {
@@ -330,7 +336,7 @@ public partial class NextWebF : System.Web.UI.Page
         sqsApplyList.UpdateParameters["Action"].DefaultValue = "update";
         sqsApplyList.UpdateParameters["strName"].DefaultValue = NameN;
         sqsApplyList.UpdateParameters["strYearID"].DefaultValue = CurYear;
-        sqsApplyList.UpdateParameters["strCDep"].DefaultValue = UsrDep;
+        sqsApplyList.UpdateParameters["cdepid"].DefaultValue = UsrDep;
         sqsApplyList.UpdateParameters["strRemark"].DefaultValue = ((TextBox)GVApplyList.Rows[e.RowIndex].FindControl("tbStrRemarkE")).Text;
         sqsApplyList.UpdateParameters["applyid"].DefaultValue = e.Keys["applyid"].ToString();
 
@@ -359,6 +365,7 @@ public partial class NextWebF : System.Web.UI.Page
         int endN = Convert.ToInt16(((DropDownList)gvTemp.Rows[e.RowIndex].FindControl("ddlEndNE")).SelectedValue);
         string ClassN = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrClassE")).Text;
         string TeacherN = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrTeacherE")).Text;
+        string RemarkN = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrRemarkE")).Text;
         string weekReg = ((TextBox)gvTemp.Rows[e.RowIndex].FindControl("tbStrWeekRegE")).Text;
         string weekData = string.Empty;        
         //string idN = ((Label)gvTemp.Rows[e.RowIndex].FindControl("lbid")).Text;
@@ -411,7 +418,7 @@ public partial class NextWebF : System.Web.UI.Page
 
         //更新数据
         sqsRoomApply.UpdateParameters["action"].DefaultValue = "update";
-        sqsRoomApply.UpdateParameters["strRoom"].DefaultValue = roomN;
+        sqsRoomApply.UpdateParameters["roomid"].DefaultValue = roomN;
         sqsRoomApply.UpdateParameters["intDay"].DefaultValue = dayW.ToString();
         sqsRoomApply.UpdateParameters["intStartNum"].DefaultValue = startN.ToString();
         sqsRoomApply.UpdateParameters["intEndNum"].DefaultValue = endN.ToString();
@@ -419,6 +426,7 @@ public partial class NextWebF : System.Web.UI.Page
         sqsRoomApply.UpdateParameters["strWeekData"].DefaultValue = weekData;
         sqsRoomApply.UpdateParameters["strClass"].DefaultValue = ClassN;
         sqsRoomApply.UpdateParameters["strTeacher"].DefaultValue = TeacherN;
+        sqsRoomApply.UpdateParameters["strRemark"].DefaultValue = RemarkN;
         sqsRoomApply.UpdateParameters["id"].DefaultValue = idN;
 
         sqsRoomApply.Update();
@@ -549,29 +557,35 @@ public partial class NextWebF : System.Web.UI.Page
         //check empty row
         if (gvTemp.Rows.Count == 0)
         {
-            renderEmptyGridView(gvTemp, "applyid, id, strRoom, intDay, intStartNum, intEndNum, strClass, strTeacher, strWeekReg, strWeekData");
+            renderEmptyGridView(gvTemp, "applyid, id, strRoomName, intDay, intStartNum, intEndNum, strClass, strTeacher, strWeekReg, strWeekData, strRemark");
         }
         
-        if ((Convert.ToInt16(Session["CopySubFlag"]) == 1)&&(gvTemp.UniqueID == gvUniqueID))
+        if ((Convert.ToInt16(Session["CopySubFlag"]) == 1)/*&&(gvTemp.UniqueID == gvUniqueID)*/)
         {            
-            ((DropDownList)gvTemp.FooterRow.FindControl("ddlRoomGVRAadd")).SelectedValue = Session["roomN"].ToString();
+            ((DropDownList)gvTemp.FooterRow.FindControl("ddlRoomGVRAadd")).SelectedItem.Text = Session["roomN"].ToString();
             ((DropDownList)gvTemp.FooterRow.FindControl("ddlDayA")).SelectedValue = Session["dayW"].ToString();
             ((DropDownList)gvTemp.FooterRow.FindControl("ddlStartNA")).SelectedValue = Session["startN"].ToString();
             ((DropDownList)gvTemp.FooterRow.FindControl("ddlEndNA")).SelectedValue = Session["endN"].ToString();
             ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = Session["ClassN"].ToString();
             ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = Session["TeacherN"].ToString(); ;
-            ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text = Session["weekReg"].ToString();            
-            ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
-            Session["CopySubFlag"] = 0;
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text = Session["weekReg"].ToString();
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrRemarkA")).Text = Session["remarkN"].ToString();
+            //ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+            //Session["CopySubFlag"] = 0;
         }
-        
+        if (gvTemp.UniqueID == gvUniqueID)
+        {
+            ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+        }
+
+
     }
 
     protected void GVApplyList_PreRender(object sender, EventArgs e)
     {
         if (GVApplyList.Rows.Count == 0)
         {
-            renderEmptyGridView(GVApplyList, "applyid, strName, yearID, strCDep, strRemark");
+            renderEmptyGridView(GVApplyList, "applyid, strName, yearID, cdepid, strRemark");
         }
     }
 
@@ -617,9 +631,9 @@ public partial class NextWebF : System.Web.UI.Page
         }
         tbSearch.Text = string.Empty;
         //reset select
-        string CDep = Session["dep"].ToString();
+        string CDep = Session["cdep"].ToString();
         sqsApplyList.SelectParameters.Clear();
-        sqsApplyList.SelectCommand = String.Format("SELECT [applyid],RTRIM([strName]) as strName,[yearID],[strCDep],[strRemark] FROM [ApplyList] WHERE [strCdep] = '{0}'  order by applyid desc", CDep);
+        sqsApplyList.SelectCommand = String.Format("SELECT [applyid],RTRIM([strName]) as strName,[yearID],[cdepid],[strRemark] FROM [ApplyList] WHERE [cdepid] = '{0}'  order by applyid desc", CDep);
         ViewState["ApplyListSelStr"] = sqsApplyList.SelectCommand;
         sqsApplyList.DataBind();
         
@@ -627,7 +641,7 @@ public partial class NextWebF : System.Web.UI.Page
         {
             SqlDataSource sqsRoomApply;
             sqsRoomApply = GVApplyList.Rows[i].FindControl("sqsRoomApply") as SqlDataSource;            
-            sqsRoomApply.SelectCommand = string.Format("SELECT [id], [applyid], [strRoom], [intDay], [intStartNum], [intEndNum], RTRIM([strClass]) as strClass, RTRIM([strTeacher]) as strTeacher, [strWeekReg], [strWeekData] FROM [RoomApply] WHERE [applyid] = @applyid order by strRoom");
+            sqsRoomApply.SelectCommand = string.Format("SELECT a.id, a.applyid, d.strRoomName, a.intDay, a.intStartNum, a.intEndNum, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher, a.strWeekReg, a.strWeekData, a.strRemark FROM RoomApply a,RoomDetail d WHERE a.applyid = @applyid and a.roomid = d.roomid order by d.strRoomName");
             ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
             sqsRoomApply.DataBind();
         }
@@ -701,9 +715,9 @@ public partial class NextWebF : System.Web.UI.Page
             sTextbox = "init";
         }
         //主记录筛选
-        string CDep = Session["dep"].ToString();
+        string CDep = Session["cdep"].ToString();
         sqsApplyList.SelectParameters.Clear();
-        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.strCDep,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.strCdep = '{0}' and l.applyid = a.applyid and a.id = s.F_id and a.strRoom = d.strRoomName and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({1}) and s.intWeek in ({2}) and a.intDay in ({3}) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init')) order by l.applyid desc", CDep,sRoom,sWeek,sDay,sTextbox);
+        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.cdepid,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.cdepid = '{0}' and l.applyid = a.applyid and a.id = s.F_id and a.roomid = d.roomid and l.yearID = w.yearID and w.currentFlag = 'true' and a.roomid in ({1}) and s.intWeek in ({2}) and a.intDay in ({3}) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init')) order by l.applyid desc", CDep,sRoom,sWeek,sDay,sTextbox);
         ViewState["ApplyListSelStr"] = sqsApplyList.SelectCommand;
         sqsApplyList.DataBind();
         if (GVApplyList.DataSourceID == string.Empty)
@@ -718,7 +732,7 @@ public partial class NextWebF : System.Web.UI.Page
             SqlDataSource sqsRoomApply;
             sqsRoomApply = GVApplyList.Rows[i].FindControl("sqsRoomApply") as SqlDataSource;
             //sqsRoomApply.SelectParameters["applyid"].DefaultValue = (GVApplyList.Rows[i].DataItem as DataRowView)["applyid"].ToString();
-            sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid, a.strRoom, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.strRoom = d.strRoomName and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.strRoom in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init')) order by strRoom", sRoom, sWeek, sDay, sTextbox);
+            sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid, d.strRoomName, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData, a.strRemark FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.roomid = d.roomid and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.roomid in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init')) order by d.strRoomName", sRoom, sWeek, sDay, sTextbox);
             ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
             sqsRoomApply.DataBind();
         }
