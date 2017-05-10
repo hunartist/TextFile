@@ -35,7 +35,7 @@ public partial class roomapply : System.Web.UI.Page
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.roomid = '" + RoomName + "' and s.intWeek = " + weekNum + ") as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.depid = '" + departmentName + "' where d.roomid =  '" + RoomName + "' and w.intWeek = " + weekNum + ") as aaa left join TitleStartEnd t on aaa.wYear = t.yearID and t.currentFlag = 'true' inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true'", con);
+        sda.SelectCommand = new SqlCommand("select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.roomid = '" + RoomName + "' and s.intWeek = " + weekNum + ") as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.depid = '" + departmentName + "' where d.roomid =  '" + RoomName + "' and w.intWeek = " + weekNum + ") as aaa left join TitleStartEnd t on aaa.wYear = t.yearID and t.currentFlag = 'true' inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true'", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -174,7 +174,15 @@ public partial class roomapply : System.Web.UI.Page
                         if (section == startNum)//判断课程开始时间，确定位置，填写数据
                         {
                             tempArray[i][1] = j;//记录上课开始时间（确定数据显示在哪一行）
-                            dtSchedule.Rows[j][tempArray[i][0]] = Convert.ToString(table.Rows[i]["strName"]) + "<br />" + Convert.ToString(table.Rows[i]["strClass"]) + "<br />" + Convert.ToString(table.Rows[i]["strTeacher"]);
+                            if(Convert.ToString(table.Rows[i]["strName"]) != string.Empty)
+                            {
+                                string Sremark = " " + Convert.ToString(table.Rows[i]["strRemark"]);
+                                dtSchedule.Rows[j][tempArray[i][0]] = Convert.ToString(table.Rows[i]["strName"]) + Sremark + "<br />" + Convert.ToString(table.Rows[i]["strClass"]) + "<br />" + Convert.ToString(table.Rows[i]["strTeacher"]);
+                            }
+                            else
+                            {
+                                dtSchedule.Rows[j][tempArray[i][0]] = Convert.ToString(table.Rows[i]["strName"]) + "<br />" + Convert.ToString(table.Rows[i]["strClass"]) + "<br />" + Convert.ToString(table.Rows[i]["strTeacher"]);
+                            }
                         }
                         if (section == endNum)//判断课程结束时间，记录位置
                         {
