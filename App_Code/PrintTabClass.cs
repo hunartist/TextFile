@@ -10,7 +10,7 @@ using System.Web;
 /// </summary>
 public class PrintTabClass
 {
-    public static DataTable PrintTab_SUM_DT(int weekNum, string departmentName,string sqlstr)
+    public static DataTable PrintTab_SUM_DT(int weekNum, string sqlstr)
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
@@ -78,16 +78,16 @@ public class PrintTabClass
                 if (section == startNum)//判断课程开始时间，确定位置，填写数据
                 {
                     tempArray[i][1] = j;//记录上课开始时间（确定数据显示在哪一行）
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoom"]) + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoomName"]) + "<br />";
                 }
                 if ((Convert.ToInt16(section) > Convert.ToInt16(startNum))&&(Convert.ToInt16(section) < Convert.ToInt16(endNum)))
                 {
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoom"]) + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoomName"]) + "<br />";
                 }
                 if (section == endNum)//判断课程结束时间，记录位置
                 {
                     tempArray[i][2] = j;//记录课结束时间
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoom"]) + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoomName"]) + "<br />";
                     break;
                 }
             }
