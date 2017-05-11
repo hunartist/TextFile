@@ -7,7 +7,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
     <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
     <title></title>
-    <script type="text/javascript" >
+    <%--<script type="text/javascript" >
         function FixTableHeader() {
             var t = document.getElementById("table");
             var thead = t.getElementsByTagName("thead")[0];
@@ -16,7 +16,7 @@
             document.getElementById("tableHeader").appendChild(t1)
         }
         window.onload = FixTableHeader;
-    </script>
+    </script>--%>
 </head>
 <body>
     <form id="form1" runat="server">
@@ -105,8 +105,8 @@
             </asp:ListView>        
         </div>
         <div class="righttop" id="tableHeader" ></div>
-        <div class="right"   >
-            <table id="table" border="1">
+        <div class="rightc"   >
+            <table id="table" border="1" style="overflow-x:scroll;width:auto">
                 <thead>
                 <tr id="thead" >
                     <th>
@@ -142,25 +142,25 @@
                             <td id="td0" runat="server">
                                 <%#DataBinder.Eval(Container.DataItem, "查询")%>
                             </td>
-                            <td id="td1" runat="server">
+                            <td id="td1" runat="server" style="white-space: nowrap">
                                 <%#DataBinder.Eval(Container.DataItem, "星期一")%>
                             </td>
-                            <td id="td2" runat="server">
+                            <td id="td2" runat="server" style="white-space: nowrap">
                                 <%#DataBinder.Eval(Container.DataItem, "星期二")%>
                             </td>
-                            <td id="td3" runat="server">
+                            <td id="td3" runat="server" style="white-space: nowrap">
                                 <%#DataBinder.Eval(Container.DataItem, "星期三")%>
                             </td>
-                            <td id="td4" runat="server">
+                            <td id="td4" runat="server" style="white-space: nowrap">
                                 <%#DataBinder.Eval(Container.DataItem, "星期四")%>
                             </td>
-                            <td id="td5" runat="server">
+                            <td id="td5" runat="server" style="white-space: nowrap">
                                 <%#DataBinder.Eval(Container.DataItem, "星期五")%>
                             </td>
-                            <td id="td6" runat="server">
+                            <td id="td6" runat="server" style="white-space: nowrap">
                                 <%#DataBinder.Eval(Container.DataItem, "星期六")%>
                             </td>
-                            <td id="td7" runat="server">
+                            <td id="td7" runat="server" style="white-space: nowrap">
                                 <%#DataBinder.Eval(Container.DataItem, "星期日")%>
                             </td>
                         </tr>
