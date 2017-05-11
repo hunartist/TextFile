@@ -39,7 +39,7 @@
     </script>
     <form id="form1" method="post" runat="server" enableviewstate="True">
         <asp:SqlDataSource ID="sqsApplyList" runat="server" ConnectionString='<%$ ConnectionStrings:webTestConnectionString %>' 
-            SelectCommand="SELECT [applyid],RTRIM([strName]) as strName,[yearID],[cdepid],[strRemark] FROM [ApplyList] WHERE [cdepid] = @cdepid  order by applyid desc " 
+            SelectCommand="SELECT l.applyid,RTRIM(l.strName) as strName,l.yearID,l.cdepid,l.strRemark FROM ApplyList l,TitleStartEnd t WHERE l.yearID = t.yearID and t.currentFlag = 'true' and cdepid = @cdepid  order by applyid desc " 
             UpdateCommandType ="StoredProcedure" UpdateCommand="ApplyListAction" 
             DeleteCommandType ="StoredProcedure" DeleteCommand="ApplyListAction"
             InsertCommandType ="StoredProcedure" InsertCommand="ApplyListAction">
@@ -104,7 +104,7 @@
                 <asp:HyperLink ID="hlChangePW" runat="server" NavigateUrl="~/changePW.aspx">修改密码</asp:HyperLink>
                 <asp:Button ID="btAbandon" runat="server" Text="注销" OnClick="btAbandon_Click" />
             </div>          
-            <asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>
+            <%--<asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>--%>
             <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>           
         </div>
         <div class="righttop">         
@@ -191,7 +191,7 @@
                             <td colspan="100%">
                                 <div id="div<%# Eval("applyid") %>" style="display:none;position:relative;left:15px;OVERFLOW: auto;WIDTH:97%" >
                                 <asp:SqlDataSource ID="sqsRoomApply" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" 
-                                    SelectCommand="SELECT a.id, a.applyid, d.strRoomName,a.roomid, a.intDay, a.intStartNum, a.intEndNum, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher, a.strWeekReg, a.strWeekData,a.strRemark FROM RoomApply a,RoomDetail d WHERE a.applyid = @applyid and a.roomid = d.roomid order by d.strRoomName"
+                                    SelectCommand="SELECT a.id, a.applyid, d.strRoomName,a.roomid, a.intDay, a.intStartNum, a.intEndNum, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher, a.strWeekReg, a.strWeekData,a.strRemark FROM RoomApply a,RoomDetail d WHERE a.applyid = @applyid and a.roomid = d.roomid order by a.id desc"
                                     UpdateCommandType ="StoredProcedure" UpdateCommand="RoomApplyAction" 
                                     DeleteCommandType ="StoredProcedure" DeleteCommand="RoomApplyAction"
                                     InsertCommandType ="StoredProcedure" InsertCommand="RoomApplyAction">
@@ -249,6 +249,9 @@
                                                 <asp:LinkButton ID="lbCopySub" runat="server" CausesValidation="False"
                                                         CommandName="CopySub" Text="复制" ></asp:LinkButton>
                                             </ItemTemplate>
+                                            <FooterTemplate>
+                                                <asp:LinkButton ID="linkAddRA" CommandName="AddRA" runat="server">增加子记录</asp:LinkButton>
+                                            </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="subid" SortExpression="id" Visible="false">
                                            <EditItemTemplate>
@@ -270,6 +273,17 @@
                                             </ItemTemplate>
                                             <FooterTemplate>
                                                 <asp:DropDownList ID="ddlRoomGVRAadd" runat="server" DataSourceID="SqlDataSourceRoom" DataTextField="strRoomName" DataValueField="roomid" SelectedValue='<%# Bind("roomid") %>'> </asp:DropDownList>
+                                            </FooterTemplate>
+                                        </asp:TemplateField>
+                                        <asp:TemplateField HeaderText="roomid" SortExpression="roomid" Visible="false">
+                                           <EditItemTemplate>
+                                                <asp:Label ID="lbroomid" runat="server" Text='<%# Eval("roomid") %>'></asp:Label>                     
+                                            </EditItemTemplate>
+                                            <ItemTemplate>
+                                                <asp:Label ID="lbroomid" runat="server" Text='<%# Eval("roomid") %>'></asp:Label>
+                                            </ItemTemplate>
+                                            <FooterTemplate>
+                                                <asp:Label ID="lbroomid" runat="server" Text='<%# Eval("roomid") %>'></asp:Label>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="日期（星期几）" SortExpression="intDay" >
@@ -313,7 +327,7 @@
                                                     <asp:ListItem>8</asp:ListItem>
                                                     <asp:ListItem>9</asp:ListItem>
                                                     <asp:ListItem>10</asp:ListItem>
-                                                    <asp:ListItem Value="11">中午</asp:ListItem>
+                                                    <asp:ListItem Value="99">中午</asp:ListItem>
                                                 </asp:DropDownList>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
@@ -331,7 +345,7 @@
                                                     <asp:ListItem>8</asp:ListItem>
                                                     <asp:ListItem>9</asp:ListItem>
                                                     <asp:ListItem>10</asp:ListItem>
-                                                    <asp:ListItem Value="11">中午</asp:ListItem>
+                                                    <asp:ListItem Value="99">中午</asp:ListItem>
                                                 </asp:DropDownList>     
                                             </FooterTemplate>
                                         </asp:TemplateField>
@@ -348,7 +362,7 @@
                                                     <asp:ListItem>8</asp:ListItem>
                                                     <asp:ListItem>9</asp:ListItem>
                                                     <asp:ListItem>10</asp:ListItem>
-                                                    <asp:ListItem Value="11">中午</asp:ListItem>
+                                                    <asp:ListItem Value="99">中午</asp:ListItem>
                                                 </asp:DropDownList>                          
                                             </EditItemTemplate>
                                             <ItemTemplate>
@@ -366,7 +380,7 @@
                                                     <asp:ListItem>8</asp:ListItem>
                                                     <asp:ListItem>9</asp:ListItem>
                                                     <asp:ListItem>10</asp:ListItem>
-                                                    <asp:ListItem Value="11">中午</asp:ListItem>
+                                                    <asp:ListItem Value="99">中午</asp:ListItem>
                                                 </asp:DropDownList>    
                                             </FooterTemplate>
                                         </asp:TemplateField>
@@ -386,7 +400,7 @@
                                                 <asp:TextBox ID="tbStrTeacherE" Text='<%# Eval("strTeacher") %>' runat="server"  Width="40"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
-                                                <asp:Label ID="lbStrTeacher" runat="server" Text='<%# Eval("strTeacher") %>'></asp:Label>
+                                                <asp:Label ID="lbStrTeacher" runat="server" Text='<%# Eval("strTeacher") %>' Width="50"></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
                                                 <asp:TextBox ID="tbStrTeacherA" Text='' runat="server"  Width="40"></asp:TextBox>
@@ -420,10 +434,7 @@
                                             </EditItemTemplate>
                                             <ItemTemplate>
                                                 <asp:Label ID="lbStrWeekData" runat="server" Text='<%# Eval("strWeekData") %>'></asp:Label>
-                                            </ItemTemplate>
-                                            <FooterTemplate>
-                                                <asp:LinkButton ID="linkAddRA" CommandName="AddRA" runat="server">增加子记录</asp:LinkButton>
-                                            </FooterTemplate>
+                                            </ItemTemplate>                                            
                                         </asp:TemplateField>                                        
                                     </Columns>
                                     <PagerSettings FirstPageText="首页" LastPageText="末页" Mode="NumericFirstLast" NextPageText="下一页" PreviousPageText="上一页" />

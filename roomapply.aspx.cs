@@ -136,7 +136,7 @@ public partial class roomapply : System.Web.UI.Page
                     {
                         startNum = (Convert.ToInt16(table.Rows[i]["intStartNum"])+1).ToString();
                     }
-                    if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11)
+                    if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 99)
                     {
                         startNum = "5";
                     }
@@ -153,7 +153,7 @@ public partial class roomapply : System.Web.UI.Page
                     {
                         endNum = (Convert.ToInt16(table.Rows[i]["intEndNum"]) + 1).ToString();
                     }
-                    if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11)
+                    if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 99)
                     {
                         endNum = "5";
                     }

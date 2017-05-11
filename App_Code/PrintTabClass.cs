@@ -69,7 +69,7 @@ public class PrintTabClass
             {
                 startNum = (Convert.ToInt16(table.Rows[i]["intStartNum"]) + 1).ToString();
             }
-            if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11)
+            if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 99)
             {
                 startNum = "5";
             }
@@ -84,7 +84,7 @@ public class PrintTabClass
             {
                 endNum = (Convert.ToInt16(table.Rows[i]["intEndNum"]) + 1).ToString();
             }
-            if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11)
+            if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 99)
             {
                 endNum = "5";
             }
@@ -105,21 +105,24 @@ public class PrintTabClass
                 string sName = Convert.ToString(table.Rows[i]["strName"]);
                 string sClass = Convert.ToString(table.Rows[i]["strClass"]);
                 string sTeacher = Convert.ToString(table.Rows[i]["strTeacher"]);
+                string sStartN = Convert.ToString(table.Rows[i]["intStartNum"]);
+                string sEndN = Convert.ToString(table.Rows[i]["intEndNum"]);
+                string sDay = Convert.ToString(table.Rows[i]["intDay"]);
                 if (section == startNum)//判断课程开始时间，确定位置，填写数据
                 {
                     tempArray[i][1] = j;//记录上课开始时间（确定数据显示在哪一行）
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN+sEndN + "-周" + sDay + "<br />";
                 }
                 if ((Convert.ToInt16(section) > Convert.ToInt16(startNum))&&(Convert.ToInt16(section) < Convert.ToInt16(endNum)))
                 {
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN + sEndN + "-周" + sDay + "<br />";
                 }
                 if (section == endNum)//判断课程结束时间，记录位置
                 {
                     tempArray[i][2] = j;//记录课结束时间
                     if(startNum != endNum)//如开始时间等于结束时间则会重复记录
                     {
-                        dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "<br />";
+                        dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN + sEndN + "-周" + sDay + "<br />";
                     }
                     break;
                 }

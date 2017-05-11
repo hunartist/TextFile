@@ -88,7 +88,7 @@ public partial class emptyRoom : System.Web.UI.Page
         {
             DataRow[] roomRows = roomTable.Select("roomid = '" + table.Rows[i]["roomid"] + "' and intWeek = " + table.Rows[i]["intWeek"]);
 
-            if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11))
+            if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) == 99) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 99))
             {
                 roomRows[0]["num"] = roomRows[0]["num"].ToString().Replace("z", "");
             }
@@ -108,9 +108,9 @@ public partial class emptyRoom : System.Web.UI.Page
         DataTable roomRowsFlited = new DataTable();
         string num1 = "";
         string num2 = "";
-        if (num1T == 11) { num1 = "z"; }
+        if (num1T == 99) { num1 = "z"; }
         else { num1 = num1T.ToString(); }
-        if (num2T == 11) { num2 = "z"; }
+        if (num2T == 99) { num2 = "z"; }
         else { num2 = num2T.ToString(); }
         if ((num1 == "z") && (num2 == "z"))
         {
@@ -172,7 +172,7 @@ public partial class emptyRoom : System.Web.UI.Page
 
     protected void ddlNum1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if ((Convert.ToInt16(ddlNum1.SelectedValue) == 11))
+        if ((Convert.ToInt16(ddlNum1.SelectedValue) == 99))
         {
             ddlNum2.SelectedValue = ddlNum1.SelectedValue;
         }
@@ -184,7 +184,7 @@ public partial class emptyRoom : System.Web.UI.Page
 
     protected void ddlNum2_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if ((Convert.ToInt16(ddlNum2.SelectedValue) == 11))
+        if ((Convert.ToInt16(ddlNum2.SelectedValue) == 99))
         {
             ddlNum1.SelectedValue = ddlNum2.SelectedValue;
         }
