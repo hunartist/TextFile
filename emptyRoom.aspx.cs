@@ -71,14 +71,14 @@ public partial class emptyRoom : System.Web.UI.Page
         string yearid = CommonClass.getCurYearID();
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sdaRoom = new SqlDataAdapter();
-        sdaRoom.SelectCommand = new SqlCommand("select distinct RTRIM(d.strRoomName) as strRoomName,w.intWeek,'0123456789z' as num from RoomDetail d right join WeekStartEnd w on 1=1 and w.yearID = '" + yearid + "' where d.strDepart = '" + depT + "' and w.intWeek >= "+week1T+" and w.intWeek <= "+week2T, con);
+        sdaRoom.SelectCommand = new SqlCommand("select distinct strRoomName,roomid,w.intWeek,'0123456789z' as num from RoomDetail d right join WeekStartEnd w on 1=1 and w.yearID = '" + yearid + "' where d.depid = '" + depT + "' and w.intWeek >= "+week1T+" and w.intWeek <= "+week2T, con);
         DataSet dsRoom = new DataSet();
         sdaRoom.Fill(dsRoom);
         DataTable roomTable = new DataTable();
         roomTable = dsRoom.Tables[0];
 
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select aaa.strRoom,aaa.intWeek,aaa.intStartNum,aaa.intEndNum from (select  aa.*,d.strRoomName,d.strDepart,d.strCDep from (select distinct s.intWeek ,RTRIM(a.strRoom) as strRoom, a.intDay,a.intStartNum,a.intEndNum,a.yearID ,a.strWeekReg from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.strRoom = d.strRoomName where d.strDepart= '" + depT + "' and aa.intWeek >= " + week1T + " and aa.intWeek <= " + week2T + " and aa.intDay = " + dayT + " and (( aa.intStartNum  >= " + num1T + " and aa.intStartNum <= " + num2T + " ) or(aa.intEndNum  >= " + num1T + " and aa.intEndNum <= " + num2T + " ) or((aa.intStartNum  < " + num1T + " and aa.intEndNum > " + num2T + " )))) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1", con);
+        sda.SelectCommand = new SqlCommand("select aaa.roomid,aaa.intWeek,aaa.intStartNum,aaa.intEndNum from (select  aa.*,d.strRoomName,d.depid from (select distinct s.intWeek ,a.roomid, a.intDay,a.intStartNum,a.intEndNum,l.yearID ,a.strWeekReg from RoomApply a inner join RoomApplySub s on a.id = s.F_id inner join ApplyList l on a.applyid = a.applyid) as aa inner join RoomDetail d on aa.roomid = d.roomid where d.depid= '" + depT + "' and aa.intWeek >= " + week1T + " and aa.intWeek <= " + week2T + " and aa.intDay = " + dayT + " and (( aa.intStartNum  >= " + num1T + " and aa.intStartNum <= " + num2T + " ) or(aa.intEndNum  >= " + num1T + " and aa.intEndNum <= " + num2T + " ) or((aa.intStartNum  < " + num1T + " and aa.intEndNum > " + num2T + " )))) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -86,7 +86,7 @@ public partial class emptyRoom : System.Web.UI.Page
 
         for (int i = 0;i < table.Rows.Count;i++)
         {
-            DataRow[] roomRows = roomTable.Select("strRoomName = '" + table.Rows[i]["strRoom"] + "' and intWeek = " + table.Rows[i]["intWeek"]);
+            DataRow[] roomRows = roomTable.Select("roomid = '" + table.Rows[i]["roomid"] + "' and intWeek = " + table.Rows[i]["intWeek"]);
 
             if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11))
             {
@@ -175,6 +175,10 @@ public partial class emptyRoom : System.Web.UI.Page
         if ((Convert.ToInt16(ddlNum1.SelectedValue) == 11))
         {
             ddlNum2.SelectedValue = ddlNum1.SelectedValue;
+        }
+        if ((Convert.ToInt16(ddlNum1.SelectedValue) == 1) || ((Convert.ToInt16(ddlNum1.SelectedValue) == 3)) || ((Convert.ToInt16(ddlNum1.SelectedValue) == 5)) || ((Convert.ToInt16(ddlNum1.SelectedValue) == 7)) || ((Convert.ToInt16(ddlNum1.SelectedValue) == 9)))
+        {
+            ddlNum2.SelectedValue = (Convert.ToInt16(ddlNum1.SelectedValue) + 1).ToString();
         }
     }
 

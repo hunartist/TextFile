@@ -30,13 +30,13 @@ public class PrintTabClass
         }
 
         //添加10行
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 11; i++)
         {
             dtSchedule.Rows.Add();
         }
 
         //添加左侧固定信息（第几节）
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 11; i++)
         {
             dtSchedule.Rows[i][0] = (i + 1);
         }
@@ -59,9 +59,35 @@ public class PrintTabClass
             //Day
             string week = Convert.ToString(table.Rows[i]["intDay"]);
             //StartNum
-            string startNum = Convert.ToString(table.Rows[i]["intStartNum"]);
+            //string startNum = Convert.ToString(table.Rows[i]["intStartNum"]);
+            string startNum = "";
+            if (Convert.ToInt16(table.Rows[i]["intStartNum"]) <=4)
+            {
+                startNum = Convert.ToString(table.Rows[i]["intStartNum"]);
+            }
+            if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) >= 5)&& (Convert.ToInt16(table.Rows[i]["intStartNum"]) <= 10))
+            {
+                startNum = (Convert.ToInt16(table.Rows[i]["intStartNum"]) + 1).ToString();
+            }
+            if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11)
+            {
+                startNum = "5";
+            }
             //EndNum
-            string endNum = Convert.ToString(table.Rows[i]["intEndNum"]);
+            //string endNum = Convert.ToString(table.Rows[i]["intEndNum"]);
+            string endNum = "";
+            if (Convert.ToInt16(table.Rows[i]["intEndNum"]) <= 4)
+            {
+                endNum = Convert.ToString(table.Rows[i]["intEndNum"]);
+            }
+            if ((Convert.ToInt16(table.Rows[i]["intEndNum"]) >= 5) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) <= 10))
+            {
+                endNum = (Convert.ToInt16(table.Rows[i]["intEndNum"]) + 1).ToString();
+            }
+            if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11)
+            {
+                endNum = "5";
+            }
 
             for (int weekCount = 1; weekCount < 8; weekCount++)//确定本条数据将来显示在哪一列
             {
@@ -75,19 +101,26 @@ public class PrintTabClass
             for (int j = 0; j < dtSchedule.Rows.Count; j++)//确定课程的开始时间和结束时间，并填写数据
             {
                 string section = Convert.ToString(dtSchedule.Rows[j][0]);//当前行是第几节课
+                string sRoom = Convert.ToString(table.Rows[i]["strRoomName"]);
+                string sName = Convert.ToString(table.Rows[i]["strName"]);
+                string sClass = Convert.ToString(table.Rows[i]["strClass"]);
+                string sTeacher = Convert.ToString(table.Rows[i]["strTeacher"]);
                 if (section == startNum)//判断课程开始时间，确定位置，填写数据
                 {
                     tempArray[i][1] = j;//记录上课开始时间（确定数据显示在哪一行）
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoomName"]) + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "<br />";
                 }
                 if ((Convert.ToInt16(section) > Convert.ToInt16(startNum))&&(Convert.ToInt16(section) < Convert.ToInt16(endNum)))
                 {
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoomName"]) + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "<br />";
                 }
                 if (section == endNum)//判断课程结束时间，记录位置
                 {
                     tempArray[i][2] = j;//记录课结束时间
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + Convert.ToString(table.Rows[i]["strRoomName"]) + "<br />";
+                    if(startNum != endNum)//如开始时间等于结束时间则会重复记录
+                    {
+                        dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "<br />";
+                    }
                     break;
                 }
             }
@@ -99,9 +132,18 @@ public class PrintTabClass
             dtSchedule.Columns[i].ColumnName = "星期" + CommonClass.WeekConvertToChinese(i);
         }
         //修改列标题
-        for (int i = 0; i < 10; i++)
+        //for (int i = 0; i < 10; i++)
+        //{
+        //    dtSchedule.Rows[i][0] = "第" + CommonClass.ConvertToChinese(i + 1) + "节";
+        //}
+        for (int i=0;i<4;i++)
+         {
+             dtSchedule.Rows[i][0] = "第" + ConvertToChinese2(i + 1) + "节";
+         }
+        dtSchedule.Rows[4][0] = "中午";
+        for (int i = 5; i < 11; i++)
         {
-            dtSchedule.Rows[i][0] = "第" + CommonClass.ConvertToChinese(i + 1) + "节";
+            dtSchedule.Rows[i][0] = "第" + ConvertToChinese2(i + 1) + "节";
         }
 
         //dispose        
@@ -112,5 +154,26 @@ public class PrintTabClass
 
         return dtSchedule;
 
+    }
+
+    public static string ConvertToChinese2(int x)
+    {
+        string cstr = "";
+        switch (x)
+        {
+            case 0: cstr = "零"; break;
+            case 1: cstr = "一"; break;
+            case 2: cstr = "二"; break;
+            case 3: cstr = "三"; break;
+            case 4: cstr = "四"; break;
+            //case 5: cstr = "五"; break;   
+            case 6: cstr = "五"; break;
+            case 7: cstr = "六"; break;
+            case 8: cstr = "七"; break;
+            case 9: cstr = "八"; break;
+            case 10: cstr = "九"; break;
+            case 11: cstr = "十"; break;
+        }
+        return (cstr);
     }
 }
