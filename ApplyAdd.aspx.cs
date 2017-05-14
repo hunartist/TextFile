@@ -111,7 +111,7 @@ public partial class ApplyAdd : System.Web.UI.Page
             return;
         }
 
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN, ClassN, TeacherN);
         if (checkmsg != "OK")
         {
             Response.Write("<script>alert('" + checkmsg + "')</script>");

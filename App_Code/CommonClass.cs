@@ -482,14 +482,14 @@ public class CommonClass
         return true;
     } 
 
-    public static string CheckApply(string roomN, int dayW, int newSN, int newEN, string weekData, string idN)
+    public static string CheckApply(string roomN, int dayW, int newSN, int newEN, string weekData, string idN, string classN, string teacherN)
     {
         string msg = "OK";
 
-        //取修改记录所对应的教室(strRoom)在特定日期（周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）有课，记入临时表table（不包含待修改记录本身）
+        //取修改记录所对应的教室(strRoom)在特定日期（目标周的周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）有课，记入临时表table（不包含待修改记录本身）
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        string constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID from RoomApply a, RoomApplySub s, ApplyList l where a.id = s.f_id and a.applyid = l.applyid and a.roomid = '" + roomN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);
+        string constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum, aa.strRoomName from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID, d.strRoomName from RoomApply a, RoomApplySub s, ApplyList l, RoomDetail d where a.id = s.f_id and a.applyid = l.applyid and a.roomid = d.roomid and a.roomid = '" + roomN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);
         sda.SelectCommand = new SqlCommand(constr, con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
@@ -519,23 +519,123 @@ public class CommonClass
                 {
                     int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
                     int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
+                    string oldRoom = table.Rows[i]["strRoomName"].ToString().TrimEnd();
                     if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
                     {
-                        msg = "OK";
+                        //msg = "OK";
+                        break;
                     }
                     else
                     {
-                        msg = roomN.ToString().TrimEnd() + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" + " " + "课程冲突";
+                        msg = "教室冲突"+ oldRoom+ " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节" ;
                         return msg;
                     }
                 }
 
             }
         }
-        con.Dispose();
         table.Dispose();
         ds.Dispose();
         sda.Dispose();
+        
+        //取修改记录所对应的班级(strClass)在特定日期（目标周的周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）在哪里(strRoomName)有课，记入临时表table（不包含待修改记录本身）
+        constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum,aa.strRoomName from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID, d.strRoomName from RoomApply a, RoomApplySub s, ApplyList l, RoomDetail d where a.id = s.f_id and a.applyid = l.applyid and a.roomid = d.roomid and a.strClass = '" + classN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);
+        sda.SelectCommand = new SqlCommand(constr, con);        
+        sda.Fill(ds);        
+        table = ds.Tables[0];
+
+        //临时表中的所有记录依次和新信息比较
+        newWeek = Regex.Split(weekData, ",");
+
+        for (int i = 0; i < table.Rows.Count; i++)
+        {
+            foreach (string item in newWeek)
+            {
+                try
+                {
+                    int week = Convert.ToInt16(item);
+                }
+                catch (Exception)
+                {
+                    msg = "regular int error";
+                    return msg;
+                }
+                int weekN = Convert.ToInt16(item);
+                int weekOld = Convert.ToInt16(table.Rows[i]["intWeek"]);
+
+                if (weekN == weekOld)
+                {
+                    int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
+                    int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
+                    string oldRoom = table.Rows[i]["strRoomName"].ToString().TrimEnd();
+                    if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
+                    {
+                        //msg = "OK";
+                        break;
+                    }
+                    else
+                    {
+                        msg = "班级冲突"+ classN.ToString().TrimEnd() + " " + oldRoom + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节";
+                        return msg;
+                    }
+                }
+
+            }
+        }
+
+        table.Dispose();
+        ds.Dispose();
+        sda.Dispose();
+
+        //取修改记录所对应的教师(strTeacher)在特定日期（目标周的周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）有课，记入临时表table（不包含待修改记录本身）
+        constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum, aa.strRoomName from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID, d.strRoomName from RoomApply a, RoomApplySub s, ApplyList l, RoomDetail d where a.id = s.f_id and a.applyid = l.applyid and a.roomid = d.roomid and a.strTeacher = '" + teacherN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);
+        sda.SelectCommand = new SqlCommand(constr, con);
+        sda.Fill(ds);
+        table = ds.Tables[0];
+
+        //临时表中的所有记录依次和新信息比较
+        newWeek = Regex.Split(weekData, ",");
+
+        for (int i = 0; i < table.Rows.Count; i++)
+        {
+            foreach (string item in newWeek)
+            {
+                try
+                {
+                    int week = Convert.ToInt16(item);
+                }
+                catch (Exception)
+                {
+                    msg = "regular int error";
+                    return msg;
+                }
+                int weekN = Convert.ToInt16(item);
+                int weekOld = Convert.ToInt16(table.Rows[i]["intWeek"]);
+
+                if (weekN == weekOld)
+                {
+                    int oldSN = Convert.ToInt16(table.Rows[i]["intStartNum"]);
+                    int oldEN = Convert.ToInt16(table.Rows[i]["intEndNum"]);
+                    string oldRoom = table.Rows[i]["strRoomName"].ToString().TrimEnd();
+                    if (((newSN < oldSN) && (newEN < oldSN)) || ((newSN > oldEN) && (newEN > oldEN)))//开始节次和结束节次均小于原开始节次，或者均大于原结束节次，该教室才可以排课
+                    {
+                        //msg = "OK";
+                        break;
+                    }
+                    else
+                    {
+                        msg = "教师冲突" + teacherN.ToString().TrimEnd() + " " + oldRoom + " 第" + weekN + "周 星期" + dayW + " " + "第" + oldSN + "节至第" + oldEN + "节";
+                        return msg;
+                    }
+                }
+
+            }
+        }
+
+        con.Dispose();
+        table.Dispose();
+        ds.Dispose();
+        sda.Dispose();        
         return msg;
     }
     #endregion

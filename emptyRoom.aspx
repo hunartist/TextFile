@@ -66,7 +66,10 @@
             <asp:ListItem Selected="True">10</asp:ListItem>
             <asp:ListItem Value="99">中午</asp:ListItem>
         </asp:DropDownList>
-        <asp:Label ID="Label4" runat="server" Text="节"></asp:Label>
+        <asp:Label ID="Label4" runat="server" Text="节 排除班级"></asp:Label>
+        <asp:TextBox ID="tbClass" runat="server"></asp:TextBox>
+        <asp:Label ID="Label6" runat="server" Text="排除教师"></asp:Label>
+        <asp:TextBox ID="tbTeacher" runat="server"></asp:TextBox>
         <asp:Button ID="btSearch" runat="server" Text="Search" OnClick="btSearch_Click" />
     </div>
     <div class="centertop" id="tableHeader" ></div>

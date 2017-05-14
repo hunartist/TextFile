@@ -256,7 +256,7 @@ public partial class NextWebF : System.Web.UI.Page
                 }
                                 
                 //验证重复数据
-                string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN);
+                string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN, ClassN, TeacherN);
                 if (checkmsg != "OK")
                 {
                     Response.Write("<script>alert('" + checkmsg + "')</script>");
@@ -409,7 +409,7 @@ public partial class NextWebF : System.Web.UI.Page
         }        
 
         //验证重复数据
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN, ClassN, TeacherN);
         if (checkmsg != "OK")
         {
             Response.Write("<script>alert('" + checkmsg + "')</script>");

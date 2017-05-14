@@ -40,15 +40,25 @@ public partial class emptyRoom : System.Web.UI.Page
             ddlNum2.SelectedValue = ddlNum1.SelectedValue;
         }
 
+        if (((tbClass.Text == string.Empty)&&(tbTeacher.Text == string.Empty))||((tbClass.Text != string.Empty) &&(tbTeacher.Text != string.Empty)))
+        { }
+        else
+        {
+            Response.Write("<script>alert('排除教师和排除班级不可只填一个')</script>");
+            return;
+        }
+
         string dep = ddlDep.SelectedValue.ToString();
         int week1 = Convert.ToInt16(ddlWeek.SelectedValue);
         int week2 = Convert.ToInt16(ddlWeek2.SelectedValue);
         int day = Convert.ToInt16(ddlDay.SelectedValue);
         int num1 = Convert.ToInt16(ddlNum1.SelectedValue);
         int num2 = Convert.ToInt16(ddlNum2.SelectedValue);
+        string classN = tbClass.Text;
+        string teacherN = tbTeacher.Text;
         
 
-        this.Repeater1.DataSource = getRoomTab(dep, week1, week2, day, num1, num2);
+        this.Repeater1.DataSource = getRoomTab(dep, week1, week2, day, num1, num2, classN, teacherN);
         this.Repeater1.DataBind();
 
         for (int i = 1; i <= 1; i++) // 遍历每一列
@@ -66,7 +76,7 @@ public partial class emptyRoom : System.Web.UI.Page
         Session["ERnum2"] = ddlNum2.SelectedValue.ToString();
     }
 
-    protected DataTable getRoomTab(string depT,int week1T,int week2T,int dayT,int num1T,int num2T)
+    protected DataTable getRoomTab(string depT,int week1T,int week2T,int dayT,int num1T,int num2T, string classN, string teacherN)
     {
         string yearid = CommonClass.getCurYearID();
         SqlConnection con = CommonClass.GetSqlConnection();
@@ -78,8 +88,8 @@ public partial class emptyRoom : System.Web.UI.Page
         roomTable = dsRoom.Tables[0];
 
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select aaa.roomid,aaa.intWeek,aaa.intStartNum,aaa.intEndNum from (select  aa.*,d.strRoomName,d.depid from (select distinct s.intWeek ,a.roomid, a.intDay,a.intStartNum,a.intEndNum,l.yearID ,a.strWeekReg from RoomApply a inner join RoomApplySub s on a.id = s.F_id inner join ApplyList l on a.applyid = a.applyid) as aa inner join RoomDetail d on aa.roomid = d.roomid where d.depid= '" + depT + "' and aa.intWeek >= " + week1T + " and aa.intWeek <= " + week2T + " and aa.intDay = " + dayT + " and (( aa.intStartNum  >= " + num1T + " and aa.intStartNum <= " + num2T + " ) or(aa.intEndNum  >= " + num1T + " and aa.intEndNum <= " + num2T + " ) or((aa.intStartNum  < " + num1T + " and aa.intEndNum > " + num2T + " )))) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1", con);
-        DataSet ds = new DataSet();
+        sda.SelectCommand = new SqlCommand("select aaa.roomid,aaa.intWeek,aaa.intStartNum,aaa.intEndNum from (select  aa.*,d.strRoomName,d.depid from (select distinct s.intWeek ,a.roomid, a.intDay,a.intStartNum,a.intEndNum,l.yearID ,a.strWeekReg,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.id = s.F_id inner join ApplyList l on a.applyid = l.applyid where 1=1 and (((a.strClass not like '%"+ classN + "%') and (a.strTeacher <> '" + teacherN + "')) or ('" + classN + "' = '') or ('" + teacherN + "' = ''))) as aa inner join RoomDetail d on aa.roomid = d.roomid where d.depid= '" + depT + "' and aa.intWeek >= " + week1T + " and aa.intWeek <= " + week2T + " and aa.intDay = " + dayT + " and (( aa.intStartNum  >= " + num1T + " and aa.intStartNum <= " + num2T + " ) or(aa.intEndNum  >= " + num1T + " and aa.intEndNum <= " + num2T + " ) or((aa.intStartNum  < " + num1T + " and aa.intEndNum > " + num2T + " )))) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1", con);
+         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
         table = ds.Tables[0];        
