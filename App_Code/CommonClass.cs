@@ -228,16 +228,16 @@ public class CommonClass
         }
 
 
-        //if (ClassNC == string.Empty) //班级教师可以为空
-        //{
-        //    msg = "班级名未填写";
-        //    return msg;
-        //}
-        //if (TeacherNC == string.Empty) 
-        //{
-        //    msg = "教师名未填写";
-        //    return msg;
-        //}
+        if (ClassNC == string.Empty) 
+        {
+            msg = "班级名未填写";
+            return msg;
+        }
+        if (TeacherNC == string.Empty)
+        {
+            msg = "教师名未填写";
+            return msg;
+        }
         return msg;
     }
 
@@ -538,7 +538,7 @@ public class CommonClass
         ds.Dispose();
         sda.Dispose();
         
-        if(classN != string.Empty)
+        if(classN != "待定")
         {
             //取修改记录所对应的班级(strClass)在特定日期（目标周的周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）在哪里(strRoomName)有课，记入临时表table（不包含待修改记录本身）
             constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum,aa.strRoomName from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID, d.strRoomName from RoomApply a, RoomApplySub s, ApplyList l, RoomDetail d where a.id = s.f_id and a.applyid = l.applyid and a.roomid = d.roomid and a.strClass = '" + classN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);
@@ -590,7 +590,7 @@ public class CommonClass
             sda.Dispose();
         }
 
-        if (teacherN != string.Empty)
+        if (teacherN != "待定")
         {
             //取修改记录所对应的教师(strTeacher)在特定日期（目标周的周一至周日intDay）的以下信息：哪些周（intWeek）、哪些节次（intStartNum至intEndNum）有课，记入临时表table（不包含待修改记录本身）
             constr = string.Format("select aa.intWeek, aa.intStartNum, aa.intEndNum, aa.strRoomName from(select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID, d.strRoomName from RoomApply a, RoomApplySub s, ApplyList l, RoomDetail d where a.id = s.f_id and a.applyid = l.applyid and a.roomid = d.roomid and a.strTeacher = '" + teacherN + "' and  a.intDay = " + dayW + " and a.id != '" + idN + "') as aa inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in ({0})", weekData);

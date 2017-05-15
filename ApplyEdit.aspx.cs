@@ -575,6 +575,11 @@ public partial class NextWebF : System.Web.UI.Page
             //ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
             //Session["CopySubFlag"] = 0;
         }
+        else
+        {
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = "待定";
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = "待定";
+        }
         if (gvTemp.UniqueID == gvUniqueID)
         {
             ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");

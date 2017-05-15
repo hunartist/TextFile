@@ -432,7 +432,7 @@
                                                 <asp:Label ID="lbStrClass" runat="server" Text='<%# Eval("strClass") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbStrClassA" Text='' runat="server" Width="90"></asp:TextBox>
+                                                <asp:TextBox ID="tbStrClassA" Text='' runat="server"  Width="90"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="教师" SortExpression="strTeacher">
