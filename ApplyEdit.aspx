@@ -78,7 +78,7 @@
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
-        <div class="left" runat="Server" id="leftTool">                    
+        <div class="left" runat="Server" id="leftTool">            
             <asp:Button ID="btTotalSearchUp" runat="server" Text="筛选" OnClick="btTotalSearch_Click" />
             <br />
             <asp:TextBox ID="tbSearch" runat="server"></asp:TextBox>
@@ -86,6 +86,11 @@
             <asp:TextBox ID="tbSearch1" runat="server"></asp:TextBox>
             <br />
             <asp:TextBox ID="tbSearch2" runat="server"></asp:TextBox>            
+            <br />
+            <asp:Label ID="lbAnd" runat="server" Text="and"></asp:Label>
+            <asp:RadioButton ID="rbAnd" runat="server" Checked="true" GroupName="andOr"/>
+            <asp:Label ID="lbOr" runat="server" Text="or"></asp:Label>
+            <asp:RadioButton ID="rbOr" runat="server" GroupName="andOr"/>
             <br />
             <asp:ListBox ID="liboDay" runat="server" SelectionMode="Multiple" Rows="7">
                 <asp:ListItem>1</asp:ListItem>
