@@ -11,6 +11,13 @@
     font-size:300px;
 }
 
+div,body,html{margin:0; padding:0; width:100%;}
+#left,#right,#middle{ height:300px; position:absolute;}
+#left{width:300px;}    
+#middle{ width:9px; background:#666;left:300px;}
+#middle:hover{ cursor:w-resize;}
+#right{right:0;left:309px; width:auto;}
+
 .left {
     position: fixed; top: 0px; left: 0px; width: 20%; z-index: 1050;    
     float: left; height: 100%; width: 12%; margin: 0px; overflow-y:auto; 

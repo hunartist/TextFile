@@ -31,6 +31,36 @@
             img.alt = "Expand";
         }
     }
+    
+    function $(id) {
+              return document.getElementById(id)
+         }
+         window.onload = function() {
+             left = $("leftTool"), right = $("right"), middle = $("middle");
+             var middleWidth=9;
+             middle.onmousedown = function(e) {
+                 var disX = (e || event).clientX;
+                 middle.left = middle.offsetLeft;
+                 document.onmousemove = function(e) {
+                     var iT = middle.left + ((e || event).clientX - disX);
+                     var e=e||window.event,tarnameb=e.target||e.srcElement;
+                     maxT=document.body.clientWidth;
+                     iT < 0 && (iT = 0);
+                     iT > maxT && (iT = maxT);
+                     middle.style.left = left.style.width = iT + "px";
+                     right.style.width = document.body.clientWidth - iT -middleWidth + "px";
+                     right.style.left = iT+middleWidth+"px";
+                     return false
+                 };
+                 document.onmouseup = function() {
+                     document.onmousemove = null;
+                     document.onmouseup = null;
+                     middle.releaseCapture && middle.releaseCapture()
+                 };
+                 middle.setCapture && middle.setCapture();
+                 return false
+             };
+         };
     </script>
     <link rel="stylesheet" type="text/css" href="css/StyleSheet.css" />
 </head>
@@ -116,7 +146,8 @@
             <%--<asp:HyperLink ID="hlNew" runat="server" NavigateUrl="~/ApplyAdd.aspx">新增</asp:HyperLink>--%>
             <asp:HyperLink ID="hlQuery" runat="server" NavigateUrl="~/RoomApply.aspx" target="_blank">查询</asp:HyperLink>           
         </div>
-        <div class="righttop">         
+        <div id="middle"></div>
+        <div class="righttop" id="right">         
             <asp:GridView ID="GVApplyList" runat="server" AutoGenerateColumns="False" DataKeyNames="applyid" DataSourceID="sqsApplyList" 
                 EnableModelValidation="True" AllowPaging="True" AllowSorting="True" OnRowDataBound="GVApplyList_RowDataBound" 
                 AutoGenerateEditButton="True" OnRowDeleted="GVApplyList_RowDeleted" OnRowUpdated="GVApplyList_RowUpdated" 
