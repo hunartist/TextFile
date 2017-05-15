@@ -633,6 +633,8 @@ public partial class NextWebF : System.Web.UI.Page
             li.Selected = false;
         }
         tbSearch.Text = string.Empty;
+        tbSearch1.Text = string.Empty;
+        tbSearch2.Text = string.Empty;
         //reset select
         int CDep = Convert.ToInt16(Session["cdep"]);
         sqsApplyList.SelectParameters.Clear();
@@ -718,10 +720,20 @@ public partial class NextWebF : System.Web.UI.Page
         {
             sTextbox = "init";
         }
+        string sTextbox1 = tbSearch1.Text;
+        if (sTextbox1 == string.Empty)
+        {
+            sTextbox1 = "init";
+        }
+        string sTextbox2 = tbSearch2.Text;
+        if (sTextbox2 == string.Empty)
+        {
+            sTextbox2 = "init";
+        }
         //主记录筛选
         int CDep = Convert.ToInt16(Session["cdep"]);
         sqsApplyList.SelectParameters.Clear();
-        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.cdepid,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.cdepid = {0} and l.applyid = a.applyid and a.id = s.F_id and a.roomid = d.roomid and l.yearID = w.yearID and w.currentFlag = 'true' and a.roomid in ({1}) and s.intWeek in ({2}) and a.intDay in ({3}) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init')) order by l.applyid desc", CDep,sRoom,sWeek,sDay,sTextbox);
+        sqsApplyList.SelectCommand = String.Format("SELECT distinct l.applyid,RTRIM(l.strName) as strName,l.yearID,l.cdepid,l.strRemark FROM ApplyList l, RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w WHERE l.cdepid = {0} and l.applyid = a.applyid and a.id = s.F_id and a.roomid = d.roomid and l.yearID = w.yearID and w.currentFlag = 'true' and a.roomid in ({1}) and s.intWeek in ({2}) and a.intDay in ({3}) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init')) and ((l.strName like '%{5}%') or (a.strTeacher like '%{5}%') or (a.strClass like '%{5}%') or ('{5}' = 'init')) and ((l.strName like '%{6}%') or (a.strTeacher like '%{6}%') or (a.strClass like '%{6}%') or ('{6}' = 'init')) order by l.applyid desc", CDep,sRoom,sWeek,sDay,sTextbox,sTextbox1,sTextbox2);
         ViewState["ApplyListSelStr"] = sqsApplyList.SelectCommand;
         sqsApplyList.DataBind();
         if (GVApplyList.DataSourceID == string.Empty)
@@ -736,7 +748,7 @@ public partial class NextWebF : System.Web.UI.Page
             SqlDataSource sqsRoomApply;
             sqsRoomApply = GVApplyList.Rows[i].FindControl("sqsRoomApply") as SqlDataSource;
             //sqsRoomApply.SelectParameters["applyid"].DefaultValue = (GVApplyList.Rows[i].DataItem as DataRowView)["applyid"].ToString();
-            sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid,a.roomid, d.strRoomName, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData, a.strRemark FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.roomid = d.roomid and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.roomid in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init')) order by a.id desc", sRoom, sWeek, sDay, sTextbox);
+            sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid,a.roomid, d.strRoomName, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData, a.strRemark FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.roomid = d.roomid and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.roomid in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init')) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init')) and ((l.strName like '%{5}%') or (a.strTeacher like '%{5}%') or (a.strClass like '%{5}%') or ('{5}' = 'init')) order by a.id desc", sRoom, sWeek, sDay, sTextbox, sTextbox1, sTextbox2);
             ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
             sqsRoomApply.DataBind();
         }

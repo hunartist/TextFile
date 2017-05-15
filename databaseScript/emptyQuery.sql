@@ -46,11 +46,23 @@ select aaa.roomid,aaa.intWeek,aaa.intStartNum,aaa.intEndNum,aaa.strClass,aaa.str
 		from RoomApply a 
 		inner join RoomApplySub s on a.id = s.F_id 
 		inner join ApplyList l on a.applyid = l.applyid 
-		where 1=1 and  (((a.strClass not like '%营销1402%') and (a.strTeacher <> '')) or ('营销1402' = '') or ('' = ''))
+		where 1=1 and (((a.strClass not like '%111%') and (a.strTeacher <> 'js201')) or ('111' = '') or ('js201' = ''))
 		) as aa 
 	inner join RoomDetail d on aa.roomid = d.roomid 
-	where d.depid= '1' and aa.intWeek >= 1 and aa.intWeek <= 1 and aa.intDay = 1 
-	and (( aa.intStartNum  >= 1 and aa.intStartNum <= 2 ) or(aa.intEndNum  >= 1 and aa.intEndNum <= 2 ) 
-	or((aa.intStartNum  < 1 and aa.intEndNum > 2 )))
+	where d.depid= '3' and aa.intWeek >= 1 and aa.intWeek <= 1 and aa.intDay = 1 
+	and (( aa.intStartNum  >= 1 and aa.intStartNum <= 2 ) or(aa.intEndNum  >= 1 and aa.intEndNum <= 2 ) or((aa.intStartNum  < 1 and aa.intEndNum > 2 )))
 	) as aaa 
 inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1
+
+--select aaa.roomid,aaa.intWeek,aaa.intStartNum,aaa.intEndNum from 
+--(select  aa.*,d.strRoomName,d.depid from 
+--(select distinct s.intWeek ,a.roomid, a.intDay,a.intStartNum,a.intEndNum,l.yearID ,a.strWeekReg,a.strClass,a.strTeacher 
+--from RoomApply a inner join RoomApplySub s on a.id = s.F_id 
+--inner join ApplyList l on a.applyid = l.applyid 
+--where 1=1 and (((a.strClass not like '%111%') and (a.strTeacher <> '李岚')) or ('111' = '') or ('李岚' = ''))
+--) as aa 
+--inner join RoomDetail d on aa.roomid = d.roomid 
+--where d.depid= '1' and aa.intWeek >= 1 and aa.intWeek <= 1 and aa.intDay = 1 
+--and (( aa.intStartNum  >= 1 and aa.intStartNum <= 1 ) or(aa.intEndNum  >= 1 and aa.intEndNum <= 1 ) or((aa.intStartNum  < 1 and aa.intEndNum > 1 )))
+--) as aaa 
+--inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1

@@ -111,18 +111,18 @@ public class PrintTabClass
                 if (section == startNum)//判断课程开始时间，确定位置，填写数据
                 {
                     tempArray[i][1] = j;//记录上课开始时间（确定数据显示在哪一行）
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN+sEndN + "-周" + sDay + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN+sEndN + "-星期" + sDay + "<br />";
                 }
                 if ((Convert.ToInt16(section) > Convert.ToInt16(startNum))&&(Convert.ToInt16(section) < Convert.ToInt16(endNum)))
                 {
-                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN + sEndN + "-周" + sDay + "<br />";
+                    dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN + sEndN + "-星期" + sDay + "<br />";
                 }
                 if (section == endNum)//判断课程结束时间，记录位置
                 {
                     tempArray[i][2] = j;//记录课结束时间
                     if(startNum != endNum)//如开始时间等于结束时间则会重复记录
                     {
-                        dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN + sEndN + "-周" + sDay + "<br />";
+                        dtSchedule.Rows[j][tempArray[i][0]] = dtSchedule.Rows[j][tempArray[i][0]].ToString() + sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN + sEndN + "-星期" + sDay + "<br />";
                     }
                     break;
                 }

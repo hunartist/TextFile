@@ -81,7 +81,11 @@
         <div class="left" runat="Server" id="leftTool">                    
             <asp:Button ID="btTotalSearchUp" runat="server" Text="筛选" OnClick="btTotalSearch_Click" />
             <br />
-            <asp:TextBox ID="tbSearch" runat="server"></asp:TextBox>            
+            <asp:TextBox ID="tbSearch" runat="server"></asp:TextBox>
+            <br />
+            <asp:TextBox ID="tbSearch1" runat="server"></asp:TextBox>
+            <br />
+            <asp:TextBox ID="tbSearch2" runat="server"></asp:TextBox>            
             <br />
             <asp:ListBox ID="liboDay" runat="server" SelectionMode="Multiple" Rows="7">
                 <asp:ListItem>1</asp:ListItem>
