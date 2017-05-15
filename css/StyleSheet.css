@@ -12,30 +12,30 @@
 }
 
 div,body,html{margin:0; padding:0; width:100%;}
-#left,#right,#middle{ height:300px; position:absolute;}
-#left{width:5%;}    
-#middle{ width:9px; background:#666;left:5%;}
+#left,#right,#middle{ height:100%; position:absolute;}
+#left{width:10%;}    
+#middle{ width:9px; background:#666;left:10%;}
 #middle:hover{ cursor:w-resize;}
-#right{right:0;left:8%; width:auto;}
+#right{right:0;left:12%; width:auto;}
 
 .left {
-    position: fixed; top: 0px; left: 0px; width: 5%; z-index: 1050;    
-    float: left; height: 100%; width: 5%; margin: 0px; overflow-y:auto; 
+    position: fixed; top: 0px; left: 0px; width: 10%; 
+    float: left; height: 100%; width: 10%; margin: 0px; overflow-y:auto; 
 }
 
 .righttop {
-   position:relative;left:5%;
-    height:5%; width: 95%;
+   position:relative;left:10%;
+    height:5%; width: 90%;
 }
 
 .right {
-   position:fixed;top:5%;left:5%;
-   overflow: scroll; height: 92%; width: 95%;
+   position:fixed;top:5%;left:10%;
+   overflow: scroll; height: 92%; width: 90%;
 }
 
 .rightc {
-   position:fixed;left:5%;
-   overflow: scroll; height: 100%; width: 95%;
+   position:fixed;left:10%;
+   overflow: scroll; height: 100%; width: 90%;
 }
 
 .centertop {

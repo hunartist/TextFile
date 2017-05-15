@@ -577,8 +577,8 @@ public partial class NextWebF : System.Web.UI.Page
         }
         else
         {
-            ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = "待定";
-            ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = "待定";
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = "默认班级";
+            ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = "默认教师";
         }
         if (gvTemp.UniqueID == gvUniqueID)
         {

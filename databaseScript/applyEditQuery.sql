@@ -12,7 +12,7 @@ and (
 or ((l.strName like '%陈联刚%') or (a.strTeacher like '%陈联刚%') or (a.strClass like '%陈联刚%') or ('陈联刚' = 'init')) 
 or ((l.strName like '%init%') or (a.strTeacher like '%init%') or (a.strClass like '%init%') or ('init' = 'init'))) order by l.applyid desc
 
-update RoomApply set strClass = '待定',strTeacher = '待定' where strClass is null
+update RoomApply set strClass = '默认班级',strTeacher = '默认教师' where strClass = '待定'
 select * from RoomApply where strClass is null
 
 --select aaa.*,t.currentFlag,de.strDepart from 

@@ -31,13 +31,42 @@
             img.alt = "Expand";
         }
     }
-    
+    </script>
+
+    <script type="text/javascript">
+        function createCookie(name,value,days) {
+	        if (days) {
+		        var date = new Date();
+		        date.setTime(date.getTime()+(days*24*60*60*1000));
+		        var expires = "; expires="+date.toGMTString();
+	        }
+	        else var expires = "";
+	        document.cookie = name+"="+value+expires+"; path=/";
+        }
+
+        function readCookie(name) {
+	        var nameEQ = name + "=";
+	        var ca = document.cookie.split(';');
+	        for(var i=0;i < ca.length;i++) {
+		        var c = ca[i];
+		        while (c.charAt(0)==' ') c = c.substring(1,c.length);
+		        if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+	        }
+	        return null;
+        }
+
+        function eraseCookie(name) {
+	        createCookie(name,"",-1);
+        }
     function $(id) {
               return document.getElementById(id)
          }
          window.onload = function() {
-             left = $("leftTool"), right = $("right"), middle = $("middle");
-             var middleWidth=9;
+             left = $("leftTool"), right = $("right"), middle = $("middle");             
+             var middleWidth = 9;
+             middle.style.left = readCookie('middleLeft');
+             right.style.width = readCookie('rightWidth');
+             right.style.left = readCookie('rightLeft');
              middle.onmousedown = function(e) {
                  var disX = (e || event).clientX;
                  middle.left = middle.offsetLeft;
@@ -55,7 +84,10 @@
                  document.onmouseup = function() {
                      document.onmousemove = null;
                      document.onmouseup = null;
-                     middle.releaseCapture && middle.releaseCapture()
+                     middle.releaseCapture && middle.releaseCapture();
+                     createCookie('middleLeft', middle.style.left);
+                     createCookie('rightWidth', right.style.width);
+                     createCookie('rightLeft', right.style.left)
                  };
                  middle.setCapture && middle.setCapture();
                  return false
@@ -437,13 +469,13 @@
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="教师" SortExpression="strTeacher">
                                             <EditItemTemplate>
-                                                <asp:TextBox ID="tbStrTeacherE" Text='<%# Eval("strTeacher") %>' runat="server"  Width="40"></asp:TextBox>                     
+                                                <asp:TextBox ID="tbStrTeacherE" Text='<%# Eval("strTeacher") %>' runat="server"  Width="90"></asp:TextBox>                     
                                             </EditItemTemplate>
                                             <ItemTemplate>
-                                                <asp:Label ID="lbStrTeacher" runat="server" Text='<%# Eval("strTeacher") %>' Width="50"></asp:Label>
+                                                <asp:Label ID="lbStrTeacher" runat="server" Text='<%# Eval("strTeacher") %>'></asp:Label>
                                             </ItemTemplate>
                                             <FooterTemplate>
-                                                <asp:TextBox ID="tbStrTeacherA" Text='' runat="server"  Width="40"></asp:TextBox>
+                                                <asp:TextBox ID="tbStrTeacherA" Text='' runat="server"  Width="90"></asp:TextBox>
                                             </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField HeaderText="strWeekReg" SortExpression="strWeekReg">
