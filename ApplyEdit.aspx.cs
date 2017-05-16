@@ -514,6 +514,14 @@ public partial class NextWebF : System.Web.UI.Page
         GVApplyList.DataBind();
     }
 
+    protected void GVRoomApply_PageIndexChanging(object sender, GridViewPageEventArgs e)
+    {
+        GridView gvTemp = (GridView)sender;
+        gvUniqueID = gvTemp.UniqueID;
+        gvNewPageIndex = e.NewPageIndex;
+        GVApplyList.DataBind();
+    }
+
     protected void ddlStartNE_SelectedIndexChanged(object sender, EventArgs e)
     {
 
@@ -778,11 +786,5 @@ public partial class NextWebF : System.Web.UI.Page
     }
 
     #endregion
-
-
-
-
-
-
-
+    
 }

@@ -308,6 +308,7 @@
                                      OnRowEditing="GVRoomApply_RowEditing" OnRowUpdating="GVRoomApply_RowUpdating"
                                      OnRowCancelingEdit="GVRoomApply_RowCancelingEdit" OnSorting="GVRoomApply_Sorting" 
                                      OnRowDataBound="GVRoomApply_RowDataBound" OnRowCommand="GVRoomApply_RowCommand" OnPreRender="GVRoomApply_PreRender"
+                                     OnPageIndexChanging="GVRoomApply_PageIndexChanging"
                                      DataSourceID="sqsRoomApply" AllowPaging="True" PageSize="15">
                                     <Columns>                                    
                                         <asp:TemplateField ShowHeader="False">
