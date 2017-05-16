@@ -114,17 +114,25 @@ public partial class NextWebF : System.Web.UI.Page
             GridView gv = new GridView();
             gv = (GridView)row.FindControl("GVRoomApply");
 
+            if (ViewState["roomapplySelStr"] != null)
+            {
+                sqsRoomApply.SelectCommand = ViewState["roomapplySelStr"].ToString();
+            }
+
             //Check if any additional conditions (Paging, Sorting, Editing, etc) to be applied on child GridView
             if (gv.UniqueID == gvUniqueID)
             {
                 gv.PageIndex = gvNewPageIndex;
-                gv.EditIndex = gvEditIndex;
+                gv.EditIndex = gvEditIndex;                
+
                 //Check if Sorting used
                 if (gvSortExpr != string.Empty)
                 {
                     GetSortDirection();
-                    strSort = " ORDER BY " + string.Format("{0} {1}", gvSortExpr, gvSortDir);
-                    sqsRoomApply.SelectCommand = (sqsRoomApply.SelectCommand).Replace(" order by a.id desc", "");
+                    strSort = " order by " + string.Format("{0} {1}", gvSortExpr, gvSortDir);
+                    int foundS1 = sqsRoomApply.SelectCommand.IndexOf("order by");
+                    //sqsRoomApply.SelectCommand = (sqsRoomApply.SelectCommand).Replace(" order by a.id desc", "");
+                    sqsRoomApply.SelectCommand = (sqsRoomApply.SelectCommand).Remove(foundS1);
                     sqsRoomApply.SelectCommand = sqsRoomApply.SelectCommand + strSort;
                     ViewState["roomapplySelStr"] = sqsRoomApply.SelectCommand;
                 }
@@ -141,10 +149,7 @@ public partial class NextWebF : System.Web.UI.Page
                 //Expand the Child grid
                 ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + ((DataRowView)e.Row.DataItem)["applyid"].ToString() + "','one');</script>");
             }
-            if (ViewState["roomapplySelStr"] != null)
-            {
-                sqsRoomApply.SelectCommand = ViewState["roomapplySelStr"].ToString();
-            }
+            
 
             //gv.DataSource = sqsRoomApply;
             gv.DataBind();
@@ -771,6 +776,7 @@ public partial class NextWebF : System.Web.UI.Page
             SqlDataSource sqsRoomApply;
             sqsRoomApply = GVApplyList.Rows[i].FindControl("sqsRoomApply") as SqlDataSource;
             //sqsRoomApply.SelectParameters["applyid"].DefaultValue = (GVApplyList.Rows[i].DataItem as DataRowView)["applyid"].ToString();
+            sqsRoomApply.SelectParameters.Clear();
             if(rbAnd.Checked ==true)
             {
                 sqsRoomApply.SelectCommand = string.Format("SELECT distinct a.id, a.applyid,a.roomid, d.strRoomName, a.intDay, a.intStartNum, a.intEndNum, RTRIM(l.strName) as strName, RTRIM(a.strClass) as strClass, RTRIM(a.strTeacher) as strTeacher,a.strWeekReg, a.strWeekData, a.strRemark FROM RoomApply a, RoomApplySub s, RoomDetail d, TitleStartEnd w, ApplyList l WHERE a.applyid = @applyid and a.id = s.F_id and a.roomid = d.roomid and a.applyid = l.applyid and l.yearID = w.yearID and w.currentFlag = 'true' and a.roomid in ({0}) and s.intWeek in ({1}) and a.intDay in ({2}) and ((l.strName like '%{3}%') or (a.strTeacher like '%{3}%') or (a.strClass like '%{3}%') or ('{3}' = 'init')) and ((l.strName like '%{4}%') or (a.strTeacher like '%{4}%') or (a.strClass like '%{4}%') or ('{4}' = 'init')) and ((l.strName like '%{5}%') or (a.strTeacher like '%{5}%') or (a.strClass like '%{5}%') or ('{5}' = 'init')) order by a.id desc", sRoom, sWeek, sDay, sTextbox, sTextbox1, sTextbox2);
