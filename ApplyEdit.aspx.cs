@@ -88,10 +88,10 @@ public partial class NextWebF : System.Web.UI.Page
             sqsApplyList.SelectCommand = ViewState["ApplyListSelStr"].ToString();
             //GVApplyList.DataBind();
         }
-        if (Convert.ToInt16(Session["CopySubFlag"]) == 1)
-        {
-            Session["CopySubFlag"] = 0;
-        }
+        //if (Convert.ToInt16(Session["CopySubFlag"]) == 1)
+        //{
+        //    Session["CopySubFlag"] = 0;
+        //}
 
 
     }
@@ -192,6 +192,10 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsApplyList.Insert();
                 GVApplyList.DataBind();
                 leftTool.Visible = true;
+                if (Convert.ToInt16(Session["CopySubFlag"]) == 1)
+                {
+                    Session["CopySubFlag"] = 0;
+                }
 
                 ClientScript.RegisterClientScriptBlock(GetType(), "", "<script>alert(\'操作成功!\');setTimeout(function(){location.href='ApplyEdit.aspx'},10);  </script>");
                 //Response.Redirect("ApplyEdit.aspx");
@@ -439,6 +443,10 @@ public partial class NextWebF : System.Web.UI.Page
         sqsRoomApply.Update();
         leftTool.Visible = true;
         showFooter = 1;
+        if (Convert.ToInt16(Session["CopySubFlag"]) == 1)
+        {
+            Session["CopySubFlag"] = 0;
+        }
         GVApplyList.DataBind();
         Response.Write("<script>alert('操作成功')</script>");
     }
