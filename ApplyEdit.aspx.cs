@@ -192,10 +192,7 @@ public partial class NextWebF : System.Web.UI.Page
                 sqsApplyList.Insert();
                 GVApplyList.DataBind();
                 leftTool.Visible = true;
-                if (Convert.ToInt16(Session["CopySubFlag"]) == 1)
-                {
-                    Session["CopySubFlag"] = 0;
-                }
+                
 
                 ClientScript.RegisterClientScriptBlock(GetType(), "", "<script>alert(\'操作成功!\');setTimeout(function(){location.href='ApplyEdit.aspx'},10);  </script>");
                 //Response.Redirect("ApplyEdit.aspx");
@@ -309,6 +306,58 @@ public partial class NextWebF : System.Web.UI.Page
             //GridView gvTemp = (GridView)curLB.Parent.Parent.Parent.Parent;
             GridView gvTemp = (GridView)sender;
             gvUniqueID = gvTemp.UniqueID;
+
+            Session["roomN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbroomid")).Text;
+            Session["dayW"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntDay")).Text.TrimEnd();
+            Session["startN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntStartNum")).Text.TrimEnd();
+            Session["endN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntEndNum")).Text.TrimEnd();
+            Session["ClassN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrClass")).Text.TrimEnd();
+            Session["TeacherN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrTeacher")).Text.TrimEnd();
+            Session["weekReg"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrWeekReg")).Text.TrimEnd();
+            Session["remarkN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbStrRemark")).Text.TrimEnd();
+
+        }
+
+        if (e.CommandName == "PasteSub")
+        {
+                      
+            GridView gvTemp = (GridView)sender;
+            string applyid = ((Label)gvTemp.Parent.Parent.FindControl("lbapplyid")).Text;
+
+            if (Convert.ToInt16(Session["CopySubFlag"]) == 1) 
+            {
+                ((DropDownList)gvTemp.FooterRow.FindControl("ddlRoomGVRAadd")).SelectedValue = Session["roomN"].ToString();
+                ((DropDownList)gvTemp.FooterRow.FindControl("ddlDayA")).SelectedValue = Session["dayW"].ToString();
+                ((DropDownList)gvTemp.FooterRow.FindControl("ddlStartNA")).SelectedValue = Session["startN"].ToString();
+                ((DropDownList)gvTemp.FooterRow.FindControl("ddlEndNA")).SelectedValue = Session["endN"].ToString();
+                ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = Session["ClassN"].ToString();
+                ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = Session["TeacherN"].ToString(); ;
+                ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text = Session["weekReg"].ToString();
+                ((TextBox)gvTemp.FooterRow.FindControl("tbStrRemarkA")).Text = Session["remarkN"].ToString();
+                
+            }
+            ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + applyid + "','one');</script>");
+            Session["CopySubFlag"] = 0;
+
+        }
+
+        if (e.CommandName == "CutSub")
+        {
+            GridView gvTemp = (GridView)sender;
+            gvUniqueID = gvTemp.UniqueID;
+            SqlDataSource sqsRoomApply = (SqlDataSource)gvTemp.Parent.FindControl("sqsRoomApply");
+            Session["CopySubFlag"] = 1;
+            LinkButton curLB = (LinkButton)e.CommandSource;
+            GridViewRow curRow = (GridViewRow)curLB.Parent.Parent;
+            int curRowIndex = curRow.RowIndex;
+
+            sqsRoomApply.DeleteParameters["action"].DefaultValue = "delete";
+            sqsRoomApply.DeleteParameters["id"].DefaultValue = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbid")).Text;
+
+            sqsRoomApply.Delete();
+            GVApplyList.DataBind();
+            leftTool.Visible = true;
+            Response.Write("<script>alert('子记录已记入剪切板')</script>");   
 
             Session["roomN"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbroomid")).Text;
             Session["dayW"] = ((Label)gvTemp.Rows[curRowIndex].FindControl("lbIntDay")).Text.TrimEnd();
@@ -443,10 +492,7 @@ public partial class NextWebF : System.Web.UI.Page
         sqsRoomApply.Update();
         leftTool.Visible = true;
         showFooter = 1;
-        if (Convert.ToInt16(Session["CopySubFlag"]) == 1)
-        {
-            Session["CopySubFlag"] = 0;
-        }
+        
         GVApplyList.DataBind();
         Response.Write("<script>alert('操作成功')</script>");
     }
@@ -583,24 +629,24 @@ public partial class NextWebF : System.Web.UI.Page
             renderEmptyGridView(gvTemp, "applyid, id,roomid, strRoomName, intDay, intStartNum, intEndNum, strClass, strTeacher, strWeekReg, strWeekData, strRemark");
         }
         
-        if ((Convert.ToInt16(Session["CopySubFlag"]) == 1)/*&&(gvTemp.UniqueID == gvUniqueID)*/)
-        {            
-            ((DropDownList)gvTemp.FooterRow.FindControl("ddlRoomGVRAadd")).SelectedValue = Session["roomN"].ToString();
-            ((DropDownList)gvTemp.FooterRow.FindControl("ddlDayA")).SelectedValue = Session["dayW"].ToString();
-            ((DropDownList)gvTemp.FooterRow.FindControl("ddlStartNA")).SelectedValue = Session["startN"].ToString();
-            ((DropDownList)gvTemp.FooterRow.FindControl("ddlEndNA")).SelectedValue = Session["endN"].ToString();
-            ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = Session["ClassN"].ToString();
-            ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = Session["TeacherN"].ToString(); ;
-            ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text = Session["weekReg"].ToString();
-            ((TextBox)gvTemp.FooterRow.FindControl("tbStrRemarkA")).Text = Session["remarkN"].ToString();
-            //ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
-            //Session["CopySubFlag"] = 0;
-        }
-        else
-        {
+        //if ((Convert.ToInt16(Session["CopySubFlag"]) == 1)/*&&(gvTemp.UniqueID == gvUniqueID)*/)
+        //{            
+        //    ((DropDownList)gvTemp.FooterRow.FindControl("ddlRoomGVRAadd")).SelectedValue = Session["roomN"].ToString();
+        //    ((DropDownList)gvTemp.FooterRow.FindControl("ddlDayA")).SelectedValue = Session["dayW"].ToString();
+        //    ((DropDownList)gvTemp.FooterRow.FindControl("ddlStartNA")).SelectedValue = Session["startN"].ToString();
+        //    ((DropDownList)gvTemp.FooterRow.FindControl("ddlEndNA")).SelectedValue = Session["endN"].ToString();
+        //    ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = Session["ClassN"].ToString();
+        //    ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = Session["TeacherN"].ToString(); ;
+        //    ((TextBox)gvTemp.FooterRow.FindControl("tbStrWeekRegA")).Text = Session["weekReg"].ToString();
+        //    ((TextBox)gvTemp.FooterRow.FindControl("tbStrRemarkA")).Text = Session["remarkN"].ToString();
+        //    //ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");
+        //    //Session["CopySubFlag"] = 0;
+        //}
+        //else
+        //{
             ((TextBox)gvTemp.FooterRow.FindControl("tbStrClassA")).Text = "默认班级";
             ((TextBox)gvTemp.FooterRow.FindControl("tbStrTeacherA")).Text = "默认教师";
-        }
+        //}
         if (gvTemp.UniqueID == gvUniqueID)
         {
             ClientScript.RegisterStartupScript(GetType(), "Expand", "<SCRIPT LANGUAGE='javascript'>expandcollapse('div" + gvTemp.DataKeys[0].Value.ToString() + "','one');</script>");

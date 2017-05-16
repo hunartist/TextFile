@@ -314,13 +314,19 @@
                                         <asp:TemplateField ShowHeader="False">
                                             <ItemTemplate>
                                                 <asp:LinkButton ID="lbDeleteS" runat="server" CausesValidation="False"
-                                                        CommandName="Delete" Text="删除" OnClientClick="return confirm('是否删除该记录？');"></asp:LinkButton>
+                                                        CommandName="Delete" Text="删除" OnClientClick="return confirm('是否删除该记录？');"></asp:LinkButton>                                                
                                             </ItemTemplate>
+                                            <FooterTemplate>
+                                                <asp:LinkButton ID="blPasteSub" runat="server" CausesValidation="False"
+                                                        CommandName="PasteSub" Text="粘贴" ></asp:LinkButton>
+                                            </FooterTemplate>
                                         </asp:TemplateField>
                                         <asp:TemplateField ShowHeader="False">
                                             <ItemTemplate>
                                                 <asp:LinkButton ID="lbCopySub" runat="server" CausesValidation="False"
                                                         CommandName="CopySub" Text="复制" ></asp:LinkButton>
+                                                <asp:LinkButton ID="lbCutSub" runat="server" CausesValidation="False"
+                                                        CommandName="CutSub" Text="剪切" OnClientClick="return confirm('剪切后现有记录将删除，确认？');" ></asp:LinkButton>
                                             </ItemTemplate>
                                             <FooterTemplate>
                                                 <asp:LinkButton ID="linkAddRA" CommandName="AddRA" runat="server">增加子记录</asp:LinkButton>
