@@ -11,7 +11,12 @@ public partial class objectQuery : System.Web.UI.Page
 {
     protected void Page_Load(object sender, EventArgs e)
     {
-
+        int weekNum = CommonClass.getCurrentWeek();
+        if (Page.IsPostBack == false)
+        {
+            ddlWeek1.SelectedValue = weekNum.ToString();
+            ddlWeek2.SelectedValue = weekNum.ToString();
+        }
     }
 
     protected void btSearch_Click(object sender, EventArgs e)
@@ -62,7 +67,7 @@ public partial class objectQuery : System.Web.UI.Page
         string roomname = ddlRoom.SelectedItem.Text.TrimEnd();
         int week1 = Convert.ToInt16(ddlWeek1.SelectedValue);
         int week2 = Convert.ToInt16(ddlWeek2.SelectedValue);
-        string sqlStr = "select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,a.id,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.strClass like '%" + classname + "%' and s.intWeek >= " + week1 + " and s.intWeek <= " + week2 + " ) as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.depid =  '" + depid + "' where aa.strClass like  '%" + classname + "%' and w.intWeek = aa.intWeek and d.roomid = '"+ roomid +"' and d.roomid = aa.roomid) as aaa left join TitleStartEnd t on aaa.wYear = t.yearID inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true'";
+        string sqlStr = "select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,a.id,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.strClass like '%" + classname + "%' and s.intWeek >= " + week1 + " and s.intWeek <= " + week2 + " ) as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.roomid = aa.roomid where aa.strClass like  '%" + classname + "%' and w.intWeek = aa.intWeek and  d.roomid = aa.roomid) as aaa left join TitleStartEnd t on aaa.wYear = t.yearID inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true'";
         string printStr = "RNT";
 
         Label lbTitle = new Label();
@@ -103,7 +108,7 @@ public partial class objectQuery : System.Web.UI.Page
         string roomname = ddlRoom.SelectedItem.Text.TrimEnd();
         int week1 = Convert.ToInt16(ddlWeek1.SelectedValue);
         int week2 = Convert.ToInt16(ddlWeek2.SelectedValue);
-        string sqlStr = "select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,a.id,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.strTeacher like '%" + teachername + "%' and s.intWeek >= " + week1 + " and s.intWeek <= " + week2 + " ) as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.depid =  '" + depid + "' where aa.strTeacher like  '%" + teachername + "%' and w.intWeek = aa.intWeek and d.roomid = '" + roomid + "' and d.roomid = aa.roomid) as aaa left join TitleStartEnd t on aaa.wYear = t.yearID inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true'";
+        string sqlStr = "select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,a.id,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.strTeacher like '%" + teachername + "%' and s.intWeek >= " + week1 + " and s.intWeek <= " + week2 + " ) as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.roomid = aa.roomid where aa.strTeacher like  '%" + teachername + "%' and w.intWeek = aa.intWeek and d.roomid = aa.roomid) as aaa left join TitleStartEnd t on aaa.wYear = t.yearID inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true'";
         string printStr = "RNC";
 
         Label lbTitle = new Label();

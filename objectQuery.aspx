@@ -53,7 +53,7 @@
             <asp:DropDownList ID="ddlWeek2" runat="server" AutoPostBack="False" DataSourceID="sqsWeek" DataTextField="detail" DataValueField="intWeek"></asp:DropDownList>
             <asp:DropDownList ID="ddlDepart" runat="server" AutoPostBack="true" DataSourceID="sqsDep" DataTextField="strDepart" DataValueField="depid"></asp:DropDownList>
             <asp:DropDownList ID="ddlRoom" runat="server" AutoPostBack="False" DataSourceID="sqsRoom" DataTextField="strRoomName" DataValueField="roomid"></asp:DropDownList>
-            <asp:Button ID="btSearch" runat="server" Text="查询" OnClick="btSearch_Click" />
+            <asp:Button ID="btSearch" runat="server" Text="教室查询" OnClick="btSearch_Click" />
             <asp:TextBox ID="tbClass" runat="server"></asp:TextBox>
             <asp:Button ID="btSearch2" runat="server" Text="班级查询" OnClick="btSearch2_Click" />
             <asp:TextBox ID="tbTeacher" runat="server"></asp:TextBox>
