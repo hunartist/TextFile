@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Data;
 using System.Text.RegularExpressions;
 using System.Configuration;
+using System.Web.UI.WebControls;
 
 /// <summary>
 /// CommonClass 的摘要说明
@@ -141,7 +142,6 @@ public class CommonClass
         return Convert.ToInt16(table.Rows[0][1]);
     }
 
-
     public static string ConvertToChinese(int x)
     {
         string cstr = "";
@@ -177,6 +177,42 @@ public class CommonClass
         }
         return (cstr);
     }
+
+    /// <summary>
+    /// 合并GridView中某列相同信息的行(单元格)
+    /// </summary>
+    /// <param name="GridView1">GridView</param>
+    /// <param name="cellNum">第几列</param>
+    public static void GroupRows(GridView GridView1, int cellNum)
+    {
+        int i = 0, rowSpanNum = 1;
+        while (i < GridView1.Rows.Count - 1)
+        {
+            GridViewRow gvr = GridView1.Rows[i];
+
+            for (++i; i < GridView1.Rows.Count; i++)
+            {
+                GridViewRow gvrNext = GridView1.Rows[i];
+                if ((gvr.Cells[cellNum].Text == gvrNext.Cells[cellNum].Text)&(gvr.Cells[cellNum].Text != "&nbsp;"))
+                {
+                    gvrNext.Cells[cellNum].Visible = false;
+                    rowSpanNum++;
+                }
+                else
+                {
+                    gvr.Cells[cellNum].RowSpan = rowSpanNum;
+                    rowSpanNum = 1;
+                    break;
+                }
+
+                if (i == GridView1.Rows.Count - 1)
+                {
+                    gvr.Cells[cellNum].RowSpan = rowSpanNum;
+                }
+            }
+        }
+    }
+
     #region checkdata
     public static string normalCheck(string weekRegC, int startNC, int endNC, int dayWC, string ClassNC, string TeacherNC)
     {

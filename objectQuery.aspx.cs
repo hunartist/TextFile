@@ -49,6 +49,12 @@ public partial class objectQuery : System.Web.UI.Page
             gvTemp = PrintTabClass.DynamicGenerateColumns(gvTemp, dt);
             gvTemp.DataSource = dt;
             gvTemp.DataBind();
+            //合并单元格
+            for (int j = 1; j < gvTemp.Columns.Count; j++)
+            {
+                CommonClass.GroupRows(gvTemp, j);
+            }
+
             GridViewPlaceHolder.Controls.Add(gvTemp);
 
             HtmlGenericControl spanTemp = new HtmlGenericControl("div");//创建一个span标签
@@ -56,6 +62,8 @@ public partial class objectQuery : System.Web.UI.Page
             spanTemp.Style.Add("page-break-before", "always");//属性
             GridViewPlaceHolder.Controls.Add(spanTemp); //添加到页面             
         }
+
+        
 
     }
 
@@ -90,6 +98,12 @@ public partial class objectQuery : System.Web.UI.Page
             gvTemp = PrintTabClass.DynamicGenerateColumns(gvTemp, dt);
             gvTemp.DataSource = dt;
             gvTemp.DataBind();
+            //合并单元格
+            for (int j = 1; j < gvTemp.Columns.Count; j++)
+            {
+                CommonClass.GroupRows(gvTemp, j);
+            }
+
             GridViewPlaceHolder.Controls.Add(gvTemp);
 
             HtmlGenericControl spanTemp = new HtmlGenericControl("div");//创建一个span标签
@@ -131,6 +145,12 @@ public partial class objectQuery : System.Web.UI.Page
             gvTemp = PrintTabClass.DynamicGenerateColumns(gvTemp, dt);
             gvTemp.DataSource = dt;
             gvTemp.DataBind();
+            //合并单元格
+            for (int j = 1; j < gvTemp.Columns.Count; j++)
+            {
+                CommonClass.GroupRows(gvTemp, j);
+            }
+
             GridViewPlaceHolder.Controls.Add(gvTemp);
 
             HtmlGenericControl spanTemp = new HtmlGenericControl("div");//创建一个span标签
@@ -140,4 +160,5 @@ public partial class objectQuery : System.Web.UI.Page
         }
 
     }
+
 }
