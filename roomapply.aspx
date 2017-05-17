@@ -48,7 +48,7 @@
 </head>
 <body>
     <form id="form1" runat="server">        
-        <div align="center">
+        <div style="text-align:center;margin:0 auto">
              <asp:Label ID="lbTitle" runat="server" Text="lbTitle"></asp:Label>
         </div>
         <div class="noprint">

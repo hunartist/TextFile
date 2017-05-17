@@ -1,10 +1,28 @@
-﻿select aa.intWeek, aa.intStartNum, aa.intEndNum,aa.strClass,aa.strTeacher from
-	(
-	select distinct s.intWeek, a.intStartNum, a.intEndNum, l.yearID ,a.strClass,a.strTeacher
-	from RoomApply a, RoomApplySub s, ApplyList l 
-	where a.id = s.f_id and a.applyid = l.applyid and a.strClass = '会计1403-1404' and  a.intDay = 1 
-	and a.id != 201705111326152433       
-	) as aa 
-inner join TitleStartEnd t on aa.yearID = t.yearID and t.currentFlag = 'true' and aa.intWeek in (1,2,3,4,5)
+﻿ declare 
+ @roomid varchar(50) = '1501' ,
+ @week int = 3,
+ @depid varchar(50) = '1'
 
---select * from roomapply
+
+select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from
+	(
+	select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from 
+		(
+		select l.applyid,a.id,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, 
+		a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l 
+		inner join RoomApply a on l.applyid = a.applyid 
+		inner join RoomApplySub s on a.id = s.F_id  
+		where a.roomid = '3030' and s.intWeek >= 5 and s.intWeek <=6
+		) as aa	
+	right join WeekStartEnd w on w.yearID = aa.yearID 
+	right join RoomDetail d on d.depid =  '2' 
+	where d.roomid =  '3030' and w.intWeek = aa.intWeek
+	) as aaa 
+left join TitleStartEnd t on aaa.wYear = t.yearID 
+inner join Department dp on aaa.depid = dp.depid 
+where t.currentFlag = 'true' and intweek = 6
+order by id
+
+"select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,a.id,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.roomid = '" + roomid + "' and s.intWeek >= " + week1 + " and s.intWeek <= " + week2 + " ) as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.depid =  '" + depid + "' where d.roomid =  '" + roomid + "' and w.intWeek = aa.intWeek) as aaa left join TitleStartEnd t on aaa.wYear = t.yearID inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true'"
+
+select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,a.id,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.roomid = '3031' and s.intWeek >= 7 and s.intWeek <= 8 ) as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.depid =  '2' where d.roomid =  '3031' and w.intWeek = aa.intWeek) as aaa left join TitleStartEnd t on aaa.wYear = t.yearID inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true' and intweek = 7
