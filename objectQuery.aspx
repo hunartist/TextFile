@@ -56,8 +56,8 @@
             <asp:Button ID="btSearch" runat="server" Text="查询" OnClick="btSearch_Click" />
             <asp:TextBox ID="tbClass" runat="server"></asp:TextBox>
             <asp:Button ID="btSearch2" runat="server" Text="班级查询" OnClick="btSearch2_Click" />
-            <%--<asp:TextBox ID="tbTeacher" runat="server"></asp:TextBox>
-            <asp:Button ID="btSearch3" runat="server" Text="查询" OnClick="btSearch3_Click" />--%>
+            <asp:TextBox ID="tbTeacher" runat="server"></asp:TextBox>
+            <asp:Button ID="btSearch3" runat="server" Text="教师查询" OnClick="btSearch3_Click" />
             <asp:SqlDataSource ID="sqsWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek],'第'+CAST(w.intWeek as varchar(10)) + '周 ' + w.datePeriod  as detail FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
             <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct depid,strDepart FROM [Department] order by 2 desc"></asp:SqlDataSource>
             <asp:SqlDataSource ID="sqsRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [roomid], [strRoomName] FROM [RoomDetail] WHERE ([depid] = @depid)">

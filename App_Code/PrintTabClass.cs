@@ -161,7 +161,7 @@ public class PrintTabClass
 
     }
 
-    public static DataTable PrintTab_Week_DT(int weekNum,string sqlstr)
+    public static DataTable PrintTab_Week_DT(int weekNum,string sqlstr,string printstr)
     {
         sqlstr = sqlstr + " and intweek = "+ weekNum;
         SqlConnection con = CommonClass.GetSqlConnection();
@@ -260,7 +260,15 @@ public class PrintTabClass
                 string sStartN = Convert.ToString(table.Rows[i]["intStartNum"]);
                 string sEndN = Convert.ToString(table.Rows[i]["intEndNum"]);
                 string sDay = Convert.ToString(table.Rows[i]["intDay"]);
-                string sTemp = sName + "<br />" + sClass + "<br />" + sTeacher;
+                string sTemp = string.Empty;
+                switch(printstr)
+                {
+                    case "NCT": sTemp = sName + "<br />" + sClass + "<br />" + sTeacher;break;
+                    case "RNT": sTemp = sRoom + "<br />" + sName + "<br />" + sTeacher;break;
+                    case "RNC": sTemp = sRoom + "<br />" + sName + "<br />" + sClass; break;
+                    default: sTemp = sRoom + "-" + sName + "-" + sClass + "-" + sTeacher + "-" + sStartN + sEndN + "-星期" + sDay + "<br />"; break;
+                }
+
                 if (section == startNum)//判断课程开始时间，确定位置，填写数据
                 {
                     tempArray[i][1] = j;//记录上课开始时间（确定数据显示在哪一行）
