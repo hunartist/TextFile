@@ -32,8 +32,8 @@ public partial class roomQuery : System.Web.UI.Page
     {
         int prtWeekNum = Convert.ToInt16(ddlWeek.SelectedValue);
         string prtDep = ddlDep.SelectedValue;
-        string prtsql = "select aaa.*,t.currentFlag from (select  aa.*,d.strRoomName,d.strDepart,d.strCDep from (select distinct s.intWeek, a.strRoom,a.intDay,a.intStartNum,a.intEndNum,a.yearID from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.strRoom = d.strRoomName where aa.intWeek = " + prtWeekNum + " and d.strDepart= '" + prtDep + "') as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'";
-        this.Repeater1.DataSource = PrintTabClass.PrintTab_SUM_DT(prtWeekNum, prtDep, prtsql);
+        string prtsql = "select aaa.*,t.currentFlag,RTRIM(de.strDepart) as strDepart from (select  aa.*,RTRIM(d.strRoomName) as strRoomName,d.depid from (select distinct s.intWeek, a.roomid,a.intDay,a.intStartNum,a.intEndNum,l.yearID,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher from RoomApply a inner join ApplyList l on a.applyid = l.applyid	inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.roomid = d.roomid where aa.intWeek = " + prtWeekNum + " and d.depid = '" + prtDep + "') as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true'inner join Department de on aaa.depid = de.depid";
+        this.Repeater1.DataSource = PrintTabClass.PrintTab_SUM_DT(prtsql);
         this.Repeater1.DataBind();
 
         for (int i = 1; i <= 7; i++) // 遍历每一列

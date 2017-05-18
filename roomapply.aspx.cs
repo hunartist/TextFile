@@ -35,7 +35,7 @@ public partial class roomapply : System.Web.UI.Page
     {
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select RTRIM(t.currentFlag) as currentFlag ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear	,d.strRoomName,d.strDepart from (select a.id,a.yearID ,a.strRoom,a.intDay ,a.intStartNum ,a.intEndNum ,a.intStartWeek ,a.intEndWeek ,RTRIM(a.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher ,s.intweek from RoomApply a inner join RoomApplySub s on a.id = s.F_id	where a.strRoom = '" + RoomName + "' and s.intWeek = " + weekNum + ") as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.strDepart = '" + departmentName + "' where d.strRoomName =  '" + RoomName + "' and w.intWeek = " + weekNum + ") as aaa left join TitleStartEnd t on aaa.wYear = t.yearID and t.currentFlag = 'true'where t.currentFlag = 'true'", con);
+        sda.SelectCommand = new SqlCommand("select RTRIM(t.currentFlag) as currentFlag  ,dp.strDepart ,aaa.* from(select aa.*,w.datePeriod,w.intWeek as wWeek ,w.yearID as wYear,d.strRoomName,d.depid from (select l.applyid,RTRIM(l.strName) as strName,RTRIM(a.strClass) as strClass,RTRIM(a.strTeacher) as strTeacher,a.strRemark ,l.yearID, a.roomid, a.intDay, a.intStartNum, a.intEndNum, a.strWeekReg, a.strWeekData, s.intweek from ApplyList l inner join RoomApply a on l.applyid = a.applyid inner join RoomApplySub s on a.id = s.F_id  where a.roomid = '" + RoomName + "' and s.intWeek = " + weekNum + ") as aa	right join WeekStartEnd w on w.yearID = aa.yearID right join RoomDetail d on d.depid = '" + departmentName + "' where d.roomid =  '" + RoomName + "' and w.intWeek = " + weekNum + ") as aaa left join TitleStartEnd t on aaa.wYear = t.yearID and t.currentFlag = 'true' inner join Department dp on aaa.depid = dp.depid where t.currentFlag = 'true'", con);
         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
@@ -50,10 +50,11 @@ public partial class roomapply : System.Web.UI.Page
         //lbTitle.GridLines = GridLines.Horizontal;
         lbTitle.BorderWidth = 0;
         //lbTitle.ShowHeader = false;
+        string sRoomName = table.Rows[0]["strRoomName"].ToString().TrimEnd();
 
         DataTable dtTitle = new DataTable();
         dtTitle.Columns.Add(RoomName);
-        dtTitle.Rows.Add(RoomName + " 第" + weekNum + "周 " + table.Rows[0]["strDepart"].ToString() + " " + table.Rows[0]["datePeriod"].ToString());
+        dtTitle.Rows.Add(sRoomName + " 第" + weekNum + "周 " + table.Rows[0]["strDepart"].ToString() + " " + table.Rows[0]["datePeriod"].ToString());
         lbTitle.Text = dtTitle.Rows[0][0].ToString();        
         GridViewPlaceHolder.Controls.Add(lbTitle);
         dtTitle.Dispose();
@@ -119,7 +120,7 @@ public partial class roomapply : System.Web.UI.Page
         //遍历table，将每条课表信息填在tab中适当的位置。
         for (int i = 0; i < table.Rows.Count; i++)
         {
-            if(table.Rows[i]["id"].ToString() != "")
+            if(table.Rows[i]["applyid"].ToString() != "")
             { 
                 if ((Convert.ToInt16(table.Rows[i]["intWeek"]) == Convert.ToInt16(table.Rows[i]["wWeek"]))&&((table.Rows[i]["currentFlag"].ToString()) == "true"))
                 {
@@ -135,7 +136,7 @@ public partial class roomapply : System.Web.UI.Page
                     {
                         startNum = (Convert.ToInt16(table.Rows[i]["intStartNum"])+1).ToString();
                     }
-                    if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11)
+                    if (Convert.ToInt16(table.Rows[i]["intStartNum"]) == 99)
                     {
                         startNum = "5";
                     }
@@ -152,7 +153,7 @@ public partial class roomapply : System.Web.UI.Page
                     {
                         endNum = (Convert.ToInt16(table.Rows[i]["intEndNum"]) + 1).ToString();
                     }
-                    if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11)
+                    if (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 99)
                     {
                         endNum = "5";
                     }
@@ -173,7 +174,15 @@ public partial class roomapply : System.Web.UI.Page
                         if (section == startNum)//判断课程开始时间，确定位置，填写数据
                         {
                             tempArray[i][1] = j;//记录上课开始时间（确定数据显示在哪一行）
-                            dtSchedule.Rows[j][tempArray[i][0]] = Convert.ToString(table.Rows[i]["strName"]) + "<br />" + Convert.ToString(table.Rows[i]["strClass"]) + "<br />" + Convert.ToString(table.Rows[i]["strTeacher"]);
+                            if(Convert.ToString(table.Rows[i]["strName"]) != string.Empty)
+                            {
+                                string Sremark = " " + Convert.ToString(table.Rows[i]["strRemark"]);
+                                dtSchedule.Rows[j][tempArray[i][0]] = Convert.ToString(table.Rows[i]["strName"]) + Sremark + "<br />" + Convert.ToString(table.Rows[i]["strClass"]) + "<br />" + Convert.ToString(table.Rows[i]["strTeacher"]);
+                            }
+                            else
+                            {
+                                dtSchedule.Rows[j][tempArray[i][0]] = Convert.ToString(table.Rows[i]["strName"]) + "<br />" + Convert.ToString(table.Rows[i]["strClass"]) + "<br />" + Convert.ToString(table.Rows[i]["strTeacher"]);
+                            }
                         }
                         if (section == endNum)//判断课程结束时间，记录位置
                         {
@@ -379,11 +388,11 @@ public partial class roomapply : System.Web.UI.Page
                 string sqlQuery;
 
                 SqlConnection con = CommonClass.GetSqlConnection();
-                sqlQuery = "select RTRIM(strRoomName) as strRoomName from RoomDetail where strDepart = @strDepart";
+                sqlQuery = "select roomid from RoomDetail where depid = @depid";
                 //SqlCommand comm = new SqlCommand(sqlQuery,con);
                 //comm.Parameters.AddWithValue("@strDepart", DropDownListDepart.SelectedValue);
                 SqlDataAdapter sda = new SqlDataAdapter(sqlQuery,con);
-                sda.SelectCommand.Parameters.AddWithValue("@strDepart", DropDownListDepart.SelectedValue);
+                sda.SelectCommand.Parameters.AddWithValue("@depid", DropDownListDepart.SelectedValue);
                 DataSet ds = new DataSet();
                 sda.Fill(ds);
                 DataTable table = new DataTable();

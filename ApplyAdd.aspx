@@ -30,7 +30,7 @@
 
         <asp:SqlDataSource ID="SqlDataSourceRoom" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct [strRoomName]+' '+[strDepart] as strRoomNameShow,[strRoomName] FROM [RoomDetail] Where ([strCDep] = @strCDep)">
             <SelectParameters>
-                <asp:SessionParameter Name="strCDep" SessionField="dep" Type="String" />
+                <asp:SessionParameter Name="strCDep" SessionField="cdep" Type="String" />
             </SelectParameters>
         </asp:SqlDataSource>
         <asp:SqlDataSource ID="SqlDataSourceWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek] FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
@@ -65,7 +65,7 @@
             <asp:ListItem>8</asp:ListItem>
             <asp:ListItem>9</asp:ListItem>
             <asp:ListItem>10</asp:ListItem>
-            <asp:ListItem Value="11">中午</asp:ListItem>
+            <asp:ListItem Value="99">中午</asp:ListItem>
         </asp:DropDownList>
         <br />
         <asp:Label ID="lbEndN" runat="server" Text="结束节次"></asp:Label>
@@ -80,7 +80,7 @@
             <asp:ListItem>8</asp:ListItem>
             <asp:ListItem>9</asp:ListItem>
             <asp:ListItem>10</asp:ListItem>
-            <asp:ListItem Value="11">中午</asp:ListItem>
+            <asp:ListItem Value="99">中午</asp:ListItem>
         </asp:DropDownList>
         <br />
         <asp:Label ID="lbStartW" runat="server" Text="周"></asp:Label>

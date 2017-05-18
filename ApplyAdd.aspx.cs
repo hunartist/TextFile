@@ -111,7 +111,7 @@ public partial class ApplyAdd : System.Web.UI.Page
             return;
         }
 
-        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN);
+        string checkmsg = CommonClass.CheckApply(roomN, dayW, startN, endN, weekData, idN, ClassN, TeacherN);
         if (checkmsg != "OK")
         {
             Response.Write("<script>alert('" + checkmsg + "')</script>");
@@ -145,7 +145,7 @@ public partial class ApplyAdd : System.Web.UI.Page
         {
             ddlEndN.SelectedValue = (Convert.ToInt16(ddlStartN.SelectedValue) + 1).ToString();
         }
-        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 11))
+        if ((Convert.ToInt16(ddlStartN.SelectedValue) == 99))
         {
             ddlEndN.SelectedValue = ddlStartN.SelectedValue;
         }
