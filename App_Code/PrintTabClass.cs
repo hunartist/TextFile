@@ -11,6 +11,10 @@ using System.Web.UI.WebControls;
 /// </summary>
 public class PrintTabClass
 {
+    /// <summary>
+    /// 根据连接字符串返回总体课表
+    /// </summary>
+    /// <param name="sqlstr">连接字符串（需包含第几周intDay第几节intStartNum,intEndNum等信息）</param>
     public static DataTable PrintTab_SUM_DT(string sqlstr)
     {
         SqlConnection con = CommonClass.GetSqlConnection();
@@ -161,6 +165,12 @@ public class PrintTabClass
 
     }
 
+    /// <summary>
+    /// 根据连接字符串返回单周课表
+    /// </summary>
+    /// <param name="weekNum">第几周</param>
+    /// <param name="sqlstr">连接字符串（需包含第几周intDay第几节intStartNum,intEndNum等信息）</param>
+    /// <param name="printstr">单元格要显示的内容</param>
     public static DataTable PrintTab_Week_DT(int weekNum,string sqlstr,string printstr)
     {
         sqlstr = sqlstr + " and intweek = "+ weekNum;
