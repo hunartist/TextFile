@@ -5,8 +5,8 @@
     </div>
         
     <br />        
-    <asp:Label ID="Label1" runat="server" Text="Label"></asp:Label>
-    <asp:Label ID="Label2" runat="server" Text="Label"></asp:Label>
+    <asp:Label ID="Label1" runat="server" Text="insert"></asp:Label>
+    <asp:Label ID="Label2" runat="server" Text="new"></asp:Label>
     <br />
     <asp:Button ID="Button2" runat="server" OnClick="Button2_Click" Text="new" />
     <asp:Button ID="Button1" runat="server" OnClick="Button1_Click" Text="save" />    
@@ -43,8 +43,7 @@
             <asp:BoundField DataField="vc_text" HeaderText="vc_text" SortExpression="vc_text" />
             <asp:BoundField DataField="dt_date" HeaderText="dt_date" SortExpression="dt_date" />
         </Columns>
-    </asp:GridView>
-    <asp:Button ID="Button3" runat="server" OnClick="Button3_Click" Text="inj" Width="74px" Visible="true" />   
+    </asp:GridView>    
     <br />
 
 </asp:Content>
