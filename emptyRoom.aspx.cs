@@ -40,15 +40,25 @@ public partial class emptyRoom : System.Web.UI.Page
             ddlNum2.SelectedValue = ddlNum1.SelectedValue;
         }
 
+        if (((tbClass.Text == string.Empty)&&(tbTeacher.Text == string.Empty))||((tbClass.Text != string.Empty) &&(tbTeacher.Text != string.Empty)))
+        { }
+        else
+        {
+            Response.Write("<script>alert('排除教师和排除班级不可只填一个')</script>");
+            return;
+        }
+
         string dep = ddlDep.SelectedValue.ToString();
         int week1 = Convert.ToInt16(ddlWeek.SelectedValue);
         int week2 = Convert.ToInt16(ddlWeek2.SelectedValue);
         int day = Convert.ToInt16(ddlDay.SelectedValue);
         int num1 = Convert.ToInt16(ddlNum1.SelectedValue);
         int num2 = Convert.ToInt16(ddlNum2.SelectedValue);
+        string classN = tbClass.Text;
+        string teacherN = tbTeacher.Text;
         
 
-        this.Repeater1.DataSource = getRoomTab(dep, week1, week2, day, num1, num2);
+        this.Repeater1.DataSource = getRoomTab(dep, week1, week2, day, num1, num2, classN, teacherN);
         this.Repeater1.DataBind();
 
         for (int i = 1; i <= 1; i++) // 遍历每一列
@@ -66,29 +76,29 @@ public partial class emptyRoom : System.Web.UI.Page
         Session["ERnum2"] = ddlNum2.SelectedValue.ToString();
     }
 
-    protected DataTable getRoomTab(string depT,int week1T,int week2T,int dayT,int num1T,int num2T)
+    protected DataTable getRoomTab(string depT,int week1T,int week2T,int dayT,int num1T,int num2T, string classN, string teacherN)
     {
         string yearid = CommonClass.getCurYearID();
         SqlConnection con = CommonClass.GetSqlConnection();
         SqlDataAdapter sdaRoom = new SqlDataAdapter();
-        sdaRoom.SelectCommand = new SqlCommand("select distinct RTRIM(d.strRoomName) as strRoomName,w.intWeek,'0123456789z' as num from RoomDetail d right join WeekStartEnd w on 1=1 and w.yearID = '" + yearid + "' where d.strDepart = '" + depT + "' and w.intWeek >= "+week1T+" and w.intWeek <= "+week2T, con);
+        sdaRoom.SelectCommand = new SqlCommand("select distinct strRoomName,roomid,w.intWeek,'0123456789z' as num from RoomDetail d right join WeekStartEnd w on 1=1 and w.yearID = '" + yearid + "' where d.depid = '" + depT + "' and w.intWeek >= "+week1T+" and w.intWeek <= "+week2T, con);
         DataSet dsRoom = new DataSet();
         sdaRoom.Fill(dsRoom);
         DataTable roomTable = new DataTable();
         roomTable = dsRoom.Tables[0];
 
         SqlDataAdapter sda = new SqlDataAdapter();
-        sda.SelectCommand = new SqlCommand("select aaa.strRoom,aaa.intWeek,aaa.intStartNum,aaa.intEndNum from (select  aa.*,d.strRoomName,d.strDepart,d.strCDep from (select distinct s.intWeek ,RTRIM(a.strRoom) as strRoom, a.intDay,a.intStartNum,a.intEndNum,a.yearID ,a.strWeekReg from RoomApply a inner join RoomApplySub s on a.id = s.F_id) as aa inner join RoomDetail d on aa.strRoom = d.strRoomName where d.strDepart= '" + depT + "' and aa.intWeek >= " + week1T + " and aa.intWeek <= " + week2T + " and aa.intDay = " + dayT + " and (( aa.intStartNum  >= " + num1T + " and aa.intStartNum <= " + num2T + " ) or(aa.intEndNum  >= " + num1T + " and aa.intEndNum <= " + num2T + " ) or((aa.intStartNum  < " + num1T + " and aa.intEndNum > " + num2T + " )))) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1", con);
-        DataSet ds = new DataSet();
+        sda.SelectCommand = new SqlCommand("select aaa.roomid,aaa.intWeek,aaa.intStartNum,aaa.intEndNum from (select  aa.*,d.strRoomName,d.depid from (select distinct s.intWeek ,a.roomid, a.intDay,a.intStartNum,a.intEndNum,l.yearID ,a.strWeekReg,a.strClass,a.strTeacher from RoomApply a inner join RoomApplySub s on a.id = s.F_id inner join ApplyList l on a.applyid = l.applyid where 1=1 and (((a.strClass not like '%"+ classN + "%') and (a.strTeacher <> '" + teacherN + "')) or ('" + classN + "' = '') or ('" + teacherN + "' = ''))) as aa inner join RoomDetail d on aa.roomid = d.roomid where d.depid= '" + depT + "' and aa.intWeek >= " + week1T + " and aa.intWeek <= " + week2T + " and aa.intDay = " + dayT + " and (( aa.intStartNum  >= " + num1T + " and aa.intStartNum <= " + num2T + " ) or(aa.intEndNum  >= " + num1T + " and aa.intEndNum <= " + num2T + " ) or((aa.intStartNum  < " + num1T + " and aa.intEndNum > " + num2T + " )))) as aaa inner join TitleStartEnd t on aaa.yearID = t.yearID and t.currentFlag = 'true' order by 1", con);
+         DataSet ds = new DataSet();
         sda.Fill(ds);
         DataTable table = new DataTable();
         table = ds.Tables[0];        
 
         for (int i = 0;i < table.Rows.Count;i++)
         {
-            DataRow[] roomRows = roomTable.Select("strRoomName = '" + table.Rows[i]["strRoom"] + "' and intWeek = " + table.Rows[i]["intWeek"]);
+            DataRow[] roomRows = roomTable.Select("roomid = '" + table.Rows[i]["roomid"] + "' and intWeek = " + table.Rows[i]["intWeek"]);
 
-            if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) == 11) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 11))
+            if ((Convert.ToInt16(table.Rows[i]["intStartNum"]) == 99) && (Convert.ToInt16(table.Rows[i]["intEndNum"]) == 99))
             {
                 roomRows[0]["num"] = roomRows[0]["num"].ToString().Replace("z", "");
             }
@@ -108,9 +118,9 @@ public partial class emptyRoom : System.Web.UI.Page
         DataTable roomRowsFlited = new DataTable();
         string num1 = "";
         string num2 = "";
-        if (num1T == 11) { num1 = "z"; }
+        if (num1T == 99) { num1 = "z"; }
         else { num1 = num1T.ToString(); }
-        if (num2T == 11) { num2 = "z"; }
+        if (num2T == 99) { num2 = "z"; }
         else { num2 = num2T.ToString(); }
         if ((num1 == "z") && (num2 == "z"))
         {
@@ -172,15 +182,19 @@ public partial class emptyRoom : System.Web.UI.Page
 
     protected void ddlNum1_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if ((Convert.ToInt16(ddlNum1.SelectedValue) == 11))
+        if ((Convert.ToInt16(ddlNum1.SelectedValue) == 99))
         {
             ddlNum2.SelectedValue = ddlNum1.SelectedValue;
+        }
+        if ((Convert.ToInt16(ddlNum1.SelectedValue) == 1) || ((Convert.ToInt16(ddlNum1.SelectedValue) == 3)) || ((Convert.ToInt16(ddlNum1.SelectedValue) == 5)) || ((Convert.ToInt16(ddlNum1.SelectedValue) == 7)) || ((Convert.ToInt16(ddlNum1.SelectedValue) == 9)))
+        {
+            ddlNum2.SelectedValue = (Convert.ToInt16(ddlNum1.SelectedValue) + 1).ToString();
         }
     }
 
     protected void ddlNum2_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if ((Convert.ToInt16(ddlNum2.SelectedValue) == 11))
+        if ((Convert.ToInt16(ddlNum2.SelectedValue) == 99))
         {
             ddlNum1.SelectedValue = ddlNum2.SelectedValue;
         }

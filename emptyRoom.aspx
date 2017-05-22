@@ -21,7 +21,7 @@
 <body>
     <form id="form1" runat="server">
     <div>
-    <asp:DropDownList ID="ddlDep" runat="server" DataSourceID="sqsDep" DataTextField="strDepart" DataValueField="strDepart">
+    <asp:DropDownList ID="ddlDep" runat="server" DataSourceID="sqsDep" DataTextField="strDepart" DataValueField="depid">
         </asp:DropDownList>
     <asp:DropDownList ID="ddlWeek" runat="server" DataSourceID="sdsWeek" DataTextField="detail" DataValueField="intWeek">
         </asp:DropDownList>
@@ -39,7 +39,7 @@
             <asp:ListItem>7</asp:ListItem>
         </asp:DropDownList>
         <asp:Label ID="Label2" runat="server" Text="第"></asp:Label>
-        <asp:DropDownList ID="ddlNum1" runat="server" OnSelectedIndexChanged="ddlNum1_SelectedIndexChanged">
+        <asp:DropDownList ID="ddlNum1" runat="server" OnSelectedIndexChanged="ddlNum1_SelectedIndexChanged" AutoPostBack="True">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
             <asp:ListItem>3</asp:ListItem>
@@ -50,10 +50,10 @@
             <asp:ListItem>8</asp:ListItem>
             <asp:ListItem>9</asp:ListItem>
             <asp:ListItem>10</asp:ListItem>
-            <asp:ListItem Value="11">中午</asp:ListItem>
+            <asp:ListItem Value="99">中午</asp:ListItem>
         </asp:DropDownList>
         <asp:Label ID="Label3" runat="server" Text="节至第"></asp:Label>
-        <asp:DropDownList ID="ddlNum2" runat="server" OnSelectedIndexChanged="ddlNum2_SelectedIndexChanged">
+        <asp:DropDownList ID="ddlNum2" runat="server" OnSelectedIndexChanged="ddlNum2_SelectedIndexChanged" AutoPostBack="True">
             <asp:ListItem>1</asp:ListItem>
             <asp:ListItem>2</asp:ListItem>
             <asp:ListItem>3</asp:ListItem>
@@ -64,9 +64,12 @@
             <asp:ListItem>8</asp:ListItem>
             <asp:ListItem>9</asp:ListItem>
             <asp:ListItem Selected="True">10</asp:ListItem>
-            <asp:ListItem Value="11">中午</asp:ListItem>
+            <asp:ListItem Value="99">中午</asp:ListItem>
         </asp:DropDownList>
-        <asp:Label ID="Label4" runat="server" Text="节"></asp:Label>
+        <asp:Label ID="Label4" runat="server" Text="节 排除班级"></asp:Label>
+        <asp:TextBox ID="tbClass" runat="server"></asp:TextBox>
+        <asp:Label ID="Label6" runat="server" Text="排除教师"></asp:Label>
+        <asp:TextBox ID="tbTeacher" runat="server"></asp:TextBox>
         <asp:Button ID="btSearch" runat="server" Text="Search" OnClick="btSearch_Click" />
     </div>
     <div class="centertop" id="tableHeader" ></div>
@@ -104,7 +107,7 @@
                  </tbody>
             </table>       
         </div>    
-    <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct RTRIM(strDepart) strDepart FROM [RoomDetail] order by 1 desc"></asp:SqlDataSource>
+    <asp:SqlDataSource ID="sqsDep" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT distinct depid,strDepart FROM Department order by 1"></asp:SqlDataSource>
     <asp:SqlDataSource ID="sdsWeek" runat="server" ConnectionString="<%$ ConnectionStrings:webTestConnectionString %>" SelectCommand="SELECT [intWeek],'第'+CAST(intWeek as varchar(10)) + '周 ' + datePeriod  as detail FROM [WeekStartEnd] w inner join TitleStartEnd t on w.yearID = t.yearID and t.currentFlag = 'true'"></asp:SqlDataSource>
     </form>
 </body>
