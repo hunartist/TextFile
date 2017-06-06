@@ -36,9 +36,11 @@ public partial class objectQuery : System.Web.UI.Page
 
         for (int i = week1; i <= week2; i++)
         {
+            string titleStr = "select distinct w.datePeriod,w.intWeek from WeekStartEnd w,TitleStartEnd t where w.yearID = t.yearID and t.currentFlag = 'true' and w.intWeek = " + i;
+            DataTable titleDT = CommonClass.getDataTable(titleStr);
             Label lbWeek = new Label();
             lbWeek.ID = "week" + i;
-            lbWeek.Text = "第" + i + "周";
+            lbWeek.Text = "第" + i + "周 " + titleDT.Rows[0]["datePeriod"].ToString();
             GridViewPlaceHolder.Controls.Add(lbWeek);
 
             DataTable dt = PrintTabClass.PrintTab_Week_DT(i, sqlStr, printStr);
@@ -85,9 +87,11 @@ public partial class objectQuery : System.Web.UI.Page
 
         for (int i = week1; i <= week2; i++)
         {
+            string titleStr = "select distinct w.datePeriod,w.intWeek from WeekStartEnd w,TitleStartEnd t where w.yearID = t.yearID and t.currentFlag = 'true' and w.intWeek = " + i;
+            DataTable titleDT = CommonClass.getDataTable(titleStr);
             Label lbWeek = new Label();
             lbWeek.ID = "week" + i;
-            lbWeek.Text = "第" + i + "周";
+            lbWeek.Text = "第" + i + "周 " + titleDT.Rows[0]["datePeriod"].ToString();
             GridViewPlaceHolder.Controls.Add(lbWeek);
 
             DataTable dt = PrintTabClass.PrintTab_Week_DT(i, sqlStr, printStr);
@@ -132,9 +136,11 @@ public partial class objectQuery : System.Web.UI.Page
 
         for (int i = week1; i <= week2; i++)
         {
+            string titleStr = "select distinct w.datePeriod,w.intWeek from WeekStartEnd w,TitleStartEnd t where w.yearID = t.yearID and t.currentFlag = 'true' and w.intWeek = " + i;
+            DataTable titleDT = CommonClass.getDataTable(titleStr);
             Label lbWeek = new Label();
             lbWeek.ID = "week" + i;
-            lbWeek.Text = "第" + i + "周";
+            lbWeek.Text = "第" + i + "周 " + titleDT.Rows[0]["datePeriod"].ToString();
             GridViewPlaceHolder.Controls.Add(lbWeek);
 
             DataTable dt = PrintTabClass.PrintTab_Week_DT(i, sqlStr, printStr);
